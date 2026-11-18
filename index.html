@@ -368,6 +368,23 @@ html.probe input,html.probe textarea{cursor:text!important}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 #hud{position:fixed;left:16px;bottom:18px;z-index:5;font:500 11px var(--mono);color:var(--dim);pointer-events:none}
 @media (max-width:760px){#hud{display:none}}
+#egg{position:fixed;z-index:75;background:#0d1113;border:1px solid var(--accent);border-radius:10px;padding:11px 14px 13px;font:13px/1.55 var(--mono);color:var(--ink);box-shadow:0 0 34px -10px var(--accent),0 14px 40px -12px #000;opacity:0;transform:translateY(6px) scale(.96);transition:opacity .2s,transform .2s;pointer-events:none;cursor:pointer}
+#egg.on{opacity:1;transform:none;pointer-events:auto}
+#egg .eh{display:flex;justify-content:space-between;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+#egg h4{margin:5px 0 3px;font:900 21px/1.1 var(--display);letter-spacing:.02em;text-transform:uppercase}
+#egg p{margin:0;color:#b8c0c5}
+#egg b{color:var(--accent)}
+.egg-ring{position:fixed;z-index:74;width:10px;height:10px;margin:-5px 0 0 -5px;border:1.5px solid var(--accent);border-radius:50%;pointer-events:none;animation:eggring .65s ease-out forwards}
+@keyframes eggring{to{transform:scale(9);opacity:0}}
+.logo b.spin{animation:lspin .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes lspin{to{transform:rotate(720deg)}}
+.surname{transition:color .5s,-webkit-text-stroke-color .5s}
+.surname.lit{color:var(--accent);-webkit-text-stroke-color:var(--accent);text-shadow:0 0 24px rgba(255,181,71,.35)}
+footer .led{display:inline-block;width:7px;height:7px;border-radius:50%;background:#3a2a10;margin-right:8px;vertical-align:1px;transition:background .05s,box-shadow .05s}
+footer .led.on{background:var(--accent);box-shadow:0 0 10px var(--accent)}
+html:not(.probe) #hud{cursor:default}
+#hud{pointer-events:auto}
+html.gold{--accent:#ffd34d}
 .crtfx{display:none;position:fixed;inset:0;z-index:55;pointer-events:none;background:#39ff14;mix-blend-mode:color}
 html.crt .crtfx{display:block}
 html.crt .scan{z-index:56;opacity:1;background:repeating-linear-gradient(to bottom,rgba(0,0,0,.28) 0 1px,transparent 1px 3px)}
@@ -443,7 +460,7 @@ html.crt main{animation:flicker 4s infinite}
     <div><dt>focus</dt><dd>circuits · code · AI security</dd></div>
     <div><dt>hackathons</dt><dd>SIH 2026 · Hackin' Summer 2026</dd></div>
     <div><dt>git remote</dt><dd>github.com/itzmudit</dd></div>
-    <div><dt>learning</dt><dd>EEG / EMG → brain-computer interfaces</dd></div>
+    <div><dt>building</dt><dd>MiniSPICE v2 · modified nodal analysis</dd></div>
   </dl>
 
   <!-- SHELL -->
@@ -469,7 +486,7 @@ html.crt main{animation:flicker 4s infinite}
       <div class="photo fill block">[ADD: your photo, 4:5 portrait]</div>
       <div class="bio">
         <p class="big">I'm Mudit. I work where electronics meets software, and I like taking an idea from a textbook, or a problem I run into, and turning it into a tool that actually runs.</p>
-        <p>With my SDF Lab team I turned nodal analysis into MiniSPICE, a DC circuit solver written in C. At Hackin' Summer 2026 I built CaughtBot, which fires 40 prompt-injection and jailbreak attacks at an AI chatbot, scores how many get through, and then hardens it. I also built the frontend for RoadSentinel, a road-health prediction system, at Smart India Hackathon 2026. Lately I've been moving closer to hardware and signals, starting with how EEG and EMG are read and used to control devices.</p>
+        <p>With my SDF Lab team I turned nodal analysis into MiniSPICE, a DC circuit solver written in C. At Hackin' Summer 2026 I built CaughtBot, which fires 40 prompt-injection and jailbreak attacks at an AI chatbot, scores how many get through, and then hardens it. I also built the frontend for RoadSentinel, a road-health prediction system, at Smart India Hackathon 2026. Next up is MiniSPICE v2, which moves from plain nodal analysis to modified nodal analysis so it can handle voltage sources properly.</p>
         <p><span class="fill">[ADD: one personal line, e.g. a sport, a hobby, what you do on weekends]</span></p>
         <div class="win ide">
           <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="title">~/mudit — editor</span><span class="right">UTF-8</span></div>
@@ -650,7 +667,6 @@ html.crt main{animation:flicker 4s infinite}
         <div><span class="cm"># the part of this page that changes</span></div>
         <div><span class="ky">studying</span>: <span class="vl">B.Tech, Electronics &amp; Communication Engineering · JIIT Noida (2026–2030)</span></div>
         <div><span class="ky">building</span>: <span class="vl">MiniSPICE v2: current sources + multiple voltage sources (modified nodal analysis)</span></div>
-        <div><span class="ky">learning</span>: <span class="vl">brain-computer interfaces: recording, cleaning and using EEG / EMG signals</span></div>
         <div><span class="ky">reading</span>: <span class="fill">[ADD: a book, course or channel]</span></div>
         <div><span class="ky">open_to</span>: <span class="vl">new ideas, collaborations, interesting problems</span></div>
       </div>
@@ -749,7 +765,6 @@ const SKILLS = [
   { group:"electronics_and_maths", items:[
     ["DC circuit analysis","KCL, nodal analysis · MiniSPICE",2],
     ["Linear systems","Gaussian elimination, partial pivoting",2],
-    ["Biosignals (EEG / EMG)","self-learning",1],
     ["<span class='fill'>[ADD: Arduino / ESP32?]</span>","microcontrollers",1] ]},
   { group:"tools", items:[
     ["git + GitHub","team repos, history",2],
@@ -956,7 +971,7 @@ addEventListener("scroll",()=>{ const h=document.documentElement; $("progress").
       if(f>8+final.length*3){clearInterval(t); el.innerHTML='Mu<span class="a">dit</span>';}
     },45);
   }
-  const roles=["red-teaming AI chatbots","solving circuits in C","learning EEG + BCIs","shipping full-stack builds","turning ideas into tools"];
+  const roles=["red-teaming AI chatbots","solving circuits in C","building MiniSPICE v2","shipping full-stack builds","turning ideas into tools"];
   if(reduce) return;
   let ri=0, ci=roles[0].length, del=true; const rt=$("roleText");
   setInterval(()=>{ const r=roles[ri];
@@ -1011,7 +1026,7 @@ const FILES={
     "    ."+"name     = "+S("s",'"Mudit Jindal"')+",",
     "    ."+"focus    = "+S("s",'"circuits + code + AI security"')+",",
     "    ."+"builds   = { "+S("s",'"CaughtBot"')+", "+S("s",'"MiniSPICE"')+", "+S("s",'"RoadSentinel"')+" },",
-    "    ."+"learning = "+S("s",'"EEG / EMG -> BCI"')+",",
+    "    ."+"next     = "+S("s",'"MiniSPICE v2"')+",",
     "    ."+"status   = "+S("n","BUILDING")+",",
     "};",
     "",
@@ -1033,7 +1048,7 @@ const FILES={
     "        "+S("k","return")+" {"+S("s",'"before"')+": "+S("n","22")+", "+S("s",'"after"')+": "+S("n","62")+"}",
     "",
     "    "+S("k","def")+" "+S("f","next")+"(self) -> str:",
-    "        "+S("k","return")+" "+S("s",'"hardware + biosignals"'),
+    "        "+S("k","return")+" "+S("s",'"whatever breaks next"'),
     ""]},
   json:{lang:"JSON · valid", lines:[
     "{",
@@ -1358,8 +1373,8 @@ function print(html){ const d=document.createElement("div"); d.className="ln"; d
 function echoCmd(cmd){ print(`${C("g","mudit@lab")}:${C("a","~")}$ ${esc(cmd)}`); }
 function go(id){ const el=$(id); if(el) el.scrollIntoView({behavior:reduce?"auto":"smooth"}); }
 const FILESYS={
-  "about.txt":()=>`Mudit Jindal. I build tools where electronics meets software:\na circuit solver in C, an AI red-teaming app, a road-health frontend.\nLately: EEG / EMG signals and brain-computer interfaces.\nthe current chapter: ${C("g","cat now.md")}`,
-  "now.md":()=>`studying:  B.Tech, Electronics &amp; Communication Engineering · JIIT Noida (2026–2030)\nbuilding:  MiniSPICE v2 (modified nodal analysis)\nlearning:  EEG / EMG signals and brain-computer interfaces\nopen to:   new ideas, collaborations, interesting problems`,
+  "about.txt":()=>`Mudit Jindal. I build tools where electronics meets software:\na circuit solver in C, an AI red-teaming app, a road-health frontend.\nthe current chapter: ${C("g","cat now.md")}`,
+  "now.md":()=>`studying:  B.Tech, Electronics &amp; Communication Engineering · JIIT Noida (2026–2030)\nbuilding:  MiniSPICE v2 (modified nodal analysis)\nopen to:   new ideas, collaborations, interesting problems`,
   "skills.json":()=>"{\n"+SKILLS.map(g=>`  ${C("c",'"'+g.group+'"')}: {\n`+g.items.map(([n,d,l])=>`    ${C("a",'"'+n.replace(/<[^>]+>/g,"")+'"')}: ${C("g",'"'+"■".repeat(l)+"□".repeat(3-l)+'"')}`).join(",\n")+"\n  }").join(",\n")+"\n}",
   "contact.txt":()=>`email:    ${EMAIL?EMAIL:C("a","[not added yet]")}\ngithub:   <a href="https://github.com/itzmudit" target="_blank" rel="noopener">github.com/itzmudit</a>\nlinkedin: ${LINKEDIN?`<a href="${LINKEDIN}" target="_blank" rel="noopener">${LINKEDIN}</a>`:C("a","[not added yet]")}\nor run:   ${C("g","cd contact")}`,
   "resume.pdf":()=>C("a","resume not uploaded yet. try 'cat about.txt' instead."),
@@ -1367,9 +1382,83 @@ const FILESYS={
 const neofetch=()=>{
   const art=[" __  __     _ ","|  \\/  |   | |","| \\  / |   | |","| |\\/| |_  | |","| |  | | |_| |","|_|  |_|\\___/ "].join("\n");
   const kv=(k,v)=>`${C("a",k)}: ${v}`;
-  const info=[`${C("g","mudit")}@${C("g","lab")}`,"-----------",kv("OS","mudit-os · circuits + code"),kv("Host","the lab bench"),kv("Kernel","C + Python"),kv("Focus","AI security · signals · C"),kv("Shell","mudit-sh 1.0"),kv("Projects","CaughtBot, MiniSPICE, RoadSentinel"),kv("Repos","github.com/itzmudit"),kv("Learning","EEG / EMG → BCI"),kv("Status",C("g","building")),"",["#ef7a64","#ffb547","#62c784","#5fd4e3","#c3a6ff","#e8e4dc"].map(c=>`<span class="swatch" style="background:${c}"></span>`).join("")].join("\n");
+  const info=[`${C("g","mudit")}@${C("g","lab")}`,"-----------",kv("OS","mudit-os · circuits + code"),kv("Host","the lab bench"),kv("Kernel","C + Python"),kv("Focus","AI security · signals · C"),kv("Shell","mudit-sh 1.0"),kv("Projects","CaughtBot, MiniSPICE, RoadSentinel"),kv("Repos","github.com/itzmudit"),kv("Building","MiniSPICE v2"),kv("Status",C("g","building")),"",["#ef7a64","#ffb547","#62c784","#5fd4e3","#c3a6ff","#e8e4dc"].map(c=>`<span class="swatch" style="background:${c}"></span>`).join("")].join("\n");
   return `<div class="neo"><pre class="art">${esc(art)}</pre><pre>${info}</pre></div>`;
 };
+/* =========================================================
+   Hidden: click eggs. Things that look like decoration answer clicks.
+   Progress is kept in this browser only.
+   ========================================================= */
+const EGGS=(function(){
+  const LIST=[
+    {id:"logo",  name:"overclock"},
+    {id:"trig",  name:"trigger"},
+    {id:"sur",   name:"power on"},
+    {id:"exit",  name:"exit 0"},
+    {id:"hud",   name:"diagnostics"},
+    {id:"morse", name:"signal"},
+    {id:"zero",  name:"zero deps"},
+    {id:"bot",   name:"attack #41"}];
+  let found=new Set(); try{ found=new Set(JSON.parse(localStorage.getItem("mj-eggs")||"[]")); }catch(e){}
+  const save=()=>{ try{ localStorage.setItem("mj-eggs",JSON.stringify([...found])); }catch(e){} };
+  const t0=performance.now();
+  let box=null, hideT=0;
+
+  function pop(id,title,body,x,y){
+    const fresh=!found.has(id); found.add(id); save();
+    if(!box){ box=document.createElement("div"); box.id="egg"; box.setAttribute("role","status"); document.body.appendChild(box);
+      box.addEventListener("click",()=>box.classList.remove("on")); }
+    const n=found.size, all=n===LIST.length;
+    box.innerHTML=`<div class="eh"><span>◆ egg ${n}/${LIST.length}${fresh?" · new":""}</span><span>✕</span></div><h4>${title}</h4><p>${body}</p>`;
+    const W=innerWidth, H=innerHeight, bw=Math.min(310,W-24);
+    box.style.width=bw+"px"; box.style.left=Math.max(12,Math.min(W-bw-12,(x??W/2)-bw/2))+"px"; box.style.top=Math.max(70,Math.min(H-190,(y??H/2)+18))+"px";
+    box.classList.remove("on"); void box.offsetWidth; box.classList.add("on");
+    ring(x,y);
+    if(window.FIELD) FIELD.wave(x,y,1.2);
+    clearTimeout(hideT); hideT=setTimeout(()=>box.classList.remove("on"),6500);
+    if(all && fresh) setTimeout(()=>complete(x,y),1400);
+  }
+  function ring(x,y){ if(x==null) return; const r=document.createElement("span"); r.className="egg-ring"; r.style.left=x+"px"; r.style.top=y+"px"; document.body.appendChild(r); setTimeout(()=>r.remove(),700); }
+  function complete(x,y){
+    document.documentElement.classList.add("gold");
+    if(window.FIELD) FIELD.burst();
+    pop("logo","all eggs found",`You clicked on everything that wasn't meant to be clicked. That's how most bugs get found too. Gold mode is now on. Run <b>eggs</b> in the shell to see the list.`,x,y);
+  }
+  const on=(sel,fn)=>{ const el=document.querySelector(sel); if(el) el.addEventListener("click",fn); return el; };
+
+  // 1. logo: five quick clicks
+  let lc=[]; on(".logo b",e=>{ const now=performance.now(); lc=lc.filter(t=>now-t<2500); lc.push(now);
+    if(lc.length>=5){ lc=[]; const b=e.currentTarget; b.classList.remove("spin"); void b.offsetWidth; b.classList.add("spin");
+      pop("logo","overclocked",`Five clicks in under 2.5 s, roughly ${(5/2.5).toFixed(1)} Hz. The logo is rated for 1. It survived.`,e.clientX,e.clientY); } });
+  // 2. the scope's TRIG'D lamp
+  on(".scope-top .trig",e=>pop("trig","triggered",`Captured on a rising edge at t = ${((performance.now()-t0)/1000).toFixed(2)} s. The edge was your click.`,e.clientX,e.clientY));
+  // 3. the outlined surname
+  on(".surname",e=>{ e.currentTarget.classList.toggle("lit");
+    pop("sur","power on","Outlined letters are just letters with no current through them. Fixed.",e.clientX,e.clientY); });
+  // 4. footer exit code
+  on("footer .g",e=>pop("exit","exit code 0","The page ran top to bottom with no errors. Enjoy it, that's rare.",e.clientX,e.clientY));
+  // 5. the HUD readout in the corner
+  on("#hud",e=>{ const up=Math.round((performance.now()-t0)/1000);
+    pop("hud","diagnostics",`uptime ${Math.floor(up/60)}m ${up%60}s · viewport ${innerWidth}×${innerHeight} · eggs ${found.size+(found.has("hud")?0:1)}/${LIST.length} · status nominal`,e.clientX,e.clientY-160); });
+  // 6. copyright line blinks MJ in Morse
+  const fs=document.querySelectorAll("footer .wrap > span");
+  if(fs[0]) fs[0].addEventListener("click",e=>{ const el=fs[0]; if(el.dataset.busy) return; el.dataset.busy=1;
+    const code="-- .---", led=document.createElement("i"); led.className="led"; el.prepend(led);
+    let t=0; for(const ch of code){ const d=ch==="-"?420:ch==="."?140:0; if(ch===" "){t+=420;continue;}
+      setTimeout(()=>led.classList.add("on"),t); setTimeout(()=>led.classList.remove("on"),t+d); t+=d+160; }
+    setTimeout(()=>{ led.remove(); delete el.dataset.busy; },t+300);
+    pop("morse","signal","<b>-- .---</b> is MJ in Morse code. Watch the LED next to the copyright.",e.clientX,e.clientY-160); });
+  // 7. "0 frameworks" line
+  if(fs[1]) fs[1].addEventListener("click",e=>{ const html=document.documentElement.outerHTML;
+    pop("zero","zero dependencies",`This page: ${html.split("\n").length.toLocaleString()} lines, ${(new Blob([html]).size/1024).toFixed(0)} KB, 0 frameworks, 0 npm installs, 1 file.`,e.clientX,e.clientY-160); });
+  // 8. "CaughtBot" in the intro
+  on(".lede em",e=>pop("bot","attack #41","Asking the chatbot nicely to ignore its rules. Blocked. It said please was a nice touch, though.",e.clientX,e.clientY));
+
+  if(found.size===LIST.length) document.documentElement.classList.add("gold");
+  return { list:()=>LIST.map(g=>({name:g.name,found:found.has(g.id)})), count:()=>found.size, total:LIST.length,
+           reset:()=>{ found.clear(); save(); document.documentElement.classList.remove("gold"); } };
+})();
+
 const CMDS={
   help:()=>[
     ["whoami","who is this"],["neofetch","system info, mudit edition"],["ls [dir]","list files (try: ls projects)"],["cat &lt;file&gt;","read a file (about.txt, now.md, skills.json, contact.txt)"],
@@ -1407,9 +1496,11 @@ const CMDS={
   exit:()=>`there is no exit. try ${C("g","cd contact")} instead.`,
   rm:()=>C("r","rm: permission denied. nice try."),
   vim:()=>`you are now stuck in vim. just kidding. ${C("d","(:q!)")}`,
+  eggs:()=>{ const L=EGGS.list(), n=EGGS.count();
+    return `${C("a","eggs found: "+n+"/"+EGGS.total)}\n`+L.map((g,i)=>`  ${String(i+1).padStart(2)}. ${g.found?C("g",g.name):C("d","???")}`).join("\n")+`\n${C("d",n===EGGS.total?"all found. gold mode unlocked.":"hint: click things that look like decoration.")}`; },
   decrypt:()=>{ const msg="you read the source. that's the right instinct.", glyph="01<>/{}#$%&*+=", id="dc"+Date.now();
     setTimeout(()=>{ const el=$(id); if(!el) return; let f=0; const t=setInterval(()=>{ f++; el.textContent=msg.split("").map((ch,i)=>ch===" "?" ":(f>i*.6+6?ch:glyph[Math.floor(Math.random()*glyph.length)])).join(""); if(f>msg.length*.6+8){ clearInterval(t); el.textContent=msg; FIELD.wave(); FIELD.burst(); } },35); },60);
-    return `${C("a","[decrypting payload…]")}\n<span id="${id}" class="c-g"></span>\n${C("d","more hides here: the traces answer stillness, and old consoles remember a certain code.")}`; },
+    return `${C("a","[decrypting payload…]")}\n<span id="${id}" class="c-g"></span>\n${C("d","more hides here: the traces answer stillness, old consoles remember a certain code, and some decorations answer clicks. try: eggs")}`; },
   ping:()=>`PING mudit (127.0.0.1): 56 data bytes\n64 bytes from mudit: icmp_seq=0 ttl=64 time=0.42 ms\n${C("g","mudit is up and replying.")}`,
 };
 const ALIASES={"?":"help",ll:"ls","ls -la":"ls",man:"help",about:"cat about.txt",contact:"cat contact.txt",skills:"cat skills.json",resume:"cat resume.pdf",now:"cat now.md"};
@@ -1422,7 +1513,7 @@ function run(raw){
   if(!fn){ print(C("r",`mudit-sh: command not found: ${esc(name)}`)+`  ${C("d","type 'help'")}`); return; }
   const res=fn(arg); if(res!==null&&res!==undefined) print(res);
 }
-const COMPLETE=[...Object.keys(CMDS).filter(k=>k!=="decrypt"),"ls projects","cat about.txt","cat skills.json","cat contact.txt","cat now.md","./caughtbot --score",...PROJECTS.map(p=>"open "+p.id),...Object.keys(PRESET_KEYS).map(k=>"solve "+k),...SECTIONS.map(s=>"cd "+s),"scope ecg","scope square","sudo make me a sandwich"];
+const COMPLETE=[...Object.keys(CMDS).filter(k=>k!=="decrypt"&&k!=="eggs"),"ls projects","cat about.txt","cat skills.json","cat contact.txt","cat now.md","./caughtbot --score",...PROJECTS.map(p=>"open "+p.id),...Object.keys(PRESET_KEYS).map(k=>"solve "+k),...SECTIONS.map(s=>"cd "+s),"scope ecg","scope square","sudo make me a sandwich"];
 sin.addEventListener("keydown",e=>{
   if(e.key==="Enter"){ run(sin.value); sin.value=""; e.preventDefault(); }
   else if(e.key==="ArrowUp"){ if(hIdx>0){hIdx--; sin.value=hist_[hIdx];} e.preventDefault(); }
