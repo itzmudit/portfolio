@@ -350,14 +350,20 @@ main,header,footer,.helper,#hud{transition:opacity .35s ease}
 html.dream main,html.dream header,html.dream footer,html.dream .helper{opacity:.06;transition:opacity 1.6s ease}
 /* ---------- field extras: progress, cursor, toast, hud, CRT ---------- */
 #progress{position:fixed;top:0;left:0;right:0;height:2px;background:var(--accent);transform-origin:0 50%;transform:scaleX(0);z-index:40;box-shadow:0 0 10px var(--accent)}
-#cur{position:fixed;left:0;top:0;width:0;height:0;z-index:60;pointer-events:none;opacity:0;transition:opacity .2s}
+#cur{position:fixed;left:0;top:0;width:0;height:0;z-index:60;pointer-events:none;opacity:0;transition:opacity .15s;--g:6px;--c:var(--cyan)}
 #cur.on{opacity:1}
-#cur::before{content:"";position:absolute;left:-17px;top:-17px;width:34px;height:34px;border-radius:50%;border:1.5px dashed rgba(255,181,71,.85);animation:spin 6s linear infinite;transition:left .2s,top .2s,width .2s,height .2s,border-color .2s}
-#cur::after{content:"";position:absolute;left:-2.5px;top:-2.5px;width:5px;height:5px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
-#cur i{position:absolute;left:-27px;top:-27px;width:54px;height:54px;border-radius:50%;border:1px solid rgba(95,212,227,.22);transition:transform .2s}
-#cur.big::before{left:-24px;top:-24px;width:48px;height:48px;border-color:var(--cyan)}
-#cur.press i{transform:scale(.55)}
-@keyframes spin{to{transform:rotate(360deg)}}
+#cur i{position:absolute;background:var(--c);box-shadow:0 0 6px var(--c);transition:left .18s ease,top .18s ease,background .18s}
+#cur i:nth-child(1),#cur i:nth-child(2){width:8px;height:1.5px;top:-.75px}
+#cur i:nth-child(3),#cur i:nth-child(4){width:1.5px;height:8px;left:-.75px}
+#cur i:nth-child(1){left:calc(-8px - var(--g))} #cur i:nth-child(2){left:var(--g)}
+#cur i:nth-child(3){top:calc(-8px - var(--g))} #cur i:nth-child(4){top:var(--g)}
+#cur s{position:absolute;left:-1.5px;top:-1.5px;width:3px;height:3px;background:var(--accent);transition:transform .18s}
+#cur b{position:absolute;left:14px;top:12px;font:500 10px var(--mono);letter-spacing:.06em;color:var(--dim);white-space:nowrap;background:rgba(7,9,10,.7);padding:1px 4px;border-radius:3px}
+#cur.hot{--g:11px;--c:var(--accent)} #cur.hot s{transform:rotate(45deg) scale(1.6)} #cur.hot b{color:var(--accent)}
+#cur.press{--g:2px}
+#cur.txt i{opacity:.35}
+html.probe,html.probe *{cursor:none!important}
+html.probe input,html.probe textarea{cursor:text!important}
 #toast{position:fixed;left:50%;top:74px;transform:translate(-50%,-12px);opacity:0;z-index:70;background:#0d1113;border:1px solid var(--accent);color:var(--ink);font:500 13px var(--mono);padding:8px 14px;border-radius:8px;pointer-events:none;transition:opacity .25s,transform .25s;box-shadow:0 0 24px -8px var(--accent);white-space:nowrap}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 #hud{position:fixed;left:16px;bottom:18px;z-index:5;font:500 11px var(--mono);color:var(--dim);pointer-events:none}
@@ -376,7 +382,7 @@ html.crt main{animation:flicker 4s infinite}
 <div class="scan" aria-hidden="true"></div>
 <div class="crtfx" aria-hidden="true"></div>
 <div id="progress" aria-hidden="true"></div>
-<div id="cur" aria-hidden="true"><i></i></div>
+<div id="cur" aria-hidden="true"><i></i><i></i><i></i><i></i><s></s><b></b></div>
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="hud" aria-hidden="true"></div>
 
@@ -779,155 +785,145 @@ $("resumeBtn").onclick=e=>{e.preventDefault(); flashTo(e.currentTarget)};
 addEventListener("pointermove",e=>{document.documentElement.style.setProperty("--mx",e.clientX+"px");document.documentElement.style.setProperty("--my",e.clientY+"px");},{passive:true});
 
 /* =========================================================
-   Background: signal field
-   Nodes drift and link up when close. Data packets hop along the links.
-   The cursor acts like a charge: links bend away from it, a fast swipe cuts them,
-   a click sends a shockwave. Hold still long enough and the field spells something.
+   Background: trace field
+   Horizontal signal traces, like a wide oscilloscope screen.
+   The cursor is a probe: traces rise under it and pick up a live waveform.
+   Moving sends ripples, a click sends a strong pulse, a fast swipe leaves
+   static. Hold still long enough and the traces rise to spell something.
    ========================================================= */
 const FIELD=(function(){
-  const c=$("bg"), x=c.getContext("2d"), grid=document.createElement("canvas"), gx=grid.getContext("2d");
-  let W=0,H=0,dpr=1,nodes=[],packets=[],sparks=[],waves=[],targets=[];
-  const cuts=new Map(), LINK=150, CURSOR_R=170;
-  const m={x:-9999,y:-9999,px:-9999,py:-9999,speed:0,t:performance.now(),inside:false};
-  let idle=0, gather=false, linkCount=0, crt=false;
-  const rnd=(a,b)=>a+Math.random()*(b-a);
-  const col=()=>crt?{a:"120,255,140",c:"57,255,20"}:{a:"255,181,71",c:"95,212,227"};
+  const c=$("bg"), x=c.getContext("2d"), mk=document.createElement("canvas"), mx=mk.getContext("2d",{willReadFrequently:true});
+  let W=0,H=0,dpr=1,N=0,gap=26,STEP=6,lines=[],mask=null,mw=0,mh=0;
+  let ripples=[],glitches=[],pulses=[],idle=0,gather=false,gAmt=0,crt=false,t0=performance.now(),probeV=0;
+  const m={x:-9999,y:-9999,sx:-9999,sy:-9999,px:-9999,py:-9999,speed:0,t:performance.now(),inside:false,trav:0};
+  const rnd=(a,b)=>a+Math.random()*(b-a), SIG=115, LIFT=44;
+  const col=()=>crt?{a:"120,255,140",c:"57,255,20",d:"90,200,110"}:{a:"255,181,71",c:"95,212,227",d:"150,168,178"};
 
   function resize(){
     dpr=Math.min(devicePixelRatio||1,2); W=innerWidth; H=innerHeight;
-    for(const cv of [c,grid]){cv.width=W*dpr;cv.height=H*dpr;}
-    c.style.width=W+"px"; c.style.height=H+"px";
-    gx.setTransform(dpr,0,0,dpr,0,0); gx.clearRect(0,0,W,H);
-    gx.strokeStyle="rgba(140,160,170,.045)"; gx.lineWidth=1;
-    for(let i=0;i<W;i+=48){gx.beginPath();gx.moveTo(i+.5,0);gx.lineTo(i+.5,H);gx.stroke();}
-    for(let j=0;j<H;j+=48){gx.beginPath();gx.moveTo(0,j+.5);gx.lineTo(W,j+.5);gx.stroke();}
-    gx.fillStyle="rgba(140,160,170,.12)";
-    for(let i=0;i<W;i+=48) for(let j=0;j<H;j+=48) gx.fillRect(i-.5,j-.5,1.5,1.5);
-    const n=Math.round(Math.min(140,Math.max(40,W*H/15000)));
-    while(nodes.length<n){ const a=rnd(0,Math.PI*2), s=rnd(.08,.28); nodes.push({x:rnd(0,W),y:rnd(0,H),vx:0,vy:0,bx:Math.cos(a)*s,by:Math.sin(a)*s,r:rnd(1.1,2.2),hub:Math.random()<.12,pulse:0}); }
-    nodes.length=n; buildTargets();
+    c.width=W*dpr; c.height=H*dpr; c.style.width=W+"px"; c.style.height=H+"px";
+    N=Math.round(Math.min(44,Math.max(18,H/24))); gap=H/(N-3);
+    STEP=W>1400?7:6;
+    lines=[]; for(let i=0;i<N;i++) lines.push({y:(i-1)*gap, ph:rnd(0,6.28), f1:rnd(.004,.009), f2:rnd(.013,.022), sp:rnd(.25,.6)});
+    buildMask();
   }
-  let gatherLD=40;
-  function buildTargets(){
-    const ow=Math.round(Math.min(W*.5,560)), oh=Math.round(ow*.55), o=document.createElement("canvas"); o.width=ow; o.height=oh;
-    const ox=o.getContext("2d"); ox.fillStyle="#fff"; ox.textAlign="center"; ox.textBaseline="middle";
-    ox.font=`900 ${Math.round(oh*.95)}px "Big Shoulders Display","Arial Narrow",sans-serif`; ox.fillText("MJ",ow/2,oh/2+oh*.04);
-    const d=ox.getImageData(0,0,ow,oh).data, inside=(xx,yy)=>xx>=0&&yy>=0&&xx<ow&&yy<oh&&d[(yy*ow+xx)*4+3]>140, edge=[];
-    for(let yy=0;yy<oh;yy+=2) for(let xx=0;xx<ow;xx+=2) if(inside(xx,yy)&&(!inside(xx-3,yy)||!inside(xx+3,yy)||!inside(xx,yy-3)||!inside(xx,yy+3))) edge.push([xx,yy]);
-    if(!edge.length){ targets=nodes.map(()=>[W/2,H/2]); return; }
-    // farthest-point sampling: evenly spaced points along the outline
-    const pick=[edge[0]], dist=edge.map(p=>Math.hypot(p[0]-edge[0][0],p[1]-edge[0][1])); let r=0;
-    while(pick.length<nodes.length){ let bi=0; for(let i=1;i<edge.length;i++) if(dist[i]>dist[bi]) bi=i; r=dist[bi]; const q=edge[bi]; pick.push(q);
-      for(let i=0;i<edge.length;i++){ const dd=Math.hypot(edge[i][0]-q[0],edge[i][1]-q[1]); if(dd<dist[i]) dist[i]=dd; } }
-    gatherLD=Math.max(18,r*2.3);
-    const ox0=(W-ow)/2, oy0=(H-oh)/2; targets=pick.map(p=>[p[0]+ox0,p[1]+oy0]);
+  function buildMask(){ // blurred "MJ" height map at quarter resolution
+    mw=Math.max(1,Math.round(W/4)); mh=Math.max(1,Math.round(H/4)); mk.width=mw; mk.height=mh;
+    const fs=Math.min(mh*.78,mw*.5);
+    mx.clearRect(0,0,mw,mh); mx.filter="blur(1px)"; mx.fillStyle="#fff"; mx.textAlign="center"; mx.textBaseline="middle";
+    mx.font=`900 ${Math.round(fs)}px "Big Shoulders Display","Arial Narrow",sans-serif`; mx.fillText("MJ",mw/2,mh/2+fs*.04); mx.filter="none";
+    const d=mx.getImageData(0,0,mw,mh).data; mask=new Float32Array(mw*mh); for(let i=0;i<mw*mh;i++) mask[i]=d[i*4+3]/255;
   }
-  function segX(ax,ay,bx,by,cx,cy,dx,dy){ // segment intersection point or null
-    const r1=bx-ax,s1=by-ay,r2=dx-cx,s2=dy-cy, den=r1*s2-s1*r2; if(Math.abs(den)<1e-6) return null;
-    const t=((cx-ax)*s2-(cy-ay)*r2)/den, u=((cx-ax)*s1-(cy-ay)*r1)/den;
-    return (t>=0&&t<=1&&u>=0&&u<=1)?[ax+t*r1,ay+t*s1]:null;
+  const maskAt=(px,py)=>{ const i=Math.floor(px/4), j=Math.floor(py/4); return (i<0||j<0||i>=mw||j>=mh)?0:mask[j*mw+i]; };
+  function distSeg(px,py,g){ const vx=g.x2-g.x1, vy=g.y2-g.y1, L=vx*vx+vy*vy||1; let u=((px-g.x1)*vx+(py-g.y1)*vy)/L; u=u<0?0:u>1?1:u; return Math.hypot(px-(g.x1+u*vx),py-(g.y1+u*vy)); }
+
+  // vertical offset of a trace point (negative = up)
+  function off(L,px,t){
+    const yb=L.y;
+    let o=Math.sin(px*L.f1+t*L.sp+L.ph)*3.2+Math.sin(px*L.f2-t*L.sp*1.7+L.ph*2)*1.6;
+    if(m.inside && !gather){
+      const dx=px-m.sx, dy=yb-m.sy, g=Math.exp(-(dx*dx+dy*dy)/(2*SIG*SIG));
+      if(g>.002) o+=-LIFT*g + Math.sin(px*.085-t*9)*7*g*g + Math.sin(px*.21-t*15)*2.2*g;
+    }
+    for(const r of ripples){ const d=Math.hypot(px-r.x,yb-r.y), e=d-r.r; if(e>-70&&e<70) o+=Math.sin(e*.09)*r.p*(1-Math.abs(e)/70); }
+    for(const gl of glitches){ if(distSeg(px,yb,gl)<34) o+=(Math.random()-.5)*16*gl.life; }
+    if(gAmt>0) o-=maskAt(px,yb)*gap*.9*gAmt;
+    return o;
   }
-  function spark(px,py,n,speed){ for(let k=0;k<n;k++){ const a=rnd(0,Math.PI*2), s=rnd(.5,1)*speed; sparks.push({x:px,y:py,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:1}); } }
-  function neighbours(i){ const a=nodes[i], out=[]; for(let j=0;j<nodes.length;j++){ if(j===i) continue; const b=nodes[j]; const d=Math.hypot(a.x-b.x,a.y-b.y); if(d<LINK && !cutNow(i,j)) out.push(j);} return out; }
-  const key=(i,j)=>i<j?i*4096+j:j*4096+i;
-  const cutNow=(i,j)=>{ const t=cuts.get(key(i,j)); return t && t>performance.now(); };
-  function launch(from){ const nb=neighbours(from); if(!nb.length) return; packets.push({i:from,j:nb[Math.floor(Math.random()*nb.length)],t:0,spd:rnd(.9,1.6),hops:Math.floor(rnd(2,6))}); }
 
   function step(dt,now){
     idle+=dt;
-    const g = idle>4.5 && m.inside;
-    if(g!==gather){ gather=g; document.documentElement.classList.toggle("dream",g); if(g) toast("hold still… the field is listening"); }
-    for(let i=0;i<nodes.length;i++){
-      const n=nodes[i];
-      if(gather){ const t=targets[i]; n.vx+=(t[0]-n.x)*.004*60*dt; n.vy+=(t[1]-n.y)*.004*60*dt; n.vx*=.9; n.vy*=.9; }
-      else {
-        const dx=n.x-m.x, dy=n.y-m.y, d=Math.hypot(dx,dy);
-        if(d<CURSOR_R && d>0.1){ const f=(1-d/CURSOR_R)*1.4; n.vx+=dx/d*f*dt*8; n.vy+=dy/d*f*dt*8; }
-        for(const w of waves){ const wd=Math.hypot(n.x-w.x,n.y-w.y); if(Math.abs(wd-w.r)<40 && wd>0.1){ const f=(1-Math.abs(wd-w.r)/40)*w.p; n.vx+=(n.x-w.x)/wd*f; n.vy+=(n.y-w.y)/wd*f; } }
-        n.vx*=.94; n.vy*=.94;
-      }
-      n.x+=(n.vx+(gather?0:n.bx))*dt*60; n.y+=(n.vy+(gather?0:n.by))*dt*60;
-      if(!gather){ if(n.x<-30) n.x=W+30; if(n.x>W+30) n.x=-30; if(n.y<-30) n.y=H+30; if(n.y>H+30) n.y=-30; }
-      n.pulse=Math.max(0,n.pulse-dt*1.8);
-    }
-    for(const w of waves){ w.r+=dt*520; w.p*=.97; } waves=waves.filter(w=>w.r<Math.hypot(W,H));
-    for(const s of sparks){ s.x+=s.vx*dt*60; s.y+=s.vy*dt*60; s.vx*=.95; s.vy*=.95; s.life-=dt*1.6; } sparks=sparks.filter(s=>s.life>0);
-    if(Math.random()<dt*2.2) launch(Math.floor(Math.random()*nodes.length));
-    for(const p of packets){
-      if(cutNow(p.i,p.j)){ const a=nodes[p.i],b=nodes[p.j]; spark(a.x+(b.x-a.x)*p.t,a.y+(b.y-a.y)*p.t,6,1.6); p.dead=true; continue; }
-      p.t+=dt*p.spd;
-      if(p.t>=1){ nodes[p.j].pulse=1; p.hops--; if(p.hops<=0){p.dead=true; continue;} const nb=neighbours(p.j).filter(k=>k!==p.i); if(!nb.length){p.dead=true; continue;} p.i=p.j; p.j=nb[Math.floor(Math.random()*nb.length)]; p.t=0; }
-    }
-    packets=packets.filter(p=>!p.dead);
+    const g=idle>4.5 && m.inside;
+    if(g!==gather){ gather=g; document.documentElement.classList.toggle("dream",g); if(g) toast("hold still… the traces are listening"); }
+    gAmt+=((gather?1:0)-gAmt)*Math.min(1,dt*(gather?1.4:4));
+    m.sx+=(m.x-m.sx)*Math.min(1,dt*10); m.sy+=(m.y-m.sy)*Math.min(1,dt*10);
+    for(const r of ripples){ r.r+=dt*r.v; r.p*=Math.pow(.25,dt); } ripples=ripples.filter(r=>r.p>.15 && r.r<Math.hypot(W,H));
+    for(const gl of glitches) gl.life-=dt*2.2; glitches=glitches.filter(gl=>gl.life>0);
+    if(Math.random()<dt*1.6 && pulses.length<10) spawnPulse();
+    for(const p of pulses) p.x+=p.v*dt; pulses=pulses.filter(p=>p.x<W+120 && p.x>-120);
   }
+  function spawnPulse(li){ const i=li??Math.floor(rnd(1,N-1)), dir=Math.random()<.5?1:-1; pulses.push({i, x:dir>0?-80:W+80, v:dir*rnd(220,420), len:rnd(50,110)}); }
 
   function draw(now){
-    const k=col();
-    x.setTransform(1,0,0,1,0,0); x.clearRect(0,0,c.width,c.height); x.drawImage(grid,0,0); x.setTransform(dpr,0,0,dpr,0,0);
-    if(m.inside){ const g=x.createRadialGradient(m.x,m.y,0,m.x,m.y,CURSOR_R); g.addColorStop(0,`rgba(${k.c},.10)`); g.addColorStop(1,`rgba(${k.c},0)`); x.fillStyle=g; x.fillRect(m.x-CURSOR_R,m.y-CURSOR_R,CURSOR_R*2,CURSOR_R*2); }
-    const swipe=m.speed>1.4 && m.inside, LD=gather?gatherLD:LINK;
-    linkCount=0; x.lineWidth=1;
-    for(let i=0;i<nodes.length;i++){ const a=nodes[i];
-      for(let j=i+1;j<nodes.length;j++){ const b=nodes[j];
-        const dx=a.x-b.x, dy=a.y-b.y; if(dx>LD||dx<-LD||dy>LD||dy<-LD) continue;
-        const d=Math.hypot(dx,dy); if(d>=LD) continue;
-        const kk=key(i,j), ct=cuts.get(kk); let fade=1;
-        if(ct){ if(ct>now) continue; fade=Math.min(1,(now-ct)/900); if(fade>=1) cuts.delete(kk); }
-        if(swipe && !gather){ const hit=segX(a.x,a.y,b.x,b.y,m.px,m.py,m.x,m.y); if(hit){ cuts.set(kk,now+1600); spark(hit[0],hit[1],7,2.2); continue; } }
-        linkCount++;
-        const mx=(a.x+b.x)/2, my=(a.y+b.y)/2, md=Math.hypot(mx-m.x,my-m.y);
-        let cx=mx, cy=my; if(md<CURSOR_R && md>0.1){ const push=(1-md/CURSOR_R)*38; cx+=(mx-m.x)/md*push; cy+=(my-m.y)/md*push; }
-        const al=(1-d/LD)*(gather?.8:.32)*fade;
-        x.strokeStyle=`rgba(${k.c},${al})`; x.beginPath(); x.moveTo(a.x,a.y); x.quadraticCurveTo(cx,cy,b.x,b.y); x.stroke();
-      } }
-    for(const p of packets){ const a=nodes[p.i], b=nodes[p.j]; const px=a.x+(b.x-a.x)*p.t, py=a.y+(b.y-a.y)*p.t;
-      x.fillStyle=`rgba(${k.a},.95)`; x.shadowColor=`rgba(${k.a},1)`; x.shadowBlur=12; x.beginPath(); x.arc(px,py,2.1,0,7); x.fill(); x.shadowBlur=0; }
-    for(const n of nodes){
-      x.fillStyle=n.hub?`rgba(${k.a},${.55+.45*n.pulse})`:`rgba(220,228,232,${.35+.5*n.pulse})`;
-      x.beginPath(); x.arc(n.x,n.y,n.r+n.pulse*1.5,0,7); x.fill();
-      if(n.hub){ x.strokeStyle=`rgba(${k.a},${.25+.5*n.pulse})`; x.beginPath(); x.arc(n.x,n.y,5+n.pulse*6,0,7); x.stroke(); }
+    const k=col(), t=(now-t0)/1000, fillA=.5+.45*gAmt;
+    x.setTransform(1,0,0,1,0,0); x.clearRect(0,0,c.width,c.height); x.setTransform(dpr,0,0,dpr,0,0);
+    x.lineJoin="round"; probeV=0;
+    const pts=new Float32Array(Math.ceil(W/STEP)+2);
+    for(let li=0;li<N;li++){
+      const L=lines[li]; let n=0;
+      for(let px=0;px<=W+STEP;px+=STEP) pts[n++]=L.y+off(L,px,t);
+      if(m.inside && Math.abs(L.y-m.sy)<gap*.6){ const v=-(pts[Math.max(0,Math.min(n-1,Math.round(m.sx/STEP)))]-L.y)/LIFT; probeV=Math.max(probeV,v); }
+      // occlusion: hide the traces behind this one where it rises (ridgeline look)
+      x.beginPath(); x.moveTo(0,pts[0]); for(let q=1;q<n;q++) x.lineTo(q*STEP,pts[q]);
+      x.lineTo(W+STEP,L.y+gap*1.4); x.lineTo(0,L.y+gap*1.4); x.closePath();
+      x.fillStyle=`rgba(7,9,10,${fillA})`; x.fill();
+      // stroke with a highlight around the probe
+      x.beginPath(); x.moveTo(0,pts[0]); for(let q=1;q<n;q++) x.lineTo(q*STEP,pts[q]);
+      const base=.12+.22*gAmt;
+      if(m.inside && !gather){
+        const prox=Math.exp(-((L.y-m.sy)**2)/(2*150*150)), gr=x.createLinearGradient(m.sx-260,0,m.sx+260,0);
+        gr.addColorStop(0,`rgba(${k.d},${base})`); gr.addColorStop(.5,`rgba(${k.c},${base+.62*prox})`); gr.addColorStop(1,`rgba(${k.d},${base})`);
+        x.strokeStyle=gr; x.lineWidth=1+prox*.6;
+      } else { x.strokeStyle=gAmt>.05?`rgba(${k.a},${base})`:`rgba(${k.d},${base})`; x.lineWidth=1; }
+      x.stroke();
+      // letters light up while the traces are listening
+      if(gAmt>.05){ x.beginPath(); let on=false;
+        for(let q=0;q<n;q++){ const lit=maskAt(q*STEP,L.y)>.45; if(lit&&!on){x.moveTo(q*STEP,pts[q]);on=true;} else if(lit) x.lineTo(q*STEP,pts[q]); else on=false; }
+        x.strokeStyle=`rgba(${k.a},${.95*gAmt})`; x.lineWidth=2.2; x.shadowColor=`rgba(${k.a},${gAmt})`; x.shadowBlur=12; x.stroke(); x.shadowBlur=0; }
+      // pulses riding this trace
+      for(const p of pulses){ if(p.i!==li) continue;
+        const a=Math.max(0,Math.floor((p.x-p.len/2)/STEP)), b=Math.min(n-1,Math.ceil((p.x+p.len/2)/STEP)); if(b<=a) continue;
+        x.beginPath(); x.moveTo(a*STEP,pts[a]); for(let q=a+1;q<=b;q++) x.lineTo(q*STEP,pts[q]);
+        x.strokeStyle=`rgba(${k.a},.9)`; x.lineWidth=1.8; x.shadowColor=`rgba(${k.a},1)`; x.shadowBlur=10; x.stroke(); x.shadowBlur=0; }
     }
-    for(const w of waves){ x.strokeStyle=`rgba(${k.a},${Math.max(0,.5-w.r/900)})`; x.lineWidth=1.5; x.beginPath(); x.arc(w.x,w.y,w.r,0,7); x.stroke(); x.lineWidth=1; }
-    for(const s of sparks){ x.fillStyle=`rgba(${k.a},${s.life})`; x.fillRect(s.x-1,s.y-1,2,2); }
   }
 
   let last=performance.now(), hudT=0;
   function loop(now){
     const dt=Math.min(.05,(now-last)/1000); last=now;
-    if(!document.hidden){ step(dt,now); draw(now); m.px=m.x; m.py=m.y; m.speed*=.85;
-      hudT+=dt; if(hudT>.5){ hudT=0; const h=$("hud"); if(h) h.textContent=`field · ${nodes.length} nodes · ${linkCount} links · ${packets.length} packets in flight${gather?" · listening":""}`; } }
+    if(!document.hidden){ step(dt,now); draw(now); m.speed*=.85;
+      hudT+=dt; if(hudT>.4){ hudT=0; const h=$("hud"); if(h) h.textContent=`traces · ${N-2} channels · probe ${m.inside&&!gather?Math.min(3.3,Math.max(0,probeV*3.3)).toFixed(2)+" V":"--"} · ${pulses.length} pulses${gather?" · listening":""}`; } }
     requestAnimationFrame(loop);
   }
-  addEventListener("pointermove",e=>{ const now=performance.now(), ddt=Math.max(1,now-m.t);
-    if(m.inside){ m.speed=Math.max(m.speed,Math.hypot(e.clientX-m.x,e.clientY-m.y)/ddt); } else { m.px=e.clientX; m.py=e.clientY; }
-    m.x=e.clientX; m.y=e.clientY; m.t=now; m.inside=true; idle=0; },{passive:true});
-  addEventListener("pointerleave",()=>{m.inside=false; m.x=m.y=-9999;});
-  document.addEventListener("mouseleave",()=>{m.inside=false; m.x=m.y=-9999;});
-  addEventListener("pointerdown",e=>{ idle=0; waves.push({x:e.clientX,y:e.clientY,r:0,p:2.4});
-    let best=0,bd=1e9; nodes.forEach((n,i)=>{const d=Math.hypot(n.x-e.clientX,n.y-e.clientY); if(d<bd){bd=d;best=i;}}); for(let q=0;q<3;q++) launch(best); });
+  addEventListener("pointermove",e=>{ const now=performance.now(), ddt=Math.max(1,now-m.t), X=e.clientX, Y=e.clientY;
+    if(m.inside){ const d=Math.hypot(X-m.x,Y-m.y); m.speed=Math.max(m.speed,d/ddt); m.trav+=d;
+      if(m.speed>1.6 && d>8) glitches.push({x1:m.x,y1:m.y,x2:X,y2:Y,life:1});
+      if(m.trav>90){ m.trav=0; ripples.push({x:X,y:Y,r:0,v:420,p:3.2}); } }
+    else { m.sx=X; m.sy=Y; }
+    m.x=X; m.y=Y; m.t=now; m.inside=true; idle=0; },{passive:true});
+  const out=()=>{m.inside=false; m.x=m.y=-9999;};
+  addEventListener("pointerleave",out); document.addEventListener("mouseleave",out);
+  addEventListener("pointerdown",e=>{ idle=0; ripples.push({x:e.clientX,y:e.clientY,r:0,v:620,p:16});
+    const li=Math.max(1,Math.min(N-2,Math.round(e.clientY/gap)+1)); for(let q=0;q<2;q++) spawnPulse(li); });
   addEventListener("keydown",()=>{idle=0;}); addEventListener("scroll",()=>{idle=0;},{passive:true});
   let rt; addEventListener("resize",()=>{clearTimeout(rt); rt=setTimeout(resize,150);});
-  resize();
+  resize(); document.fonts && document.fonts.ready.then(buildMask);
   if(reduce){ step(0,performance.now()); draw(performance.now()); } else requestAnimationFrame(loop);
   return {
-    wave:(px,py,p)=>waves.push({x:px??W/2,y:py??H/2,r:0,p:p||3}),
-    burst:()=>{ for(let q=0;q<14;q++) launch(Math.floor(Math.random()*nodes.length)); },
+    wave:(px,py,p)=>ripples.push({x:px??W/2,y:py??H/2,r:0,v:620,p:(p||3)*5}),
+    burst:()=>{ for(let q=0;q<10;q++) spawnPulse(); },
     setCrt:v=>{crt=v;}
   };
 })();
 
 /* =========================================================
-   Cursor ring, scroll progress, toast
+   Probe cursor, scroll progress, toast
    ========================================================= */
 function toast(msg){ const t=$("toast"); if(!t) return; t.textContent=msg; t.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("on"),2600); }
 (function(){
-  const ring=$("cur"); if(!matchMedia("(pointer: fine)").matches || reduce){ ring.remove(); return; }
-  let tx=-100,ty=-100,cx=-100,cy=-100;
-  addEventListener("pointermove",e=>{tx=e.clientX;ty=e.clientY;ring.classList.add("on");},{passive:true});
-  document.addEventListener("mouseleave",()=>ring.classList.remove("on"));
-  addEventListener("pointerdown",()=>{ring.classList.add("press"); setTimeout(()=>ring.classList.remove("press"),180);});
-  document.addEventListener("pointerover",e=>{ ring.classList.toggle("big", !!e.target.closest("a,button,input,select,textarea,label,[data-open],summary,.card")); });
-  (function f(){ cx+=(tx-cx)*.22; cy+=(ty-cy)*.22; ring.style.transform=`translate(${cx}px,${cy}px)`; requestAnimationFrame(f); })();
+  const cur=$("cur"); if(!matchMedia("(pointer: fine)").matches || reduce){ cur.remove(); return; }
+  const lab=cur.querySelector("b"); document.documentElement.classList.add("probe");
+  const pad=v=>String(Math.max(0,Math.round(v))).padStart(4,"0");
+  let hot=null;
+  addEventListener("pointermove",e=>{ cur.style.transform=`translate(${e.clientX}px,${e.clientY}px)`; cur.classList.add("on");
+    lab.textContent = hot ? hot : `x${pad(e.clientX)} y${pad(e.clientY)}`; },{passive:true});
+  document.addEventListener("mouseleave",()=>cur.classList.remove("on"));
+  addEventListener("pointerdown",()=>{cur.classList.add("press"); setTimeout(()=>cur.classList.remove("press"),160);});
+  document.addEventListener("pointerover",e=>{
+    const el=e.target.closest("a,button,input,select,textarea,label,[data-open],summary,.card");
+    cur.classList.toggle("hot",!!el); cur.classList.toggle("txt",!!(el&&/INPUT|TEXTAREA/.test(el.tagName)));
+    hot = !el ? null : el.tagName==="A" ? (el.target==="_blank"||/^http/.test(el.getAttribute("href")||"") ? "open ↗" : "go ↓") : /INPUT|TEXTAREA/.test(el.tagName) ? "type" : "run ▸";
+  });
 })();
 addEventListener("scroll",()=>{ const h=document.documentElement; $("progress").style.transform=`scaleX(${h.scrollTop/Math.max(1,h.scrollHeight-h.clientHeight)})`; },{passive:true});
 
@@ -1413,7 +1409,7 @@ const CMDS={
   vim:()=>`you are now stuck in vim. just kidding. ${C("d","(:q!)")}`,
   decrypt:()=>{ const msg="you read the source. that's the right instinct.", glyph="01<>/{}#$%&*+=", id="dc"+Date.now();
     setTimeout(()=>{ const el=$(id); if(!el) return; let f=0; const t=setInterval(()=>{ f++; el.textContent=msg.split("").map((ch,i)=>ch===" "?" ":(f>i*.6+6?ch:glyph[Math.floor(Math.random()*glyph.length)])).join(""); if(f>msg.length*.6+8){ clearInterval(t); el.textContent=msg; FIELD.wave(); FIELD.burst(); } },35); },60);
-    return `${C("a","[decrypting payload…]")}\n<span id="${id}" class="c-g"></span>\n${C("d","more hides here: the field answers stillness, and old consoles remember a certain code.")}`; },
+    return `${C("a","[decrypting payload…]")}\n<span id="${id}" class="c-g"></span>\n${C("d","more hides here: the traces answer stillness, and old consoles remember a certain code.")}`; },
   ping:()=>`PING mudit (127.0.0.1): 56 data bytes\n64 bytes from mudit: icmp_seq=0 ttl=64 time=0.42 ms\n${C("g","mudit is up and replying.")}`,
 };
 const ALIASES={"?":"help",ll:"ls","ls -la":"ls",man:"help",about:"cat about.txt",contact:"cat contact.txt",skills:"cat skills.json",resume:"cat resume.pdf",now:"cat now.md"};
