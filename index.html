@@ -157,7 +157,7 @@ section{padding:96px 0 0}
 .swatch{display:inline-block;width:22px;height:12px;margin-right:2px}
 
 /* ---------- about ---------- */
-.about{display:grid;grid-template-columns:280px 1fr;gap:36px}
+.about{display:block;max-width:860px}
 @media (max-width:860px){.about{grid-template-columns:1fr}}
 .photo{aspect-ratio:4/5;border-radius:var(--r);min-height:240px}
 .bio{display:grid;gap:18px;font-size:17px;max-width:68ch}
@@ -480,11 +480,10 @@ html.crt main{animation:flicker 4s infinite}
   <section id="about">
     <div class="sec-head"><div><span class="path"><b>mudit@lab</b>:<i>~/about</i>$ cat README.md</span><h2>About<span class="cur"></span></h2></div><span class="tag">0x01</span></div>
     <div class="about">
-      <div class="photo fill block">[ADD: your photo, 4:5 portrait]</div>
       <div class="bio">
         <p class="big">I'm Mudit. I work where electronics meets software, and I like taking an idea from a textbook, or a problem I run into, and turning it into a tool that actually runs.</p>
         <p>With my SDF Lab team I turned nodal analysis into MiniSPICE, a DC circuit solver written in C. At Hackin' Summer 2026 I built CaughtBot, which fires 40 prompt-injection and jailbreak attacks at an AI chatbot, scores how many get through, and then hardens it. I also built the frontend for RoadSentinel, a road-health prediction system, at Smart India Hackathon 2026. Next up is MiniSPICE v2, which moves from plain nodal analysis to modified nodal analysis so it can handle voltage sources properly.</p>
-        <p><span class="fill">[ADD: one personal line, e.g. a sport, a hobby, what you do on weekends]</span></p>
+        <p>Outside of building things, I spend about three hours a day commuting to college, so a lot of my project ideas start as notes on my phone during the ride.</p>
         <div class="win ide">
           <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="title">~/mudit — editor</span><span class="right">UTF-8</span></div>
           <div class="tabs" role="tablist" aria-label="Files">
@@ -652,7 +651,7 @@ html.crt main{animation:flicker 4s infinite}
       <div class="legend"><span><b class="c-a">■</b>□□ learning</span><span><b class="c-a">■■</b>□ comfortable</span><span><b class="c-a">■■■</b> confident</span></div>
     </div>
     <div class="skills" id="skillsBox"></div>
-    <p style="margin-top:14px;font-size:14px" class="muted">Every skill is tied to something I built. Ratings are honest self-assessment. <span class="fill">[CHECK: adjust levels in the SKILLS list in the code]</span></p>
+    <p style="margin-top:14px;font-size:14px" class="muted">Every skill is tied to something I built. Ratings are honest self-assessment.</p>
   </section>
 
   <!-- NOW -->
@@ -664,7 +663,6 @@ html.crt main{animation:flicker 4s infinite}
         <div><span class="cm"># the part of this page that changes</span></div>
         <div><span class="ky">studying</span>: <span class="vl">B.Tech, Electronics &amp; Communication Engineering · JIIT Noida (2026–2030)</span></div>
         <div><span class="ky">building</span>: <span class="vl">MiniSPICE v2: current sources + multiple voltage sources (modified nodal analysis)</span></div>
-        <div><span class="ky">reading</span>: <span class="fill">[ADD: a book, course or channel]</span></div>
         <div><span class="ky">open_to</span>: <span class="vl">new ideas, collaborations, interesting problems</span></div>
       </div>
     </div>
@@ -676,7 +674,7 @@ html.crt main{animation:flicker 4s infinite}
     <div class="contact">
       <div class="win pane">
         <p class="mono muted" style="font-size:12px">$ echo $EMAIL</p>
-        <p class="big-mail" id="mailText"><span class="fill">[ADD: your email]</span></p>
+        <p class="big-mail" id="mailText">muditjindal100@gmail.com</p>
         <button class="btn sm" type="button" id="copyMail" style="margin-top:14px"><span class="p">$</span> copy email</button>
         <div class="socials">
           <a class="social" href="https://github.com/itzmudit" target="_blank" rel="noopener"><span class="l">github</span><span class="v">github.com/itzmudit</span></a>
@@ -715,7 +713,7 @@ html.crt main{animation:flicker 4s infinite}
 /* =========================================================
    EDIT YOUR CONTENT HERE
    ========================================================= */
-const EMAIL = "";   // e.g. "mudit@gmail.com"
+const EMAIL = "muditjindal100@gmail.com";
 const LINKEDIN = "https://www.linkedin.com/in/itzmudit";
 
 const PROJECTS = [
@@ -725,7 +723,7 @@ const PROJECTS = [
     problem:"Most chatbots ship without anyone trying to break them. Testing by hand means typing hundreds of tricky prompts and judging every answer yourself.",
     built:"A Streamlit app that fires 40 attacks in 6 categories at a target bot, in parallel. A second, larger model judges each reply against a fixed security policy and returns a verdict validated with Pydantic, so there is no fragile string matching. An AI attack generator writes new attacks tailored to the target's own instructions. Reports show a score, a per-category breakdown and the exact quote behind every failure. Auto-harden rewrites the bot's prompt and keeps a fix only if the re-measured score goes up. It can also test a live bot over HTTP, tracks score over time, and has a rate limiter that keeps it on Groq's free tier.",
     result:"On the demo bot the security score went from 22 to 62 out of 100. Rule overrides dropped from 6/8 to 1/8 and off-limits actions from 8/8 to 0/8. Secret leakage did not improve (7/8 to 8/8), which showed that secrets should never sit in a system prompt.",
-    role:"Owner and main developer of the repo. <span class='fill'>[ADD: hackathon result if any]</span>",
+    role:"Owner and main developer of the repo.",
     learned:"How LLMs fail under adversarial input, why you need a fixed yardstick to compare before and after, and how to ship a full app in four days.",
     links:[["GitHub repo","https://github.com/itzmudit/CaughtBot"]] },
   { id:"minispice", tags:["circuits"], kind:"sdf lab-1 · c · team of 4", state:"live", stateText:"shipped",
@@ -742,7 +740,7 @@ const PROJECTS = [
     stack:["Frontend","<span class='fill'>[ADD: framework]</span>"],
     problem:"Road damage is usually found after it turns into a pothole or an accident. Predicting it earlier means cheaper, faster repairs.",
     built:"A system that predicts road condition from collected data, with an app to view and act on the results. <span class='fill'>[ADD: 1–2 lines on how it works]</span>",
-    result:"<span class='fill'>[ADD: round reached]</span>",
+    result:"Built and presented as a team at Smart India Hackathon 2026.",
     role:"Built the frontend app.",
     learned:"<span class='fill'>[ADD: one thing you learned]</span>",
     links:[] },
@@ -752,17 +750,17 @@ const SKILLS = [
   { group:"languages", items:[
     ["C","structs, dynamic memory, numerical methods · MiniSPICE",2],
     ["Python","13-module Streamlit app · CaughtBot",2],
-    ["HTML / CSS / JS","RoadSentinel frontend, this website",2],
+    ["HTML / CSS / JS","RoadSentinel frontend, this website",1],
     ["SQL (SQLite)","accounts and scan history · CaughtBot",1] ]},
   { group:"ai_and_data", items:[
     ["LLM APIs (Groq)","attacker, judge and fixer models",2],
     ["LLM security","prompt injection, jailbreaks, hardening",2],
-    ["Pydantic schemas","validated JSON verdicts",2],
+    ["Pydantic schemas","validated JSON verdicts",1],
     ["OpenCV","image processing basics",1] ]},
   { group:"electronics_and_maths", items:[
-    ["DC circuit analysis","KCL, nodal analysis · MiniSPICE",2],
-    ["Linear systems","Gaussian elimination, partial pivoting",2],
-    ["<span class='fill'>[ADD: Arduino / ESP32?]</span>","microcontrollers",1] ]},
+    ["DC circuit analysis","KCL, nodal analysis · MiniSPICE",3],
+    ["Linear systems","Gaussian elimination, partial pivoting",3],
+    ["Arduino","microcontroller basics",1] ]},
   { group:"tools", items:[
     ["git + GitHub","team repos, history",2],
     ["Streamlit","full app with login and dashboards",2],
@@ -771,11 +769,10 @@ const SKILLS = [
 ];
 
 const LOG = [ // newest first
-  { date:"next", msg:"feat: what I'm aiming for", body:"MiniSPICE with current sources and multiple voltage sources (modified nodal analysis), and my first hardware build. <span class='fill'>[ADD or edit: your next goal]</span>", next:true },
   { date:"Nov 2026", ref:"HEAD -> main", msg:"ship: MiniSPICE for SDF Lab-1", body:"A DC circuit solver in C with a team of four, under Dr. Taj Alam. Floating-node detection, power-balance check, strict input validation." },
-  { date:"[date]", msg:"learn: image processing workshop", body:"Thresholding, colour channels, histogram equalisation and gamma correction in OpenCV. The Image lab on this page rebuilds those ideas from scratch. <span class='fill'>[ADD: date]</span>" },
-  { date:"Sep 24–27 2026", ref:"tag: hackin-summer", msg:"ship: CaughtBot at Hackin' Summer 2026", body:"First commit to a working red-teaming tool with accounts, PDF reports and auto-hardening in four days. <span class='fill'>[ADD: result]</span>" },
-  { date:"Aug 2026", ref:"tag: sih-2026", msg:"feat: RoadSentinel frontend at Smart India Hackathon", body:"Joined a 7-person team building a road-health prediction system. I built the frontend app. <span class='fill'>[ADD: round reached]</span>" },
+  { date:"2026", msg:"learn: image processing workshop", body:"Thresholding, colour channels, histogram equalisation and gamma correction in OpenCV. The Image lab on this page rebuilds those ideas from scratch." },
+  { date:"Sep 24–27 2026", ref:"tag: hackin-summer", msg:"ship: CaughtBot at Hackin' Summer 2026", body:"First commit to a working red-teaming tool with accounts, PDF reports and auto-hardening in four days." },
+  { date:"Aug 2026", ref:"tag: sih-2026", msg:"feat: RoadSentinel frontend at Smart India Hackathon", body:"Joined a 7-person team building a road-health prediction system. I built the frontend app." },
   { date:"Jul 2026", msg:"init: started engineering", body:"Electronics and communication: circuits, signals and the code that drives them." },
 ];
 
@@ -1097,7 +1094,7 @@ function renderProjects(f){
       <h3>${p.name}</h3><p class="sub">${p.sub}</p>
       <div class="stack">${p.stack.map(s=>`<span>${s}</span>`).join("")}</div>
       <span class="open"><b>$</b> open ${p.id} →</span>
-    </button>`).join("") + (f==="all" ? `<div class="card empty"><span class="fill block">[ADD: your next project, e.g. a hardware build. Copy a block in the PROJECTS list]</span></div>` : "");
+    </button>`).join("");
   bindOpen(grid); countFills();
 }
 function bindOpen(scope){ scope.querySelectorAll("[data-open]").forEach(c=>c.onclick=()=>openProject(c.dataset.open)); }
