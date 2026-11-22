@@ -430,7 +430,7 @@ html.crt main{animation:flicker 4s infinite}
       <h1 class="name" id="heroName" aria-label="Mudit">Mu<span class="a">dit</span></h1>
       <div class="surname">Jindal</div>
       <p class="role"><span class="g">&gt;</span> <span id="roleText">red-teaming AI chatbots</span><span class="caret"></span></p>
-      <p class="lede">I build tools where electronics meets software. I made <em>CaughtBot</em>, which attacks AI chatbots to find their weak spots, and <em>MiniSPICE</em>, a circuit solver in C you can run on this page.</p>
+      <p class="lede">I build tools where electronics meets software. With my teams I made <em>CaughtBot</em>, which attacks AI chatbots to find their weak spots, and <em>MiniSPICE</em>, a circuit solver in C you can run on this page.</p>
       <div class="ctas">
         <a class="btn primary" href="#projects"><span class="p">$</span> ls projects</a>
         <a class="btn" href="#shell"><span class="p">$</span> open shell</a>
@@ -484,7 +484,7 @@ html.crt main{animation:flicker 4s infinite}
     <div class="about">
       <div class="bio">
         <p class="big">I'm Mudit. I work where electronics meets software, and I like taking an idea from a textbook, or a problem I run into, and turning it into a tool that actually runs.</p>
-        <p>With my SDF Lab team I turned nodal analysis into MiniSPICE, a DC circuit solver written in C. At Hackin' Summer 2026 I built CaughtBot, which fires 40 prompt-injection and jailbreak attacks at an AI chatbot, scores how many get through, and then hardens it. I also built the frontend for RoadSentinel, a road-health prediction system, at Smart India Hackathon 2026. Next up is MiniSPICE v2, which moves from plain nodal analysis to modified nodal analysis so it can handle voltage sources properly.</p>
+        <p>With my SDF Lab team I turned nodal analysis into MiniSPICE, a DC circuit solver written in C. At Hackin' Summer 2026 my team of three built CaughtBot, which fires 40 prompt-injection and jailbreak attacks at an AI chatbot, scores how many get through, and then hardens it. I also built the frontend for RoadSentinel, a road-health prediction system, at Smart India Hackathon 2026. Next up is MiniSPICE v2, which moves from plain nodal analysis to modified nodal analysis so it can handle voltage sources properly.</p>
         <p>Outside of building things, I spend about three hours a day commuting to college, so a lot of my project ideas start as notes on my phone during the ride.</p>
         <div class="win ide">
           <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="title">~/mudit — editor</span><span class="right">UTF-8</span></div>
@@ -520,7 +520,7 @@ html.crt main{animation:flicker 4s infinite}
 
     <article class="win feature" id="featureCB">
       <div class="copy">
-        <div class="meta"><span>featured · ai security · hackin' summer 2026</span><span class="state live"><i></i>live</span></div>
+        <div class="meta"><span>featured · ai security · hackin' summer 2026 · team of 3</span><span class="state live"><i></i>live</span></div>
         <h3>CaughtBot</h3>
         <p style="font-size:18px">Catches a chatbot's weaknesses before attackers do. It attacks the bot, has a second AI judge every reply, writes a report, then rewrites the bot's instructions until its security score goes up.</p>
         <ul class="bullets">
@@ -719,14 +719,14 @@ const EMAIL = "muditjindal100@gmail.com";
 const LINKEDIN = "https://www.linkedin.com/in/itzmudit";
 
 const PROJECTS = [
-  { id:"caughtbot", tags:["ai","hack","python"], kind:"ai security · hackin' summer 2026", state:"live", stateText:"shipped",
+  { id:"caughtbot", tags:["ai","hack","python"], kind:"ai security · hackin' summer 2026 · team of 3", state:"live", stateText:"shipped",
     name:"CaughtBot", sub:"Automated prompt-injection and jailbreak testing for AI chatbots, with a judge, a report and auto-hardening.",
     stack:["Python","Streamlit","Groq","Pydantic","SQLite","reportlab"],
     problem:"Most chatbots ship without anyone trying to break them. Testing by hand means typing hundreds of tricky prompts and judging every answer yourself.",
-    built:"A Streamlit app that fires 40 attacks in 6 categories at a target bot, in parallel. A second, larger model judges each reply against a fixed security policy and returns a verdict validated with Pydantic, so there is no fragile string matching. An AI attack generator writes new attacks tailored to the target's own instructions. Reports show a score, a per-category breakdown and the exact quote behind every failure. It runs live on Streamlit Cloud with sign-up and login (passwords stored hashed), and an admin dashboard that only my account can open. Auto-harden rewrites the bot's prompt and keeps a fix only if the re-measured score goes up. It can also test a live bot over HTTP, tracks score over time, and has a rate limiter that keeps it on Groq's free tier.",
+    built:"We built a Streamlit app that fires 40 attacks in 6 categories at a target bot, in parallel. A second, larger model judges each reply against a fixed security policy and returns a verdict validated with Pydantic, so there is no fragile string matching. An AI attack generator writes new attacks tailored to the target's own instructions. Reports show a score, a per-category breakdown and the exact quote behind every failure. It runs live on Streamlit Cloud with sign-up and login (passwords stored hashed), and an admin dashboard that only my account can open. Auto-harden rewrites the bot's prompt and keeps a fix only if the re-measured score goes up. It can also test a live bot over HTTP, tracks score over time, and has a rate limiter that keeps it on Groq's free tier.",
     result:"On the demo bot the security score went from 22 to 62 out of 100. Rule overrides dropped from 6/8 to 1/8 and off-limits actions from 8/8 to 0/8. Secret leakage did not improve (7/8 to 8/8), which showed that secrets should never sit in a system prompt.",
-    role:"Owner and main developer of the repo.",
-    learned:"How LLMs fail under adversarial input, why you need a fixed yardstick to compare before and after, and how to ship a full app in four days.",
+    role:"A team of three; we sat together and wrote the code as a group. The repo started on my GitHub on day one of the hackathon (24 Sep 2026) and is the original. I host and maintain the live app.",
+    learned:"How LLMs fail under adversarial input, why you need a fixed yardstick to compare before and after, and how to ship a full app as a team in four days.",
     links:[["Live app","https://caughtbot.streamlit.app"],["GitHub repo","https://github.com/itzmudit/CaughtBot"]] },
   { id:"minispice", tags:["circuits"], kind:"sdf lab-1 · c · team of 4", state:"live", stateText:"shipped",
     name:"MiniSPICE", sub:"A DC circuit solver in C. Enter resistors and a voltage source; it finds every node voltage, current and power.",
@@ -773,7 +773,7 @@ const SKILLS = [
 const LOG = [ // newest first
   { date:"Nov 2026", ref:"HEAD -> main", msg:"ship: MiniSPICE for SDF Lab-1", body:"A DC circuit solver in C with a team of four, under Dr. Taj Alam. Floating-node detection, power-balance check, strict input validation." },
   { date:"2026", msg:"learn: image processing workshop", body:"Thresholding, colour channels, histogram equalisation and gamma correction in OpenCV. The Image lab on this page rebuilds those ideas from scratch." },
-  { date:"Sep 24–27 2026", ref:"tag: hackin-summer", msg:"ship: CaughtBot at Hackin' Summer 2026", body:"First commit to a working red-teaming tool with accounts, PDF reports and auto-hardening in four days." },
+  { date:"Sep 24–27 2026", ref:"tag: hackin-summer", msg:"ship: CaughtBot at Hackin' Summer 2026", body:"With a team of three: first commit to a working red-teaming tool with accounts, PDF reports and auto-hardening in four days." },
   { date:"Aug 2026", ref:"tag: sih-2026", msg:"feat: RoadSentinel frontend at Smart India Hackathon", body:"Joined a 7-person team building a road-health prediction system. I built the frontend app." },
   { date:"Jul 2026", msg:"init: started engineering", body:"Electronics and communication: circuits, signals and the code that drives them." },
 ];
