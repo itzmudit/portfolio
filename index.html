@@ -216,6 +216,10 @@ section{padding:96px 0 0}
 .card .stack{margin-top:auto}
 .stack span{font:500 11.5px var(--mono);border:1px solid var(--line2);border-radius:5px;padding:3px 8px;color:#cfd2cc}
 .card .open{font:500 12.5px var(--mono);color:var(--muted)}
+.card .clinks{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.card .clinks a{font:600 12px var(--mono);color:var(--ink);text-decoration:none;padding:6px 10px;border:1px solid var(--line2);border-radius:6px;background:#080a0b}
+.card .clinks a:hover{border-color:var(--accent);color:var(--accent)}
+.card .clinks .nolink{font:500 12px var(--mono);color:var(--dim)}
 .card .open b{color:var(--ok);font-weight:500}
 .card:hover .open{color:var(--accent)}
 .card.empty{border-style:dashed;cursor:default;justify-content:center;min-height:200px}
@@ -719,7 +723,7 @@ const EMAIL = "muditjindal100@gmail.com";
 const LINKEDIN = "https://www.linkedin.com/in/itzmudit";
 
 const PROJECTS = [
-  { id:"caughtbot", tags:["ai","hack","python"], kind:"ai security · hackin' summer 2026 · team of 3", state:"live", stateText:"shipped",
+  { id:"caughtbot", tags:["ai","hack","python"], kind:"ai security · hackin' summer 2026 · team of 3", state:"live", stateText:"live",
     name:"CaughtBot", sub:"Automated prompt-injection and jailbreak testing for AI chatbots, with a judge, a report and auto-hardening.",
     stack:["Python","Streamlit","Groq","Pydantic","SQLite","reportlab"],
     problem:"Most chatbots ship without anyone trying to break them. Testing by hand means typing hundreds of tricky prompts and judging every answer yourself.",
@@ -1090,15 +1094,19 @@ showFile("c");
 const grid=$("projGrid");
 function renderProjects(f){
   grid.innerHTML = PROJECTS.filter(p=>f==="all"||p.tags.includes(f)).map(p=>`
-    <button class="card" type="button" data-open="${p.id}">
+    <div class="card" role="button" tabindex="0" aria-label="Open the ${p.name} case study" data-open="${p.id}">
       <div class="meta"><span>${p.kind}</span><span class="state ${p.state}"><i></i>${p.stateText}</span></div>
       <h3>${p.name}</h3><p class="sub">${p.sub}</p>
       <div class="stack">${p.stack.map(s=>`<span>${s}</span>`).join("")}</div>
-      <span class="open"><b>$</b> open ${p.id} →</span>
-    </button>`).join("");
+      <div class="clinks">${p.links.length?p.links.map(([t,u])=>`<a href="${u}" ${u.startsWith("#")?"":'target="_blank" rel="noopener"'}>${t}</a>`).join(""):`<span class="nolink">team build · no public repo</span>`}</div>
+      <span class="open"><b>$</b> open case study →</span>
+    </div>`).join("");
   bindOpen(grid); countFills();
 }
-function bindOpen(scope){ scope.querySelectorAll("[data-open]").forEach(c=>c.onclick=()=>openProject(c.dataset.open)); }
+function bindOpen(scope){ scope.querySelectorAll("[data-open]").forEach(c=>{
+  c.onclick=e=>{ if(e.target.closest("a")) return; openProject(c.dataset.open); };
+  if(c.tagName!=="BUTTON") c.onkeydown=e=>{ if((e.key==="Enter"||e.key===" ")&&e.target===c){ e.preventDefault(); openProject(c.dataset.open); } };
+}); }
 document.querySelectorAll("#projects .filters .chip").forEach(c=>c.onclick=()=>{
   document.querySelectorAll("#projects .filters .chip").forEach(x=>x.setAttribute("aria-pressed",x===c)); renderProjects(c.dataset.f);
 });
