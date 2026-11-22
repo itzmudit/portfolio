@@ -221,6 +221,16 @@ section{padding:96px 0 0}
 .card .clinks{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .card .clinks a{font:600 12px var(--mono);color:var(--ink);text-decoration:none;padding:6px 10px;border:1px solid var(--line2);border-radius:6px;background:#080a0b}
 .card .clinks a:hover{border-color:var(--accent);color:var(--accent)}
+.card .clinks a.pri{color:var(--accent);border-color:rgba(255,181,71,.45);background:rgba(255,181,71,.08)}
+.card .clinks a.pri:hover{background:rgba(255,181,71,.16)}
+.card .clinks a.sec{color:var(--muted)}
+.card .ttl{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;min-width:0}
+.card .ttl h3{min-width:0;overflow-wrap:anywhere}
+.cicon{width:46px;height:46px;flex:none;fill:none;stroke:var(--muted);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;opacity:.8;transition:stroke .25s,opacity .25s,transform .25s}
+.cicon .hot{stroke:var(--accent)}
+.cicon circle.hot{fill:var(--accent);stroke:none}
+.card:hover .cicon{stroke:var(--ink);opacity:1;transform:translateY(-2px)}
+@media (max-width:560px){.cicon{width:36px;height:36px}.card h3{font-size:clamp(22px,7vw,34px)}}
 .card .clinks .nolink{font:500 12px var(--mono);color:var(--dim)}
 .card .open b{color:var(--ok);font-weight:500}
 .card:hover .open{color:var(--accent)}
@@ -1097,13 +1107,18 @@ showFile("c");
    Projects + case studies
    ========================================================= */
 const grid=$("projGrid");
+const CARD_ICONS={
+  minispice:`<svg class="cicon" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 2v6l-5 2 10 4-10 4 5 2v4l-5 2 10 4-10 4 5 2v5"/><circle class="hot" cx="24" cy="24" r="2.2"/><path d="M24 24h13"/><circle cx="39" cy="24" r="1.8"/><path d="M16 41h16M19.5 44.5h9M22.5 48h3"/></svg>`,
+  caughtbot:`<svg class="cicon" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 9a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H15l-6 5v-5H9a4 4 0 0 1-4-4z"/><path d="M11 12h16M11 17h10"/><path d="M34 22l9 3.2v6.3c0 6.2-4 9.6-9 11.5-5-1.9-9-5.3-9-11.5v-6.3z"/><path class="hot" d="M30 32.5l3 3 5.5-6"/></svg>`,
+  roadsentinel:`<svg class="cicon" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 46L19 4M32 46L23 4"/><path d="M20.5 42v-5M20.5 31v-4M21 22v-3.5M21.3 14v-2.5"/><path class="hot" d="M38 18c0 5-5 10-5 10s-5-5-5-10a5 5 0 0 1 10 0z"/><circle cx="33" cy="18" r="1.6"/></svg>`
+};
 function renderProjects(f){
   grid.innerHTML = PROJECTS.filter(p=>f==="all"||p.tags.includes(f)).map(p=>`
     <div class="card" role="button" tabindex="0" aria-label="Open the ${p.name} case study" data-open="${p.id}">
       <div class="meta"><span>${p.kind}</span><span class="state ${p.state}"><i></i>${p.stateText}</span></div>
-      <h3>${p.name}</h3><p class="sub">${p.sub}</p>
+      <div class="ttl"><h3>${p.name}</h3>${CARD_ICONS[p.id]||""}</div><p class="sub">${p.sub}</p>
       <div class="stack">${p.stack.map(s=>`<span>${s}</span>`).join("")}</div>
-      <div class="clinks">${p.links.length?p.links.map(([t,u])=>`<a href="${u}" ${u.startsWith("#")?"":'target="_blank" rel="noopener"'}>${t}</a>`).join(""):`<span class="nolink">team build · no public repo</span>`}</div>
+      <div class="clinks">${p.links.length?[...p.links].sort((a,b)=>/github/i.test(a[0])-/github/i.test(b[0])).map(([t,u])=>`<a class="${/github/i.test(t)?"sec":"pri"}" href="${u}" ${u.startsWith("#")?"":'target="_blank" rel="noopener"'}>${t}</a>`).join(""):`<span class="nolink">team build · no public repo</span>`}</div>
       <span class="open"><b>$</b> open case study →</span>
     </div>`).join("");
   bindOpen(grid); countFills();
