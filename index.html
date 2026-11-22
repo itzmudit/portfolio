@@ -322,6 +322,1581 @@ textarea{font-family:var(--body);min-height:110px;resize:vertical}
 .contact{display:grid;grid-template-columns:1fr 1.1fr;gap:24px}
 @media (max-width:900px){.contact{grid-template-columns:1fr}}
 .contact .pane{padding:22px}
+.contact .pane:first-child{container-type:inline-size}
+.big-mail{font:900 22px var(--display);font-size:min(40px,7.3cqi);white-space:nowrap;margin-top:4px}
+.helper[hidden]{display:none}
+.socials{display:grid;gap:10px;margin-top:20px}
+.social{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 16px;border:1px solid var(--line2);background:#080a0b;border-radius:8px;text-decoration:none;transition:border-color .2s, box-shadow .2s}
+.social:hover{border-color:var(--accent);box-shadow:0 0 22px -10px var(--accent)}
+.social .l{font:700 13px var(--mono);white-space:nowrap}
+.social .l::before{content:"→ ";color:var(--accent)}
+.social .v{font:500 13px var(--mono);color:var(--muted);text-align:right}
+form{display:grid;gap:12px;padding:22px}
+.form-out{font-size:14px;color:var(--muted)}
+.form-out pre{white-space:pre-wrap;font:13px var(--mono);background:#050708;border:1px solid var(--line);border-radius:7px;padding:12px;color:var(--ink);margin:8px 0 0}
+
+footer{margin-top:110px;border-top:1px solid var(--line);padding:26px 0 100px;font:500 12px var(--mono);color:var(--dim);background:rgba(7,9,10,.8)}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer .g{color:var(--ok)}
+
+.helper{position:fixed;right:16px;bottom:16px;z-index:30;display:flex;gap:6px;background:#0d1113;border:1.5px dashed var(--accent);border-radius:12px;padding:6px;box-shadow:0 10px 30px -10px #000}
+.helper button{font:700 12px var(--mono);border:0;background:var(--accent-soft);color:var(--ink);padding:8px 10px;border-radius:8px;cursor:pointer}
+.helper button.x{background:transparent;color:var(--muted)}
+.flash{animation:flash 1.4s ease}
+@keyframes flash{0%,100%{box-shadow:none}30%{box-shadow:0 0 0 6px var(--accent)}}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}.boot .line{opacity:1}html{scroll-behavior:auto}}
+
+main,header,footer,.helper,#hud{transition:opacity .35s ease}
+html.dream main,html.dream header,html.dream footer,html.dream .helper{opacity:.06;transition:opacity 1.6s ease}
+/* ---------- field extras: progress, cursor, toast, hud, CRT ---------- */
+#progress{position:fixed;top:0;left:0;right:0;height:2px;background:var(--accent);transform-origin:0 50%;transform:scaleX(0);z-index:40;box-shadow:0 0 10px var(--accent)}
+#cur{position:fixed;left:0;top:0;width:0;height:0;z-index:60;pointer-events:none;opacity:0;transition:opacity .15s;--g:6px;--c:var(--cyan)}
+#cur.on{opacity:1}
+#cur i{position:absolute;background:var(--c);box-shadow:0 0 6px var(--c);transition:left .18s ease,top .18s ease,background .18s}
+#cur i:nth-child(1),#cur i:nth-child(2){width:8px;height:1.5px;top:-.75px}
+#cur i:nth-child(3),#cur i:nth-child(4){width:1.5px;height:8px;left:-.75px}
+#cur i:nth-child(1){left:calc(-8px - var(--g))} #cur i:nth-child(2){left:var(--g)}
+#cur i:nth-child(3){top:calc(-8px - var(--g))} #cur i:nth-child(4){top:var(--g)}
+#cur s{position:absolute;left:-1.5px;top:-1.5px;width:3px;height:3px;background:var(--accent);transition:transform .18s}
+#cur b{position:absolute;left:14px;top:12px;font:500 10px var(--mono);letter-spacing:.06em;color:var(--dim);white-space:nowrap;background:rgba(7,9,10,.7);padding:1px 4px;border-radius:3px}
+#cur.hot{--g:11px;--c:var(--accent)} #cur.hot s{transform:rotate(45deg) scale(1.6)} #cur.hot b{color:var(--accent)}
+#cur.press{--g:2px}
+#cur.txt i{opacity:.35}
+html.probe,html.probe *{cursor:none!important}
+html.probe input,html.probe textarea{cursor:text!important}
+#toast{position:fixed;left:50%;top:74px;transform:translate(-50%,-12px);opacity:0;z-index:70;background:#0d1113;border:1px solid var(--accent);color:var(--ink);font:500 13px var(--mono);padding:8px 14px;border-radius:8px;pointer-events:none;transition:opacity .25s,transform .25s;box-shadow:0 0 24px -8px var(--accent);white-space:nowrap}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+#hud{position:fixed;left:16px;bottom:18px;z-index:5;font:500 11px var(--mono);color:var(--dim);pointer-events:none}
+@media (max-width:760px){#hud{display:none}}
+#egg{position:fixed;z-index:75;background:#0d1113;border:1px solid var(--accent);border-radius:10px;padding:11px 14px 13px;font:13px/1.55 var(--mono);color:var(--ink);box-shadow:0 0 34px -10px var(--accent),0 14px 40px -12px #000;opacity:0;transform:translateY(6px) scale(.96);transition:opacity .2s,transform .2s;pointer-events:none;cursor:pointer}
+#egg.on{opacity:1;transform:none;pointer-events:auto}
+#egg .eh{display:flex;justify-content:space-between;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+#egg h4{margin:5px 0 3px;font:900 21px/1.1 var(--display);letter-spacing:.02em;text-transform:uppercase}
+#egg p{margin:0;color:#b8c0c5}
+#egg b{color:var(--accent)}
+.egg-ring{position:fixed;z-index:74;width:10px;height:10px;margin:-5px 0 0 -5px;border:1.5px solid var(--accent);border-radius:50%;pointer-events:none;animation:eggring .65s ease-out forwards}
+@keyframes eggring{to{transform:scale(9);opacity:0}}
+.logo b.spin{animation:lspin .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes lspin{to{transform:rotate(720deg)}}
+.surname{transition:color .5s,-webkit-text-stroke-color .5s}
+.surname.lit{color:var(--accent);-webkit-text-stroke-color:var(--accent);text-shadow:0 0 24px rgba(255,181,71,.35)}
+footer .led{display:inline-block;width:7px;height:7px;border-radius:50%;background:#3a2a10;margin-right:8px;vertical-align:1px;transition:background .05s,box-shadow .05s}
+footer .led.on{background:var(--accent);box-shadow:0 0 10px var(--accent)}
+html:not(.probe) #hud{cursor:default}
+#hud{pointer-events:auto}
+html.gold{--accent:#ffd34d}
+.crtfx{display:none;position:fixed;inset:0;z-index:55;pointer-events:none;background:#39ff14;mix-blend-mode:color}
+html.crt .crtfx{display:block}
+html.crt .scan{z-index:56;opacity:1;background:repeating-linear-gradient(to bottom,rgba(0,0,0,.28) 0 1px,transparent 1px 3px)}
+html.crt body{text-shadow:0 0 6px rgba(57,255,20,.45)}
+html.crt main{animation:flicker 4s infinite}
+@keyframes flicker{0%,100%{opacity:1}50%{opacity:.97}52%{opacity:.9}54%{opacity:.98}}
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="glow" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+<div class="crtfx" aria-hidden="true"></div>
+<div id="progress" aria-hidden="true"></div>
+<div id="cur" aria-hidden="true"><i></i><i></i><i></i><i></i><s></s><b></b></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="hud" aria-hidden="true"></div>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top" aria-label="Back to top"><b>MJ</b><span><em>mudit</em>@lab:~$</span></a>
+    <nav class="links" id="links" aria-label="Sections">
+      <a href="#shell">shell</a>
+      <a href="#about">about</a>
+      <a href="#projects">projects</a>
+      <a href="#lab">lab</a>
+      <a href="#journey">log</a>
+      <a href="#skills">skills</a>
+      <a href="#contact">contact</a>
+    </nav>
+    <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="links">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <button class="icon-btn" id="termBtn" aria-label="Open the shell">&gt;_ <kbd>/</kbd></button>
+  </div>
+</header>
+
+<main id="top" class="wrap">
+
+  <div class="hero">
+    <div>
+      <div class="boot" id="boot" aria-hidden="true"></div>
+      <h1 class="name" id="heroName" aria-label="Mudit">Mu<span class="a">dit</span></h1>
+      <div class="surname">Jindal</div>
+      <p class="role"><span class="g">&gt;</span> <span id="roleText">red-teaming AI chatbots</span><span class="caret"></span></p>
+      <p class="lede">I build tools where electronics meets software. I made <em>CaughtBot</em>, which attacks AI chatbots to find their weak spots, and <em>MiniSPICE</em>, a circuit solver in C you can run on this page.</p>
+      <div class="ctas">
+        <a class="btn primary" href="#projects"><span class="p">$</span> ls projects</a>
+        <a class="btn" href="#shell"><span class="p">$</span> open shell</a>
+      </div>
+    </div>
+
+    <div class="scope" aria-label="Interactive oscilloscope">
+      <div class="scope-top"><span><b>MJ-SCOPE</b> · 2CH · 100 MHz</span><span class="trig">● TRIG'D</span></div>
+      <div class="screen">
+        <canvas id="scope" width="800" height="560" aria-hidden="true"></canvas>
+        <div class="hud"><span id="hud1">CH1 1.00 kHz · 2.0 Vpp</span><span class="c2">CH2 sine ref</span></div>
+      </div>
+      <div class="scope-ctl">
+        <div class="wave-btns" role="group" aria-label="CH1 waveform">
+          <button type="button" data-w="sine" aria-pressed="true">SINE</button>
+          <button type="button" data-w="square" aria-pressed="false">SQR</button>
+          <button type="button" data-w="tri" aria-pressed="false">TRI</button>
+          <button type="button" data-w="ecg" aria-pressed="false">ECG</button>
+        </div>
+        <label class="knob" for="freq">FREQ <input id="freq" type="range" min="0.5" max="4" step="0.05" value="1"></label>
+      </div>
+    </div>
+  </div>
+
+  <dl class="statusbar">
+    <div><dt>focus</dt><dd>circuits · code · AI security</dd></div>
+    <div><dt>hackathons</dt><dd>SIH 2026 · Hackin' Summer 2026</dd></div>
+    <div><dt>git remote</dt><dd>github.com/itzmudit</dd></div>
+    <div><dt>building</dt><dd>MiniSPICE v2 · modified nodal analysis</dd></div>
+  </dl>
+
+  <!-- SHELL -->
+  <section id="shell">
+    <div class="sec-head">
+      <div><span class="path"><b>mudit@lab</b>:<i>~/shell</i>$ ./mudit-sh</span><h2>The shell<span class="cur"></span></h2></div>
+      <p>A working terminal. Type <b class="mono">help</b>, press Tab to autocomplete, ↑ ↓ for history. Press <b class="mono">/</b> anywhere on the page to jump here.</p>
+    </div>
+    <div class="win" id="shellWin">
+      <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="title">mudit-sh — 100×30</span><span class="right">zsh-ish</span></div>
+      <div class="term-body" id="termBody">
+        <div id="termOut"></div>
+        <div class="prompt-line"><label class="ps" for="shellIn"><span>mudit@lab</span>:<b>~</b>$</label><input id="shellIn" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Shell command"></div>
+      </div>
+      <div class="shell-hints" id="hints"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="sec-head"><div><span class="path"><b>mudit@lab</b>:<i>~/about</i>$ cat README.md</span><h2>About<span class="cur"></span></h2></div><span class="tag">0x01</span></div>
+    <div class="about">
+      <div class="bio">
+        <p class="big">I'm Mudit. I work where electronics meets software, and I like taking an idea from a textbook, or a problem I run into, and turning it into a tool that actually runs.</p>
+        <p>With my SDF Lab team I turned nodal analysis into MiniSPICE, a DC circuit solver written in C. At Hackin' Summer 2026 I built CaughtBot, which fires 40 prompt-injection and jailbreak attacks at an AI chatbot, scores how many get through, and then hardens it. I also built the frontend for RoadSentinel, a road-health prediction system, at Smart India Hackathon 2026. Next up is MiniSPICE v2, which moves from plain nodal analysis to modified nodal analysis so it can handle voltage sources properly.</p>
+        <p>Outside of building things, I spend about three hours a day commuting to college, so a lot of my project ideas start as notes on my phone during the ride.</p>
+        <div class="win ide">
+          <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="title">~/mudit — editor</span><span class="right">UTF-8</span></div>
+          <div class="tabs" role="tablist" aria-label="Files">
+            <button type="button" role="tab" data-file="c" aria-selected="true">mudit.c</button>
+            <button type="button" role="tab" data-file="py" aria-selected="false">mudit.py</button>
+            <button type="button" role="tab" data-file="json" aria-selected="false">mudit.json</button>
+          </div>
+          <div class="code-view"><div class="gut" id="gut"></div><pre id="codeView"></pre></div>
+          <div class="ide-foot"><span><b>●</b> main</span><span id="ideLang">C · 0 errors · 0 warnings</span></div>
+        </div>
+        <div class="pillars">
+          <div class="pillar"><span class="k">01</span><h3>Theory to tool</h3><p>MiniSPICE is KCL and Gaussian elimination turned into about 440 lines of C that solve real circuits.</p></div>
+          <div class="pillar"><span class="k">02</span><h3>Break it first</h3><p>CaughtBot attacks a chatbot before anyone else does, then shows exactly which defences failed.</p></div>
+          <div class="pillar"><span class="k">03</span><h3>Measure, then trust</h3><p>CaughtBot keeps a fix only if the score goes up. MiniSPICE checks that power supplied equals power used.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="sec-head">
+      <div><span class="path"><b>mudit@lab</b>:<i>~/projects</i>$ ls -la</span><h2>Projects<span class="cur"></span></h2></div>
+      <div class="filters" role="group" aria-label="Filter projects">
+        <button class="chip" type="button" data-f="all" aria-pressed="true">all</button>
+        <button class="chip" type="button" data-f="ai" aria-pressed="false">ai</button>
+        <button class="chip" type="button" data-f="circuits" aria-pressed="false">c-circuits</button>
+        <button class="chip" type="button" data-f="hack" aria-pressed="false">hackathon</button>
+        <button class="chip" type="button" data-f="python" aria-pressed="false">python</button>
+      </div>
+    </div>
+
+    <article class="win feature" id="featureCB">
+      <div class="copy">
+        <div class="meta"><span>featured · ai security · hackin' summer 2026</span><span class="state live"><i></i>live</span></div>
+        <h3>CaughtBot</h3>
+        <p style="font-size:18px">Catches a chatbot's weaknesses before attackers do. It attacks the bot, has a second AI judge every reply, writes a report, then rewrites the bot's instructions until its security score goes up.</p>
+        <ul class="bullets">
+          <li>40 attacks in 6 categories: prompt leakage, instruction override, role-play jailbreaks, off-limits actions, encoding tricks (Base64, leetspeak) and persona unmasking</li>
+          <li>An AI attack generator writes new attacks tailored to each bot's own instructions</li>
+          <li>An LLM judge returns a checked verdict for every reply: whether it worked, the quote that proves it, and how severe it was</li>
+          <li>Auto-harden keeps a fix only if the measured score improves. Accounts, admin dashboard and PDF reports included</li>
+        </ul>
+        <div class="stack"><span>Python</span><span>Streamlit</span><span>Groq</span><span>Pydantic</span><span>SQLite</span><span>reportlab</span></div>
+        <div class="ctas" style="margin-top:2px">
+          <a class="btn sm primary" href="https://github.com/itzmudit/CaughtBot" target="_blank" rel="noopener"><span class="p">$</span> git clone</a>
+          <button class="btn sm" type="button" data-open="caughtbot"><span class="p">$</span> open case-study</button>
+        </div>
+      </div>
+      <div class="chartbox">
+        <div class="score"><b class="from">22</b><span>→</span><b class="to">62</b><span>security score / 100<br>before → after auto-harden</span></div>
+        <div class="chart-legend"><span><i style="background:#ef7a64"></i>got through, before</span><span><i style="background:#62c784"></i>got through, after</span><span>sample run · 4 of the 6 categories, 8 attacks each · lower is better</span></div>
+        <svg id="cbChart" viewBox="0 0 460 250" role="img" aria-label="Attacks that got through per category, before and after auto-harden"></svg>
+        <p class="finding">Finding: hardening stopped nearly every rule override and unauthorised action, but not secret leakage, because the secret still lived inside the prompt. Never put secrets in a system prompt.</p>
+      </div>
+    </article>
+
+    <div class="grid" id="projGrid"></div>
+  </section>
+
+  <!-- LAB -->
+  <section id="lab">
+    <div class="sec-head">
+      <div><span class="path"><b>mudit@lab</b>:<i>~/lab</i>$ make run</span><h2>The Lab<span class="cur"></span></h2></div>
+      <div class="filters" role="tablist" aria-label="Lab tools" id="labTabs">
+        <button class="chip" type="button" role="tab" data-tab="spice" aria-pressed="true" aria-selected="true">minispice</button>
+        <button class="chip" type="button" role="tab" data-tab="image" aria-pressed="false" aria-selected="false">image-lab</button>
+        <button class="chip" type="button" role="tab" data-tab="res" aria-pressed="false" aria-selected="false">resistor</button>
+      </div>
+    </div>
+
+    <div class="win tool-wrap" id="tab-spice" role="tabpanel">
+      <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="title">./minispice — ported from MiniSPICE.c</span><span class="right">gcc -lm</span></div>
+      <div class="tool">
+        <div class="tool-head">
+          <div><span class="k">tool 01 · my C project, in your browser</span><h3>MiniSPICE, live</h3>
+          <p>The same algorithm as my C program: nodal analysis builds the conductance matrix, then Gaussian elimination with partial pivoting finds every node voltage. Change any resistor and it re-solves instantly. Node 0 is ground.</p></div>
+          <label class="f" for="preset" style="min-width:220px">load circuit<select id="preset"></select></label>
+        </div>
+        <div class="split">
+          <div style="display:grid;gap:14px;align-content:start">
+            <div style="overflow-x:auto">
+              <table class="rtable">
+                <thead><tr><th>id</th><th>from</th><th>to</th><th>resistance (Ω)</th><th><span style="position:absolute;left:-9999px">remove</span></th></tr></thead>
+                <tbody id="rRows"></tbody>
+              </table>
+            </div>
+            <div class="ctl-row">
+              <button class="btn sm" type="button" id="addR">+ add resistor</button>
+              <label class="f" for="srcNode">source + on node<select id="srcNode"></select></label>
+              <label class="f" for="srcV">voltage (V)<input id="srcV" type="text" inputmode="decimal" value="10"></label>
+            </div>
+            <p class="lab-note">Type values like <b>100</b>, <b>4.7k</b> or <b>1M</b>. Two resistors on the same pair of nodes are treated as parallel. Up to 10 nodes and 20 resistors, the same limits as the C version.</p>
+            <svg id="graph" viewBox="0 0 520 330" role="img" aria-label="Circuit graph with node voltages and current directions"></svg>
+          </div>
+          <div class="term" id="spiceOut" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="win tool-wrap" id="tab-image" role="tabpanel" hidden>
+      <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="title">image_lab.ipynb — ported to JS</span><span class="right">opencv-ish</span></div>
+      <div class="tool">
+        <div class="tool-head">
+          <div><span class="k">tool 02 · image processing, from scratch</span><h3>Image lab</h3>
+          <p>Classic image-processing steps written from scratch in JavaScript: threshold at the mean, invert, histogram equalisation and gamma correction. The sample is a foggy, low-contrast scene, so each step is easy to see. Upload your own photo to try it. It never leaves your browser.</p></div>
+          <label class="btn sm" for="imgFile" style="cursor:pointer"><span class="p">$</span> upload photo<input id="imgFile" type="file" accept="image/*" style="position:absolute;left:-9999px"></label>
+        </div>
+        <div class="seg" role="group" aria-label="Operation" id="ops">
+          <button type="button" data-op="gray" aria-pressed="false">grayscale</button>
+          <button type="button" data-op="thresh" aria-pressed="false">threshold(mean)</button>
+          <button type="button" data-op="invert" aria-pressed="false">invert</button>
+          <button type="button" data-op="equal" aria-pressed="true">equalizeHist</button>
+          <button type="button" data-op="gamma" aria-pressed="false">gamma</button>
+        </div>
+        <label class="knob f" for="gamma" id="gammaWrap" style="display:none">gamma α = <span id="gVal">1.90</span><input id="gamma" type="range" min="0.3" max="3" step="0.05" value="1.9"></label>
+        <div class="imgs">
+          <figure><canvas id="imgIn" width="480" height="300"></canvas><figcaption><span>input</span><span id="statIn"></span></figcaption></figure>
+          <figure><canvas id="imgOut" width="480" height="300"></canvas><figcaption><span id="opName">output</span><span id="statOut"></span></figcaption></figure>
+        </div>
+        <div><canvas id="hist" width="960" height="220" aria-label="Brightness histogram, input in grey and output in amber"></canvas>
+        <p class="lab-note" style="margin-top:6px">Brightness histogram from 0 (black) to 255 (white). Grey is the input, amber is the output. Equalisation spreads a squashed histogram across the whole range.</p></div>
+        <pre class="code" id="pyCode"></pre>
+      </div>
+    </div>
+
+    <div class="win tool-wrap" id="tab-res" role="tabpanel" hidden>
+      <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="title">resistor.decode()</span><span class="right">4-band</span></div>
+      <div class="tool">
+        <div class="tool-head">
+          <div><span class="k">tool 03 · bench helper</span><h3>Resistor colour code</h3>
+          <p>Pick the four bands and get the value and tolerance range: two digits, a power of ten, then tolerance. Gold and silver as multipliers mean ×0.1 and ×0.01.</p></div>
+        </div>
+        <svg class="res-svg" viewBox="0 0 420 110" aria-hidden="true">
+          <line x1="0" y1="55" x2="420" y2="55" stroke="#9aa1a6" stroke-width="5"/>
+          <rect x="95" y="22" width="230" height="66" rx="30" fill="#d9c49a" stroke="#a88f60" stroke-width="2"/>
+          <rect id="b1" x="135" y="22" width="18" height="66"/><rect id="b2" x="170" y="22" width="18" height="66"/>
+          <rect id="b3" x="205" y="22" width="18" height="66"/><rect id="b4" x="275" y="22" width="18" height="66"/>
+        </svg>
+        <div class="row4">
+          <label class="f" for="s1">band 1<select id="s1"></select></label>
+          <label class="f" for="s2">band 2<select id="s2"></select></label>
+          <label class="f" for="s3">multiplier<select id="s3"></select></label>
+          <label class="f" for="s4">tolerance<select id="s4"></select></label>
+        </div>
+        <div class="readout" aria-live="polite"><b id="resOut"></b><span id="resTol"></span></div>
+        <button class="btn sm" type="button" id="sendToSpice" style="justify-self:start"><span class="p">$</span> pipe into minispice</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOURNEY -->
+  <section id="journey">
+    <div class="sec-head"><div><span class="path"><b>mudit@lab</b>:<i>~</i>$ git log --graph --oneline</span><h2>Journey<span class="cur"></span></h2></div><span class="tag">0x04 · so far</span></div>
+    <div class="win">
+      <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="title">git log — mudit/life</span><span class="right">branch: main</span></div>
+      <div class="gitlog" id="gitlog"></div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="sec-head">
+      <div><span class="path"><b>mudit@lab</b>:<i>~</i>$ cat skills.json | jq</span><h2>Skills<span class="cur"></span></h2></div>
+      <div class="legend"><span><b class="c-a">■</b>□□ learning</span><span><b class="c-a">■■</b>□ comfortable</span><span><b class="c-a">■■■</b> confident</span></div>
+    </div>
+    <div class="skills" id="skillsBox"></div>
+    <p style="margin-top:14px;font-size:14px" class="muted">Every skill is tied to something I built. Ratings are honest self-assessment.</p>
+  </section>
+
+  <!-- NOW -->
+  <section id="now">
+    <div class="sec-head"><div><span class="path"><b>mudit@lab</b>:<i>~</i>$ cat now.md</span><h2>Right now<span class="cur"></span></h2></div><span class="tag">updated nov 2026</span></div>
+    <div class="win">
+      <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="title">now.yml</span><span class="right">the current chapter</span></div>
+      <div class="yaml">
+        <div><span class="cm"># the part of this page that changes</span></div>
+        <div><span class="ky">studying</span>: <span class="vl">B.Tech, Electronics &amp; Communication Engineering · JIIT Noida (2026–2030)</span></div>
+        <div><span class="ky">building</span>: <span class="vl">MiniSPICE v2: current sources + multiple voltage sources (modified nodal analysis)</span></div>
+        <div><span class="ky">open_to</span>: <span class="vl">new ideas, collaborations, interesting problems</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="sec-head"><div><span class="path"><b>mudit@lab</b>:<i>~/contact</i>$ ./compose.sh</span><h2>Contact<span class="cur"></span></h2></div><p>Have an idea, a project, or a question about anything here? Say hello.</p></div>
+    <div class="contact">
+      <div class="win pane">
+        <p class="mono muted" style="font-size:12px">$ echo $EMAIL</p>
+        <p class="big-mail" id="mailText">muditjindal100@gmail.com</p>
+        <button class="btn sm" type="button" id="copyMail" style="margin-top:14px"><span class="p">$</span> copy email</button>
+        <div class="socials">
+          <a class="social" href="https://github.com/itzmudit" target="_blank" rel="noopener"><span class="l">github</span><span class="v">github.com/itzmudit</span></a>
+          <a class="social" href="https://www.linkedin.com/in/itzmudit" target="_blank" rel="noopener"><span class="l">linkedin</span><span class="v">linkedin.com/in/itzmudit</span></a>
+          <a class="social" href="https://x.com/mudit1419j" target="_blank" rel="noopener"><span class="l">x</span><span class="v">@mudit1419j</span></a>
+        </div>
+      </div>
+      <form class="win" id="msgForm" novalidate>
+        <label class="f" for="fn">Your name<input id="fn" type="text" autocomplete="name"></label>
+        <label class="f" for="fe">Your email<input id="fe" type="email" autocomplete="email"></label>
+        <label class="f" for="fs">Topic<select id="fs"><option>Project or collaboration</option><option>An idea</option><option>A question about my work</option><option>Just saying hello</option></select></label>
+        <label class="f" for="fm">Message<textarea id="fm"></textarea></label>
+        <button class="btn primary" type="submit"><span class="p">$</span> send via email</button>
+        <div class="form-out" id="formOut" aria-live="polite">Opens your email app with the message ready to send. Nothing is stored on this site.</div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Mudit Jindal</span>
+    <span>vanilla HTML · CSS · JS — 0 frameworks, 0 templates</span>
+    <span><span class="g">[process exited with code 0]</span> · <a href="#top">cd ~ ↑</a></span>
+  </div>
+</footer>
+
+<div class="helper" id="helper">
+  <button type="button" id="nextFill">next blank (<span id="fillCount">0</span>)</button>
+  <button type="button" class="x" id="toggleFills" aria-pressed="false">hide highlights</button>
+</div>
+
+<dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
+
+<script>
+/* =========================================================
+   EDIT YOUR CONTENT HERE
+   ========================================================= */
+const EMAIL = "muditjindal100@gmail.com";
+const LINKEDIN = "https://www.linkedin.com/in/itzmudit";
+
+const PROJECTS = [
+  { id:"caughtbot", tags:["ai","hack","python"], kind:"ai security · hackin' summer 2026", state:"live", stateText:"shipped",
+    name:"CaughtBot", sub:"Automated prompt-injection and jailbreak testing for AI chatbots, with a judge, a report and auto-hardening.",
+    stack:["Python","Streamlit","Groq","Pydantic","SQLite","reportlab"],
+    problem:"Most chatbots ship without anyone trying to break them. Testing by hand means typing hundreds of tricky prompts and judging every answer yourself.",
+    built:"A Streamlit app that fires 40 attacks in 6 categories at a target bot, in parallel. A second, larger model judges each reply against a fixed security policy and returns a verdict validated with Pydantic, so there is no fragile string matching. An AI attack generator writes new attacks tailored to the target's own instructions. Reports show a score, a per-category breakdown and the exact quote behind every failure. It runs live on Streamlit Cloud with sign-up and login (passwords stored hashed), and an admin dashboard that only my account can open. Auto-harden rewrites the bot's prompt and keeps a fix only if the re-measured score goes up. It can also test a live bot over HTTP, tracks score over time, and has a rate limiter that keeps it on Groq's free tier.",
+    result:"On the demo bot the security score went from 22 to 62 out of 100. Rule overrides dropped from 6/8 to 1/8 and off-limits actions from 8/8 to 0/8. Secret leakage did not improve (7/8 to 8/8), which showed that secrets should never sit in a system prompt.",
+    role:"Owner and main developer of the repo.",
+    learned:"How LLMs fail under adversarial input, why you need a fixed yardstick to compare before and after, and how to ship a full app in four days.",
+    links:[["Live app","https://caughtbot.streamlit.app"],["GitHub repo","https://github.com/itzmudit/CaughtBot"]] },
+  { id:"minispice", tags:["circuits"], kind:"sdf lab-1 · c · team of 4", state:"live", stateText:"shipped",
+    name:"MiniSPICE", sub:"A DC circuit solver in C. Enter resistors and a voltage source; it finds every node voltage, current and power.",
+    stack:["C","Nodal analysis","Gaussian elimination","GCC"],
+    problem:"Solving resistor networks by hand gets slow and error-prone past a few nodes. We wanted a program that applies the same KCL method we learn in class, correctly, every time.",
+    built:"A single-file terminal program with no dependencies. It builds the conductance matrix [G | I] from KCL, solves it with Gaussian elimination and partial pivoting, then reports node voltages and each resistor's current, direction and power. It handles parallel resistors, detects floating nodes instead of printing wrong answers, checks that power supplied equals power used, rejects bad input like 'abc' or negative values, and saves a report to results.txt.",
+    result:"Supports up to 10 nodes and 20 resistors. The same algorithm runs live in the Lab section on this page.",
+    role:"Repo owner. Riyansh Pandey, Aniket Rastogi, Prakhar Mishra and I sat down together and wrote the code side by side, under Dr. Taj Alam.",
+    learned:"Turning a circuit into a matrix, why partial pivoting matters, and how much of a real program is input checking.",
+    links:[["GitHub repo","https://github.com/itzmudit/MiniSPICE"],["Run it live ↓","#lab"]] },
+  { id:"roadsentinel", tags:["hack"], kind:"smart india hackathon 2026 · team of 7", state:"wip", stateText:"team build",
+    name:"RoadSentinel", sub:"A road-health prediction system (also called StructMirai) that flags roads likely to fail before they become hazards.",
+    stack:["HTML / CSS / JS","Leaflet maps","Flask API","SQLite","ESP32 + MPU6050"],
+    problem:"Road damage is usually found after it turns into a pothole or an accident. Predicting it earlier means cheaper, faster repairs.",
+    built:"The team built a citizen web app where anyone can upload a photo of a road and get a Road Health Score, see a public pothole severity map, and plan a route that avoids bad roads. A Flask backend scores each report from road age, material, traffic, climate and an image-roughness check, then blends it with vibration data from car-mounted ESP32 + MPU6050 sensor units, grid cell by grid cell. An admin console shows every report and sensor on a live map.",
+    result:"Built and presented as a team at Smart India Hackathon 2026.",
+    role:"My part was the frontend only: the citizen app (report upload, pothole map, route planner, my-car-sensor tab) that talks to the team's Flask API.",
+    learned:"How a frontend talks to a real API, how to draw live data on a map with Leaflet, and that a demo should say plainly which numbers are placeholders.",
+    links:[] },
+];
+
+const SKILLS = [
+  { group:"languages", items:[
+    ["C","structs, dynamic memory, numerical methods · MiniSPICE",2],
+    ["Python","13-module Streamlit app · CaughtBot",2],
+    ["HTML / CSS / JS","RoadSentinel frontend, this website",1],
+    ["SQL (SQLite)","accounts and scan history · CaughtBot",1] ]},
+  { group:"ai_and_data", items:[
+    ["LLM APIs (Groq)","attacker, judge and fixer models",2],
+    ["LLM security","prompt injection, jailbreaks, hardening",2],
+    ["Pydantic schemas","validated JSON verdicts",1],
+    ["OpenCV","image processing basics",1] ]},
+  { group:"electronics_and_maths", items:[
+    ["DC circuit analysis","KCL, nodal analysis · MiniSPICE",3],
+    ["Linear systems","Gaussian elimination, partial pivoting",3],
+    ["Arduino","microcontroller basics",1] ]},
+  { group:"tools", items:[
+    ["git + GitHub","team repos, history",2],
+    ["Streamlit","full app with login and dashboards",2],
+    ["AI coding tools","Claude Code for fast builds",3],
+    ["Jupyter","notebooks and experiments",1] ]},
+];
+
+const LOG = [ // newest first
+  { date:"Nov 2026", ref:"HEAD -> main", msg:"ship: MiniSPICE for SDF Lab-1", body:"A DC circuit solver in C with a team of four, under Dr. Taj Alam. Floating-node detection, power-balance check, strict input validation." },
+  { date:"2026", msg:"learn: image processing workshop", body:"Thresholding, colour channels, histogram equalisation and gamma correction in OpenCV. The Image lab on this page rebuilds those ideas from scratch." },
+  { date:"Sep 24–27 2026", ref:"tag: hackin-summer", msg:"ship: CaughtBot at Hackin' Summer 2026", body:"First commit to a working red-teaming tool with accounts, PDF reports and auto-hardening in four days." },
+  { date:"Aug 2026", ref:"tag: sih-2026", msg:"feat: RoadSentinel frontend at Smart India Hackathon", body:"Joined a 7-person team building a road-health prediction system. I built the frontend app." },
+  { date:"Jul 2026", msg:"init: started engineering", body:"Electronics and communication: circuits, signals and the code that drives them." },
+];
+
+const CB_RESULTS = [ // CaughtBot README example run, out of 8 attacks per category
+  ["Instruction override",6,1], ["Off-limits action",8,0], ["Prompt leakage",7,8], ["Role-play jailbreak",4,3] ];
+
+/* =========================================================
+   Basics
+   ========================================================= */
+const $=id=>document.getElementById(id);
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const links=$("links"), menuBtn=$("menuBtn");
+menuBtn.onclick=()=>{const o=links.classList.toggle("open"); menuBtn.setAttribute("aria-expanded",o)};
+links.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{links.classList.remove("open");menuBtn.setAttribute("aria-expanded","false")}));
+const navObs=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) links.querySelectorAll("a").forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+e.target.id)); }),{rootMargin:"-40% 0px -55% 0px"});
+document.querySelectorAll("main section[id]").forEach(s=>navObs.observe(s));
+
+
+/* =========================================================
+   Background: code rain behind a circuit board
+   Layer 1 (#bg): slow falling code, drawn one character per column per step.
+   Layer 2 (#pcb): faint circuit traces, pre-rendered once; only the lit trace
+   and its sparks are drawn live. The cursor lights the nearest trace and
+   speeds up the code under it. A click sends sparks and scrambles nearby code.
+   Hold still and the code spells something.
+   ========================================================= */
+const FIELD=(function(){
+  const c=$("bg"), x=c.getContext("2d");
+  const p=document.createElement("canvas"); p.id="pcb"; p.setAttribute("aria-hidden","true");
+  p.style.cssText="position:fixed;inset:0;width:100%;height:100%;z-index:-3;pointer-events:none;display:block";
+  c.after(p); const px=p.getContext("2d");
+  const base=document.createElement("canvas"), bx=base.getContext("2d");
+  const mk=document.createElement("canvas"), mx=mk.getContext("2d",{willReadFrequently:true});
+  const CH="01<>/{}[]=+*#$&;:01ABCDEF0110", FS=14, CW=18;
+  let W=0,H=0,dpr=1,cols=[],rows=0,traces=[],sparks=[],lit=-1,mask=null,mw=0,mh=0,cells=[];
+  let idle=0,gather=false,crt=false,pulseT=0,scram=[];
+  const m={x:-9999,y:-9999,inside:false,lastNear:0};
+  const rnd=(a,b)=>a+Math.random()*(b-a), ch=()=>CH[(Math.random()*CH.length)|0];
+  const K=()=>crt?{a:"120,255,140",c:"57,255,20",d:"60,150,80",bg:"4,10,6"}:{a:"255,181,71",c:"95,212,227",d:"120,138,148",bg:"7,9,10"};
+
+  function resize(){
+    dpr=Math.min(devicePixelRatio||1,1.5); W=innerWidth; H=innerHeight;
+    for(const cv of [c,p,base]){ cv.width=W*dpr; cv.height=H*dpr; }
+    x.setTransform(dpr,0,0,dpr,0,0); px.setTransform(dpr,0,0,dpr,0,0); bx.setTransform(dpr,0,0,dpr,0,0);
+    x.fillStyle=`rgb(${K().bg})`; x.fillRect(0,0,W,H);
+    rows=Math.ceil(H/CW)+1; const n=Math.ceil(W/CW);
+    cols=[]; for(let i=0;i<n;i++) cols.push({y:Math.floor(rnd(-rows,rows)), wait:0, every:Math.floor(rnd(4,9)), t:0, on:Math.random()<.55});
+    buildTraces(); buildMask();
+  }
+  // circuit: right-angle random walks on a 30px grid, ending in vias
+  function buildTraces(){
+    const G=30, n=Math.round(W*H/26000); traces=[];
+    for(let k=0;k<n;k++){
+      let gx=Math.round(rnd(0,W)/G)*G, gy=Math.round(rnd(0,H)/G)*G, dir=Math.random()<.5?0:1, pts=[[gx,gy]];
+      const segs=Math.floor(rnd(2,5));
+      for(let s=0;s<segs;s++){ const len=Math.floor(rnd(2,8))*G*(Math.random()<.5?-1:1);
+        if(dir===0) gx+=len; else gy+=len; pts.push([gx,gy]); dir^=1; }
+      let L=0; const seg=[]; for(let i=1;i<pts.length;i++){ const d=Math.abs(pts[i][0]-pts[i-1][0])+Math.abs(pts[i][1]-pts[i-1][1]); seg.push(d); L+=d; }
+      traces.push({pts,seg,L});
+    }
+    bx.clearRect(0,0,W,H);
+    const g1=bx.createRadialGradient(W*.7,H*.2,0,W*.7,H*.2,520); g1.addColorStop(0,"rgba(255,181,71,.06)"); g1.addColorStop(1,"rgba(255,181,71,0)"); bx.fillStyle=g1; bx.fillRect(0,0,W,H);
+    const g2=bx.createRadialGradient(W*.1,H*1.1,0,W*.1,H*1.1,900); g2.addColorStop(0,"rgba(95,212,227,.05)"); g2.addColorStop(1,"rgba(95,212,227,0)"); bx.fillStyle=g2; bx.fillRect(0,0,W,H);
+    const g3=bx.createRadialGradient(W/2,H/2,Math.min(W,H)*.35,W/2,H/2,Math.hypot(W,H)*.6); g3.addColorStop(0,"rgba(0,0,0,0)"); g3.addColorStop(1,"rgba(0,0,0,.5)"); bx.fillStyle=g3; bx.fillRect(0,0,W,H);
+    bx.lineWidth=1.2; bx.lineJoin="round";
+    for(const t of traces){ bx.strokeStyle="rgba(150,168,178,.11)"; bx.beginPath(); bx.moveTo(...t.pts[0]); for(const q of t.pts.slice(1)) bx.lineTo(...q); bx.stroke();
+      for(const q of [t.pts[0],t.pts[t.pts.length-1]]){ bx.beginPath(); bx.arc(q[0],q[1],2.6,0,6.283); bx.strokeStyle="rgba(150,168,178,.2)"; bx.stroke(); } }
+  }
+  function buildMask(){
+    mw=Math.ceil(W/CW); mh=rows; mk.width=mw; mk.height=mh;
+    const fs=Math.min(mh*.7,mw*.36); mx.clearRect(0,0,mw,mh); mx.fillStyle="#fff"; mx.textAlign="center"; mx.textBaseline="middle";
+    mx.font=`900 ${Math.round(fs)}px "Big Shoulders Display","Arial Narrow",sans-serif`; mx.fillText("MJ",mw/2,mh/2);
+    const d=mx.getImageData(0,0,mw,mh).data; mask=new Uint8Array(mw*mh); cells=[]; for(let i=0;i<mw*mh;i++){ mask[i]=d[i*4+3]>110?1:0; if(mask[i]) cells.push(i); }
+  }
+  const inMask=(i,j)=>mask && i>=0&&j>=0&&i<mw&&j<mh && mask[j*mw+i];
+
+  function at(t,u){ // point at distance u along trace t
+    for(let i=0;i<t.seg.length;i++){ if(u<=t.seg[i]){ const a=t.pts[i],b=t.pts[i+1],f=u/(t.seg[i]||1); return [a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f]; } u-=t.seg[i]; }
+    return t.pts[t.pts.length-1];
+  }
+  function nearest(X,Y,max){ let best=-1,bd=max*max;
+    traces.forEach((t,ti)=>{ for(let i=1;i<t.pts.length;i++){ const a=t.pts[i-1],b=t.pts[i];
+      const minx=Math.min(a[0],b[0]),maxx=Math.max(a[0],b[0]),miny=Math.min(a[1],b[1]),maxy=Math.max(a[1],b[1]);
+      const dx=X<minx?minx-X:X>maxx?X-maxx:0, dy=Y<miny?miny-Y:Y>maxy?Y-maxy:0, d=dx*dx+dy*dy; if(d<bd){bd=d;best=ti;} } });
+    return best; }
+  const spark=(ti,col,sp)=>{ if(ti<0||sparks.length>24) return; sparks.push({ti,u:0,v:sp||rnd(260,420),col}); };
+
+  function rain(){
+    const k=K(), now=performance.now();
+    x.fillStyle=`rgba(${k.bg},${gather?.07:.085})`; x.fillRect(0,0,W,H);
+    x.font=`500 ${FS}px "JetBrains Mono",monospace`; x.textBaseline="top";
+    const near=m.inside&&!gather;
+    for(let i=0;i<cols.length;i++){ const cl=cols[i];
+      if(!cl.on){ if(Math.random()<.004) {cl.on=true; cl.y=-Math.floor(rnd(0,8));} continue; }
+      const close=near && Math.abs(i*CW+CW/2-m.x)<110;
+      cl.t++; if(cl.t<(gather?cl.every*2:close?Math.max(2,cl.every>>1):cl.every)) continue; cl.t=0; cl.y++;
+      if(cl.y>rows){ cl.on=Math.random()<.6; cl.y=-Math.floor(rnd(0,12)); continue; }
+      if(cl.y<0) continue;
+      const lit=gather&&inMask(i,cl.y); if(gather&&!lit) continue;
+      x.fillStyle=lit?`rgba(${k.a},.95)`:close?`rgba(${k.a},.75)`:`rgba(${k.d},.5)`;
+      x.fillText(ch(),i*CW+2,cl.y*CW);
+    }
+    if(gather){ // fill the letters with code
+      x.fillStyle=`rgba(${k.a},.85)`;
+      const n=Math.min(cells.length,Math.max(60,cells.length>>2));
+      for(let q=0;q<n;q++){ const ci=cells[(Math.random()*cells.length)|0]; x.fillText(ch(),(ci%mw)*CW+2,((ci/mw)|0)*CW); } }
+    for(let q=scram.length-1;q>=0;q--){ const s=scram[q]; s.n--; if(s.n<0){scram.splice(q,1);continue;}
+      x.fillStyle=`rgba(${k.a},.9)`; for(let r=0;r<6;r++){ const a=rnd(0,6.283), d=rnd(0,s.r); x.fillText(ch(),Math.round((s.x+Math.cos(a)*d)/CW)*CW+2,Math.round((s.y+Math.sin(a)*d)/CW)*CW); } }
+  }
+  function board(dt){
+    const k=K(); px.clearRect(0,0,W,H); px.drawImage(base,0,0,W,H);
+    if(lit>=0 && !gather){ const t=traces[lit]; px.strokeStyle=`rgba(${k.c},.55)`; px.lineWidth=1.6;
+      px.beginPath(); px.moveTo(...t.pts[0]); for(const q of t.pts.slice(1)) px.lineTo(...q); px.stroke(); }
+    for(let q=sparks.length-1;q>=0;q--){ const s=sparks[q], t=traces[s.ti]; s.u+=s.v*dt; if(!t||s.u>t.L){ sparks.splice(q,1); continue; }
+      const [sx,sy]=at(t,s.u), col=s.col==="a"?k.a:k.c;
+      px.fillStyle=`rgba(${col},.25)`; px.beginPath(); px.arc(sx,sy,6,0,6.283); px.fill();
+      px.fillStyle=`rgba(${col},1)`; px.beginPath(); px.arc(sx,sy,2,0,6.283); px.fill(); }
+  }
+
+  let last=performance.now(), acc=0, hudT=0;
+  function loop(now){
+    const dt=Math.min(.05,(now-last)/1000); last=now;
+    if(!document.hidden){
+      idle+=dt; const g=idle>4.5&&m.inside;
+      if(g!==gather){ gather=g; document.documentElement.classList.toggle("dream",g); if(g) toast("hold still… the code is compiling something"); }
+      acc+=dt; if(acc>=1/40){ acc=0; rain(); }            // code steps at ~40 fps
+      pulseT+=dt; if(pulseT>1.1){ pulseT=0; spark((Math.random()*traces.length)|0,"c"); }
+      if(m.inside && lit>=0 && now-m.lastNear>650){ m.lastNear=now; spark(lit,"c",360); }
+      board(dt);
+      hudT+=dt; if(hudT>.5){ hudT=0; const h=$("hud"); if(h) h.textContent=`board · ${traces.length} traces · ${cols.filter(q=>q.on).length} streams · ${sparks.length} sparks${gather?" · compiling":""}`; }
+    }
+    requestAnimationFrame(loop);
+  }
+  let mvT=0;
+  addEventListener("pointermove",e=>{ m.x=e.clientX; m.y=e.clientY; m.inside=true; idle=0;
+    const now=performance.now(); if(now-mvT>60){ mvT=now; const n=nearest(m.x,m.y,70); if(n!==lit){ lit=n; if(n>=0) spark(n,"c",380); } } },{passive:true});
+  const out=()=>{ m.inside=false; lit=-1; };
+  addEventListener("pointerleave",out); document.addEventListener("mouseleave",out);
+  addEventListener("pointerdown",e=>wave(e.clientX,e.clientY,1));
+  addEventListener("keydown",()=>{idle=0;}); addEventListener("scroll",()=>{idle=0;},{passive:true});
+  function wave(X,Y,s){ idle=0; X=X??W/2; Y=Y??H/2; scram.push({x:X,y:Y,r:90*(s||1),n:14});
+    const n=nearest(X,Y,160); spark(n,"a",480);
+    traces.map((t,i)=>[Math.hypot(t.pts[0][0]-X,t.pts[0][1]-Y),i]).sort((a,b)=>a[0]-b[0]).slice(0,3).forEach(([,i])=>spark(i,"a")); }
+  let rt; addEventListener("resize",()=>{clearTimeout(rt); rt=setTimeout(resize,150);});
+  resize(); document.fonts && document.fonts.ready.then(buildMask);
+  if(reduce){ for(let i=0;i<60;i++) rain(); board(0); } else requestAnimationFrame(loop);
+  return { wave, burst:()=>{ for(let i=0;i<12;i++) spark((Math.random()*traces.length)|0,"a"); }, setCrt:v=>{ crt=v; x.fillStyle=`rgb(${K().bg})`; x.fillRect(0,0,W,H); } };
+})();
+
+/* =========================================================
+   Probe cursor, scroll progress, toast
+   ========================================================= */
+function toast(msg){ const t=$("toast"); if(!t) return; t.textContent=msg; t.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("on"),2600); }
+(function(){
+  const cur=$("cur"); if(!matchMedia("(pointer: fine)").matches || reduce){ cur.remove(); return; }
+  const lab=cur.querySelector("b"); document.documentElement.classList.add("probe");
+  const pad=v=>String(Math.max(0,Math.round(v))).padStart(4,"0");
+  let hot=null;
+  addEventListener("pointermove",e=>{ cur.style.transform=`translate(${e.clientX}px,${e.clientY}px)`; cur.classList.add("on");
+    lab.textContent = hot ? hot : `x${pad(e.clientX)} y${pad(e.clientY)}`; },{passive:true});
+  document.addEventListener("mouseleave",()=>cur.classList.remove("on"));
+  addEventListener("pointerdown",()=>{cur.classList.add("press"); setTimeout(()=>cur.classList.remove("press"),160);});
+  document.addEventListener("pointerover",e=>{
+    const el=e.target.closest("a,button,input,select,textarea,label,[data-open],summary,.card");
+    cur.classList.toggle("hot",!!el); cur.classList.toggle("txt",!!(el&&/INPUT|TEXTAREA/.test(el.tagName)));
+    hot = !el ? null : el.tagName==="A" ? (el.target==="_blank"||/^http/.test(el.getAttribute("href")||"") ? "open ↗" : "go ↓") : /INPUT|TEXTAREA/.test(el.tagName) ? "type" : "run ▸";
+  });
+})();
+addEventListener("scroll",()=>{ const h=document.documentElement; $("progress").style.transform=`scaleX(${h.scrollTop/Math.max(1,h.scrollHeight-h.clientHeight)})`; },{passive:true});
+
+/* =========================================================
+   Hidden: ↑↑↓↓←→←→BA turns the whole site into a green CRT
+   ========================================================= */
+(function(){
+  const seq=["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"]; let pos=0;
+  addEventListener("keydown",e=>{
+    if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
+    const k=e.key.length===1?e.key.toLowerCase():e.key;
+    pos = k===seq[pos] ? pos+1 : (k===seq[0]?1:0);
+    if(pos===seq.length){ pos=0; const on=document.documentElement.classList.toggle("crt"); FIELD.setCrt(on); FIELD.wave(); toast(on?"CRT mode · phosphor P1 · 1982 called":"back to the present"); }
+  });
+})();
+
+/* =========================================================
+   Hero: boot lines, name decode, rotating role
+   ========================================================= */
+(function(){
+  const lines=[
+    `<span class="okk">[  ok  ]</span> loading circuits.ko · signals.ko · code.ko`,
+    `<span class="okk">[  ok  ]</span> mounted ~/projects (caughtbot, minispice, roadsentinel)`,
+    `<span class="pr">mudit@lab:~$</span> whoami`];
+  $("boot").innerHTML=lines.map((l,i)=>`<div class="line" style="animation-delay:${i*0.28}s">${l}</div>`).join("");
+  if(!reduce){
+    const el=$("heroName"), final=["M","U","D","I","T"], glyph="01<>/{}#$%&*+=";
+    let f=0; const t=setInterval(()=>{ f++;
+      el.innerHTML = final.map((ch,i)=>{ const done=f>8+i*3; const g=done?ch:glyph[Math.floor(Math.random()*glyph.length)]; return i>=2?`<span class="a">${g}</span>`:g; }).join("");
+      if(f>8+final.length*3){clearInterval(t); el.innerHTML='Mu<span class="a">dit</span>';}
+    },45);
+  }
+  const roles=["red-teaming AI chatbots","solving circuits in C","building MiniSPICE v2","shipping full-stack builds","turning ideas into tools"];
+  if(reduce) return;
+  let ri=0, ci=roles[0].length, del=true; const rt=$("roleText");
+  setInterval(()=>{ const r=roles[ri];
+    if(del){ ci--; if(ci<=0){del=false; ri=(ri+1)%roles.length;} }
+    else { ci++; if(ci>=roles[ri].length){ del=true; ci=roles[ri].length+18; } }
+    rt.textContent=roles[ri].slice(0,Math.max(0,Math.min(ci,roles[ri].length)));
+  },60);
+})();
+
+/* =========================================================
+   Oscilloscope
+   ========================================================= */
+const cv=$("scope"), cx=cv.getContext("2d");
+let wave="sine", freq=1, phase=0;
+function wf(t){
+  const p=t-Math.floor(t);
+  if(wave==="square") return p<.5?.8:-.8;
+  if(wave==="tri") return p<.5? -0.8+3.2*p : 2.4-3.2*p;
+  if(wave==="ecg"){ const g=(c,w,a)=>a*Math.exp(-Math.pow((p-c)/w,2)); return g(.18,.03,.12)+g(.36,.008,-.15)+g(.40,.012,.95)+g(.44,.01,-.25)+g(.65,.05,.25)-.1; }
+  return .8*Math.sin(2*Math.PI*t);
+}
+function drawScope(){
+  const W=cv.width,H=cv.height; cx.clearRect(0,0,W,H);
+  cx.strokeStyle="#182024"; cx.lineWidth=1;
+  for(let i=1;i<10;i++){cx.beginPath();cx.moveTo(i*W/10,0);cx.lineTo(i*W/10,H);cx.stroke();}
+  for(let j=1;j<8;j++){cx.beginPath();cx.moveTo(0,j*H/8);cx.lineTo(W,j*H/8);cx.stroke();}
+  cx.strokeStyle="#2a363b"; cx.beginPath();cx.moveTo(W/2,0);cx.lineTo(W/2,H);cx.moveTo(0,H/2);cx.lineTo(W,H/2);cx.stroke();
+  for(let i=0;i<=50;i++){cx.beginPath();cx.moveTo(i*W/50,H/2-4);cx.lineTo(i*W/50,H/2+4);cx.stroke();}
+  cx.save(); cx.strokeStyle="#5fd4e3"; cx.globalAlpha=.55; cx.lineWidth=2; cx.beginPath();
+  for(let x=0;x<=W;x+=3){const y=H*.76-Math.sin((x/W)*2*Math.PI*1.5+phase*.5)*H*.08; x?cx.lineTo(x,y):cx.moveTo(x,y);} cx.stroke(); cx.restore();
+  const cycles=(wave==="ecg"?1.5:2.5)*freq;
+  cx.save(); cx.strokeStyle="#ffb547"; cx.lineWidth=2.6; cx.shadowColor="#ffb547"; cx.shadowBlur=16; cx.beginPath();
+  for(let x=0;x<=W;x+=2){const y=H*.42-wf((x/W)*cycles+phase)*H*.28; x?cx.lineTo(x,y):cx.moveTo(x,y);} cx.stroke(); cx.restore();
+}
+function hud(){ $("hud1").textContent = wave==="ecg" ? `CH1 ECG · ${Math.round(freq*72)} BPM` : `CH1 ${freq.toFixed(2)} kHz · 2.0 Vpp`; }
+let scopeVisible=true; new IntersectionObserver(es=>{scopeVisible=es[0].isIntersecting}).observe(cv);
+function scopeLoop(){ if(scopeVisible&&!document.hidden){phase+=0.006*freq; drawScope();} requestAnimationFrame(scopeLoop); }
+document.querySelectorAll(".wave-btns button").forEach(b=>b.onclick=()=>{ setWave(b.dataset.w); });
+function setWave(w){ wave=w; document.querySelectorAll(".wave-btns button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.w===w)); hud(); if(reduce) drawScope(); }
+$("freq").oninput=e=>{freq=+e.target.value; hud(); if(reduce) drawScope();};
+reduce?drawScope():scopeLoop();
+
+/* =========================================================
+   Editor card
+   ========================================================= */
+const S=(c,t)=>`<span class="t-${c}">${esc(t)}</span>`;
+const FILES={
+  c:{lang:"C · 0 errors · 0 warnings", lines:[
+    S("k","#include")+" "+S("s","<ece.h>"),
+    "",
+    S("k","struct")+" "+S("t","engineer")+" mudit = {",
+    "    ."+"name     = "+S("s",'"Mudit Jindal"')+",",
+    "    ."+"focus    = "+S("s",'"circuits + code + AI security"')+",",
+    "    ."+"builds   = { "+S("s",'"CaughtBot"')+", "+S("s",'"MiniSPICE"')+", "+S("s",'"RoadSentinel"')+" },",
+    "    ."+"next     = "+S("s",'"MiniSPICE v2"')+",",
+    "    ."+"status   = "+S("n","BUILDING")+",",
+    "};",
+    "",
+    S("k","int")+" "+S("f","main")+"("+S("k","void")+") {",
+    "    "+S("k","while")+" ("+S("f","curious")+"(&mudit))",
+    "        "+S("f","build")+"(&mudit, "+S("f","next_idea")+"());   "+S("c","// never returns"),
+    "    "+S("k","return")+" "+S("n","0")+";",
+    "}"]},
+  py:{lang:"Python 3.12 · ruff: all checks passed", lines:[
+    S("k","from")+" lab "+S("k","import")+" Engineer",
+    "",
+    S("k","class")+" "+S("t","Mudit")+"(Engineer):",
+    "    builds = ["+S("s",'"CaughtBot"')+", "+S("s",'"MiniSPICE"')+", "+S("s",'"RoadSentinel"')+"]",
+    "    stack = {"+S("s",'"lang"')+": ["+S("s",'"C"')+", "+S("s",'"Python"')+", "+S("s",'"JS"')+"],",
+    "             "+S("s",'"ai"')+": ["+S("s",'"Groq"')+", "+S("s",'"Pydantic"')+", "+S("s",'"Streamlit"')+"]}",
+    "",
+    "    "+S("k","def")+" "+S("f","caughtbot")+"(self) -> dict:",
+    "        "+S("c",'"""security score on the demo bot"""'),
+    "        "+S("k","return")+" {"+S("s",'"before"')+": "+S("n","22")+", "+S("s",'"after"')+": "+S("n","62")+"}",
+    "",
+    "    "+S("k","def")+" "+S("f","next")+"(self) -> str:",
+    "        "+S("k","return")+" "+S("s",'"whatever breaks next"'),
+    ""]},
+  json:{lang:"JSON · valid", lines:[
+    "{",
+    "  "+S("f",'"name"')+": "+S("s",'"Mudit Jindal"')+",",
+    "  "+S("f",'"github"')+": "+S("s",'"itzmudit"')+",",
+    "  "+S("f",'"focus"')+": ["+S("s",'"circuits"')+", "+S("s",'"code"')+", "+S("s",'"AI security"')+"],",
+    "  "+S("f",'"hackathons"')+": ["+S("s",'"SIH 2026"')+", "+S("s",'"Hackin\' Summer 2026"')+"],",
+    "  "+S("f",'"repos"')+": ["+S("s",'"CaughtBot"')+", "+S("s",'"MiniSPICE"')+"],",
+    "  "+S("f",'"open_to"')+": ["+S("s",'"new ideas"')+", "+S("s",'"collaborations"')+"]",
+    "}"]},
+};
+function showFile(k){
+  const f=FILES[k]; $("codeView").innerHTML=f.lines.join("\n"); $("gut").innerHTML=f.lines.map((_,i)=>i+1).join("<br>"); $("ideLang").textContent=f.lang;
+  document.querySelectorAll(".ide .tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.file===k));
+}
+document.querySelectorAll(".ide .tabs button").forEach(b=>b.onclick=()=>showFile(b.dataset.file));
+showFile("c");
+
+/* =========================================================
+   CaughtBot chart
+   ========================================================= */
+(function(){
+  const W=460,left=140,top=10,rowH=56,maxV=8,barH=16,plotW=W-left-36; let s="";
+  for(let v=0;v<=8;v+=2){const x=left+plotW*v/maxV; s+=`<line x1="${x}" y1="${top}" x2="${x}" y2="${top+rowH*4}" stroke="#1c2428"/><text x="${x}" y="${top+rowH*4+16}" fill="#8a949a" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">${v}</text>`;}
+  CB_RESULTS.forEach(([n,b,a],i)=>{ const y=top+i*rowH+8;
+    s+=`<text x="${left-10}" y="${y+barH+4}" fill="#cfd5d9" font-family="IBM Plex Sans, sans-serif" font-size="12.5" text-anchor="end">${n}</text>`;
+    s+=`<rect x="${left}" y="${y}" width="${Math.max(2,plotW*b/maxV)}" height="${barH}" rx="2" fill="#ef7a64"/><text x="${left+plotW*b/maxV+6}" y="${y+12}" fill="#ef7a64" font-family="JetBrains Mono, monospace" font-size="11">${b}</text>`;
+    s+=`<rect x="${left}" y="${y+barH+4}" width="${Math.max(2,plotW*a/maxV)}" height="${barH}" rx="2" fill="#62c784"/><text x="${left+plotW*a/maxV+6}" y="${y+barH+16}" fill="#62c784" font-family="JetBrains Mono, monospace" font-size="11">${a}</text>`; });
+  $("cbChart").innerHTML=s;
+})();
+
+/* =========================================================
+   Projects + case studies
+   ========================================================= */
+const grid=$("projGrid");
+function renderProjects(f){
+  grid.innerHTML = PROJECTS.filter(p=>f==="all"||p.tags.includes(f)).map(p=>`
+    <button class="card" type="button" data-open="${p.id}">
+      <div class="meta"><span>${p.kind}</span><span class="state ${p.state}"><i></i>${p.stateText}</span></div>
+      <h3>${p.name}</h3><p class="sub">${p.sub}</p>
+      <div class="stack">${p.stack.map(s=>`<span>${s}</span>`).join("")}</div>
+      <span class="open"><b>$</b> open ${p.id} →</span>
+    </button>`).join("");
+  bindOpen(grid); countFills();
+}
+function bindOpen(scope){ scope.querySelectorAll("[data-open]").forEach(c=>c.onclick=()=>openProject(c.dataset.open)); }
+document.querySelectorAll("#projects .filters .chip").forEach(c=>c.onclick=()=>{
+  document.querySelectorAll("#projects .filters .chip").forEach(x=>x.setAttribute("aria-pressed",x===c)); renderProjects(c.dataset.f);
+});
+const dlg=$("dlg"), dlgBody=$("dlgBody");
+function openProject(id){
+  const p=PROJECTS.find(x=>x.id===id); if(!p) return false;
+  const shots = id==="caughtbot" ? `<div class="shots">
+      <figure><img src="https://raw.githubusercontent.com/itzmudit/CaughtBot/main/screenshots/before.webp" alt="CaughtBot report before auto-harden" loading="lazy" onerror="this.closest('.shots').remove()"><figcaption>before</figcaption></figure>
+      <figure><img src="https://raw.githubusercontent.com/itzmudit/CaughtBot/main/screenshots/after.webp" alt="CaughtBot report after auto-harden" loading="lazy" onerror="this.closest('.shots').remove()"><figcaption>after</figcaption></figure></div>` : "";
+  const linkHtml = p.links.length ? p.links.map(([t,u])=>`<a class="ext" href="${u}" ${u.startsWith("#")?"data-close":'target="_blank" rel="noopener"'}>${t}</a>`).join(" · ") : `<span class="fill">[ADD: repo, demo or screenshots]</span>`;
+  dlgBody.innerHTML=`
+    <div class="dlg-head"><div><div class="meta">${p.kind}</div><h3>${p.name}</h3></div>
+    <button class="icon-btn" type="button" id="dlgClose" aria-label="Close">esc ✕</button></div>
+    <p style="font-size:17px">${p.sub}</p>${shots}
+    <dl><dt>problem</dt><dd>${p.problem}</dd><dt>what_i_built</dt><dd>${p.built}</dd>
+    <dt>result</dt><dd>${p.result}</dd><dt>my_role</dt><dd>${p.role}</dd>
+    <dt>stack</dt><dd><div class="stack">${p.stack.map(s=>`<span>${s}</span>`).join("")}</div></dd>
+    <dt>learned</dt><dd>${p.learned}</dd>${p.links.length?`<dt>links</dt><dd>${linkHtml}</dd>`:""}</dl>`;
+  dlg.showModal(); countFills();
+  $("dlgClose").onclick=()=>dlg.close();
+  dlgBody.querySelectorAll("[data-close]").forEach(a=>a.addEventListener("click",()=>{dlg.close(); showTab(id==="imagelab"?"image":"spice");}));
+  return true;
+}
+dlg.addEventListener("click",e=>{if(e.target===dlg) dlg.close()});
+bindOpen($("featureCB"));
+
+/* =========================================================
+   Git log + skills
+   ========================================================= */
+function hash(s){ let h=2166136261; for(const ch of s){h^=ch.charCodeAt(0); h=Math.imul(h,16777619);} return (h>>>0).toString(16).padStart(8,"0").slice(0,7); }
+$("gitlog").innerHTML=LOG.map(c=>`<div class="commit${c.next?" next":""}"><span class="node"></span><div>
+  <div class="head"><span class="hash">${c.next?"·······":hash(c.msg)}</span>${c.ref?`<span class="ref">(${c.ref})</span>`:""}<span class="msg">${c.msg}</span><span class="date">${c.date==="[date]"?"":c.date}</span></div>
+  <p>${c.body}</p></div></div>`).join("");
+const bar=l=>`<span class="lvl" role="img" aria-label="${["","learning","comfortable","confident"][l]}"><b>${"■".repeat(l)}</b>${"□".repeat(3-l)}</span>`;
+$("skillsBox").innerHTML = SKILLS.map(g=>`
+  <div class="win"><div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="title">skills.${g.group}</span><span class="right">${g.items.length} keys</span></div>
+  <div class="sk-group">${g.items.map(([n,d,l])=>`<div class="sk"><div><span class="nm">${n}</span>${d?`<small>${d}</small>`:""}</div>${bar(l)}</div>`).join("")}</div></div>`).join("");
+
+/* =========================================================
+   Lab tabs
+   ========================================================= */
+function showTab(name){
+  document.querySelectorAll("#labTabs .chip").forEach(c=>{const on=c.dataset.tab===name; c.setAttribute("aria-pressed",on); c.setAttribute("aria-selected",on);});
+  ["spice","image","res"].forEach(t=>$("tab-"+t).hidden = t!==name);
+  if(name==="image") runImage();
+}
+document.querySelectorAll("#labTabs .chip").forEach(c=>c.onclick=()=>showTab(c.dataset.tab));
+
+/* =========================================================
+   MiniSPICE (port of MiniSPICE.c)
+   ========================================================= */
+const MAX_NODES=10, MAX_COMP=20, PIVOT_EPS=1e-12;
+const PRESETS = {
+  "README example (divider)": {res:[[1,2,"100"],[2,0,"200"]], node:1, v:"10"},
+  "Wheatstone bridge": {res:[[1,2,"1k"],[1,3,"2.2k"],[2,0,"3.3k"],[3,0,"4.7k"],[2,3,"10k"]], node:1, v:"12"},
+  "Parallel pair": {res:[[1,2,"1k"],[2,0,"2k"],[2,0,"2k"]], node:1, v:"5"},
+  "Resistor ladder": {res:[[1,2,"1k"],[2,0,"2k"],[2,3,"1k"],[3,0,"2k"],[3,4,"1k"],[4,0,"2k"]], node:1, v:"8"},
+  "Broken circuit (floating node)": {res:[[1,2,"100"],[2,0,"200"],[3,4,"470"]], node:1, v:"10"},
+};
+const PRESET_KEYS={divider:"README example (divider)",bridge:"Wheatstone bridge",parallel:"Parallel pair",ladder:"Resistor ladder",broken:"Broken circuit (floating node)"};
+let circ = JSON.parse(JSON.stringify(PRESETS["README example (divider)"]));
+$("preset").innerHTML = Object.keys(PRESETS).map(k=>`<option>${k}</option>`).join("");
+$("preset").onchange=e=>loadPreset(e.target.value);
+function loadPreset(k){ circ=JSON.parse(JSON.stringify(PRESETS[k])); $("preset").value=k; renderRows(); solveAndShow(); }
+const nodeOpts=(sel,min)=>Array.from({length:MAX_NODES-min},(_,i)=>i+min).map(n=>`<option value="${n}" ${n===sel?"selected":""}>N${n}${n===0?" (gnd)":""}</option>`).join("");
+function parseVal(s){
+  s=String(s).trim().replace(/\s+/g,"").replace(/(ohm|Ω)$/i,"");
+  const m=/^(\d+(?:\.\d+)?|\.\d+)([kKM]?)$/.exec(s); if(!m) return NaN;
+  return parseFloat(m[1])*({"":1,k:1e3,K:1e3,M:1e6}[m[2]]);
+}
+function renderRows(){
+  $("rRows").innerHTML = circ.res.map((r,i)=>`<tr>
+    <td>R${i+1}</td>
+    <td><select data-i="${i}" data-k="0" aria-label="R${i+1} from node">${nodeOpts(r[0],0)}</select></td>
+    <td><select data-i="${i}" data-k="1" aria-label="R${i+1} to node">${nodeOpts(r[1],0)}</select></td>
+    <td><input data-i="${i}" data-k="2" type="text" value="${esc(r[2])}" aria-label="R${i+1} resistance"></td>
+    <td><button class="rm" type="button" data-rm="${i}" aria-label="Remove R${i+1}">×</button></td></tr>`).join("");
+  $("srcNode").innerHTML = nodeOpts(circ.node,1);
+  $("srcV").value = circ.v;
+  $("addR").disabled = circ.res.length>=MAX_COMP;
+}
+$("rRows").addEventListener("input",e=>{const t=e.target; if(t.dataset.i===undefined) return; const k=+t.dataset.k; circ.res[+t.dataset.i][k] = k<2 ? +t.value : t.value; solveAndShow();});
+$("rRows").addEventListener("change",e=>{const t=e.target; if(t.tagName!=="SELECT") return; circ.res[+t.dataset.i][+t.dataset.k]=+t.value; solveAndShow();});
+$("rRows").addEventListener("click",e=>{const b=e.target.closest("[data-rm]"); if(!b) return; circ.res.splice(+b.dataset.rm,1); renderRows(); solveAndShow();});
+$("addR").onclick=()=>{ if(circ.res.length>=MAX_COMP) return; const top=Math.max(1,...circ.res.flatMap(r=>[r[0],r[1]])); circ.res.push([top,Math.min(top+1,MAX_NODES-1),"1k"]); renderRows(); solveAndShow(); };
+$("srcNode").onchange=e=>{circ.node=+e.target.value; solveAndShow();};
+$("srcV").oninput=e=>{circ.v=e.target.value; solveAndShow();};
+
+function fmtU(v,unit){
+  const a=Math.abs(v); const pick = a>=1e6?[1e6,"M"]: a>=1e3?[1e3,"k"]: a>=1||a===0?[1,""]: a>=1e-3?[1e-3,"m"]: a>=1e-6?[1e-6,"µ"]:[1e-9,"n"];
+  return (v/pick[0]).toFixed(4)+" "+pick[1]+unit;
+}
+function solve(c){
+  const errs=[], res=[];
+  c.res.forEach((r,i)=>{ const R=parseVal(r[2]);
+    if(!(R>0)) errs.push(`R${i+1}: "${r[2]}" is not a valid resistance. Use a positive number like 220, 4.7k or 1M.`);
+    else if(r[0]===r[1]) errs.push(`R${i+1}: both ends are on N${r[0]}. A resistor needs two different nodes.`);
+    else res.push({id:i+1,a:r[0],b:r[1],R}); });
+  const vs=String(c.v).trim(), V0=parseFloat(vs);
+  if(!/^-?\d+(\.\d+)?$/.test(vs)) errs.push(`Voltage: "${c.v}" is not a number.`);
+  if(errs.length) return {errs};
+  if(!res.length) return {errs:["Add at least one resistor."]};
+  const N=Math.max(c.node,...res.flatMap(r=>[r.a,r.b]))+1, n=N-1, s=c.node;
+  const adj=Array.from({length:N},()=>[]); res.forEach(r=>{adj[r.a].push(r.b);adj[r.b].push(r.a)}); adj[0].push(s); adj[s].push(0);
+  const seen=new Set([0]), q=[0]; while(q.length){const u=q.shift(); for(const w of adj[u]) if(!seen.has(w)){seen.add(w);q.push(w);}}
+  const floating=[]; for(let i=1;i<N;i++) if(!seen.has(i)) floating.push("N"+i);
+  const G=Array.from({length:n},()=>Array(n).fill(0)), I=Array(n).fill(0);
+  for(const {a,b,R} of res){ const g=1/R;
+    if(a>0) G[a-1][a-1]+=g; if(b>0) G[b-1][b-1]+=g;
+    if(a>0&&b>0){ G[a-1][b-1]-=g; G[b-1][a-1]-=g; } }
+  for(let j=0;j<n;j++) G[s-1][j]=0; G[s-1][s-1]=1; I[s-1]=V0;
+  const shown={G:G.map(r=>r.slice()),I:I.slice()};
+  if(floating.length) return {errs:[`${floating.join(", ")} ${floating.length>1?"have":"has"} no path to ground, so the matrix is singular. MiniSPICE stops here instead of printing wrong answers.`], shown, N};
+  const A=G.map((r,i)=>[...r,I[i]]);
+  for(let col=0;col<n;col++){
+    let p=col; for(let r=col+1;r<n;r++) if(Math.abs(A[r][col])>Math.abs(A[p][col])) p=r;
+    if(Math.abs(A[p][col])<PIVOT_EPS) return {errs:["Pivot below 1e-12: a node has no path to ground."], shown, N};
+    [A[col],A[p]]=[A[p],A[col]];
+    for(let r=col+1;r<n;r++){ const f=A[r][col]/A[col][col]; for(let k=col;k<=n;k++) A[r][k]-=f*A[col][k]; }
+  }
+  const xs=Array(n).fill(0);
+  for(let i=n-1;i>=0;i--){ let sum=A[i][n]; for(let k=i+1;k<n;k++) sum-=A[i][k]*xs[k]; xs[i]=sum/A[i][i]; }
+  const V=[0,...xs];
+  const rows=res.map(r=>{ const cur=(V[r.a]-V[r.b])/r.R; return {...r, from:cur>=0?r.a:r.b, to:cur>=0?r.b:r.a, I:Math.abs(cur), P:cur*cur*r.R}; });
+  let Is=0; res.forEach(r=>{ if(r.a===s) Is+=(V[r.a]-V[r.b])/r.R; else if(r.b===s) Is+=(V[r.b]-V[r.a])/r.R; });
+  const Pused=rows.reduce((t,r)=>t+r.P,0);
+  return {V,rows,Is,Psup:V0*Is,Pused,N,shown,s,V0};
+}
+function matrixHtml(sh){
+  const n=sh.G.length; let t="<table><tr>"+Array.from({length:n},(_,j)=>`<th>N${j+1}</th>`).join("")+"<th>| I</th></tr>";
+  sh.G.forEach((r,i)=>{ t+="<tr>"+r.map(v=>`<td>${v.toFixed(5)}</td>`).join("")+`<td>| ${sh.I[i].toFixed(4)}</td></tr>`; });
+  return t+"</table>";
+}
+function solveAndShow(){
+  const r=solve(circ); const o=$("spiceOut");
+  document.querySelectorAll("#rRows input").forEach(inp=>inp.classList.toggle("bad", !(parseVal(inp.value)>0)));
+  $("srcV").classList.toggle("bad", !/^-?\d+(\.\d+)?$/.test(String(circ.v).trim()));
+  if(r.errs){
+    o.innerHTML = `<div class="h">STATUS</div><div class="err">${r.errs.map(e=>"✕ "+esc(e)).join("<br>")}</div>` + (r.shown?`<hr><details open><summary>nodal matrix [G | I] (siemens)</summary>${matrixHtml(r.shown)}</details>`:"");
+    drawGraph(null); return;
+  }
+  const bal=Math.abs(r.Psup-r.Pused)<=1e-9*Math.max(1,Math.abs(r.Psup));
+  o.innerHTML = `
+    <div class="h">NODE VOLTAGES</div>
+    <table>${r.V.map((v,i)=>`<tr><td>N${i}</td><td>${v.toFixed(4)} V</td><td style="color:#8a949a">${i===0?"(ground)":i===r.s?"(source +)":""}</td></tr>`).join("")}</table>
+    <hr><div class="h">RESISTORS</div>
+    <table><tr><th>ID</th><th>Flow</th><th>Resistance</th><th>Current</th><th>Power</th></tr>
+    ${r.rows.map(x=>`<tr><td>R${x.id}</td><td>N${x.from} → N${x.to}</td><td>${fmtU(x.R,"Ω")}</td><td>${fmtU(x.I,"A")}</td><td>${fmtU(x.P,"W")}</td></tr>`).join("")}</table>
+    <hr><div class="h">SOURCE</div>
+    <table><tr><td>Voltage</td><td>${r.V0.toFixed(4)} V</td><td style="color:#8a949a">(N${r.s} to ground)</td></tr>
+    <tr><td>Current</td><td>${fmtU(Math.abs(r.Is),"A")}</td><td></td></tr>
+    <tr><td>Power supplied</td><td>${fmtU(r.Psup,"W")}</td><td></td></tr>
+    <tr><td>Power used</td><td>${fmtU(r.Pused,"W")}</td><td style="color:#8a949a">(all resistors)</td></tr></table>
+    <div class="${bal?"ok":"err"}" style="margin-top:6px">${bal?"✓ power balance checks out":"✕ power balance mismatch"}</div>
+    <hr><details><summary>nodal matrix [G | I] (siemens), before elimination</summary>${matrixHtml(r.shown)}</details>`;
+  drawGraph(r);
+}
+function drawGraph(r){
+  const svg=$("graph"), W=520, H=330;
+  const res=circ.res.map((x,i)=>({id:i+1,a:x[0],b:x[1],R:parseVal(x[2])})).filter(x=>x.R>0&&x.a!==x.b);
+  const N=Math.max(circ.node,1,...res.flatMap(x=>[x.a,x.b]))+1;
+  const pos=[[W/2,H-36]], others=N-1;
+  for(let i=1;i<N;i++){ const t= others===1?Math.PI/2 : Math.PI*0.9-(i-1)*(Math.PI*0.8/(others-1)); pos[i]=[W/2+Math.cos(t)*(W/2-62), H-92-Math.sin(t)*(H-150)]; }
+  const Vmax = r? Math.max(1e-9,...r.V.map(Math.abs)) : 1, Pmax = r? Math.max(1e-12,...r.rows.map(x=>x.P)) : 1;
+  const pairCount={}; let s="";
+  res.forEach(x=>{
+    const key=[Math.min(x.a,x.b),Math.max(x.a,x.b)].join("-"); const k=pairCount[key]=(pairCount[key]||0)+1;
+    const [x1,y1]=pos[x.a],[x2,y2]=pos[x.b]; const mx=(x1+x2)/2,my=(y1+y2)/2, dx=x2-x1,dy=y2-y1, L=Math.hypot(dx,dy)||1;
+    const off=(k-1)*34*(k%2?1:-1)*(x.a<x.b?1:-1); const cxp=mx-dy/L*off, cyp=my+dx/L*off;
+    const row = r? r.rows.find(z=>z.id===x.id):null; const w = row? 1.5+4*row.P/Pmax : 1.5;
+    s+=`<path d="M${x1} ${y1} Q${cxp} ${cyp} ${x2} ${y2}" fill="none" stroke="#ffb547" stroke-opacity="${row?0.35+0.65*row.P/Pmax:0.35}" stroke-width="${w}"/>`;
+    const qx=.25*x1+.5*cxp+.25*x2, qy=.25*y1+.5*cyp+.25*y2;
+    if(row){ const [fx,fy]=pos[row.from],[tx,ty]=pos[row.to]; const ang=Math.atan2(ty-fy,tx-fx)*180/Math.PI; s+=`<polygon points="-6,-5 6,0 -6,5" fill="#ffb547" transform="translate(${qx} ${qy}) rotate(${ang})"/>`; }
+    const lt=.3, lx=(1-lt)*(1-lt)*x1+2*(1-lt)*lt*cxp+lt*lt*x2, ly=(1-lt)*(1-lt)*y1+2*(1-lt)*lt*cyp+lt*lt*y2;
+    s+=`<text x="${lx}" y="${ly-9}" fill="#cfd5d9" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle" paint-order="stroke" stroke="#050708" stroke-width="4">R${x.id} ${fmtU(x.R,"Ω").replace(/\.?0+ /," ")}</text>`;
+  });
+  for(let i=0;i<N;i++){
+    const [x,y]=pos[i]; const v=r? r.V[i] : null; const heat = v===null?0:Math.abs(v)/Vmax; const isSrc=i===circ.node;
+    s+=`<circle cx="${x}" cy="${y}" r="17" fill="rgba(255,181,71,${0.08+0.6*heat})" stroke="${isSrc?"#ffb547":"#4a555b"}" stroke-width="${isSrc?2.5:1.5}"/>`;
+    s+=`<text x="${x}" y="${y+4}" fill="#ebe7df" font-family="JetBrains Mono, monospace" font-size="11.5" font-weight="700" text-anchor="middle">N${i}</text>`;
+    const label = i===0 ? "GND 0 V" : (v===null?"?":v.toFixed(2)+" V") + (isSrc?" (+src)":"");
+    s+=`<text x="${x}" y="${i===0?y+32:y-24}" fill="${isSrc?"#ffb547":"#8a949a"}" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">${label}</text>`;
+  }
+  if(!r) s+=`<text x="${W/2}" y="22" fill="#ef7a64" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">not solved: see status on the right</text>`;
+  svg.innerHTML=s;
+}
+renderRows(); solveAndShow();
+
+/* =========================================================
+   Image lab (port of IMAGE_ENHANCEMENT.ipynb)
+   ========================================================= */
+const inC=$("imgIn"), outC=$("imgOut"), ictx=inC.getContext("2d",{willReadFrequently:true}), octx=outC.getContext("2d"), hctx=$("hist").getContext("2d");
+let op="equal", gammaA=1.9;
+function sampleScene(){
+  const W=inC.width,H=inC.height, c=ictx;
+  let g=c.createLinearGradient(0,0,0,H); g.addColorStop(0,"#6f9cc9"); g.addColorStop(.6,"#d8e3ea"); c.fillStyle=g; c.fillRect(0,0,W,H);
+  c.fillStyle="#f6e7b0"; c.beginPath(); c.arc(360,80,28,0,7); c.fill();
+  c.fillStyle="#4c6178"; c.beginPath(); c.moveTo(0,190); [[60,120],[130,170],[200,100],[280,175],[340,130],[420,180],[480,140],[480,300],[0,300]].forEach(p=>c.lineTo(...p)); c.fill();
+  c.fillStyle="#2f4a3a"; c.beginPath(); c.moveTo(0,230); [[90,200],[170,225],[260,195],[360,228],[480,205],[480,300],[0,300]].forEach(p=>c.lineTo(...p)); c.fill();
+  c.fillStyle="#1d2f25"; for(let i=0;i<14;i++){const x=20+i*34+(i%3)*7, h=34+(i*13)%26; c.beginPath(); c.moveTo(x,262-h); c.lineTo(x-12,262); c.lineTo(x+12,262); c.fill();}
+  c.fillStyle="#3b3a36"; c.fillRect(0,262,W,38);
+  c.fillStyle="#d9d4c4"; for(let x=10;x<W;x+=46) c.fillRect(x,279,24,4);
+  c.fillStyle="#7a2e22"; c.fillRect(300,214,70,48); c.fillStyle="#552018"; c.beginPath(); c.moveTo(294,216); c.lineTo(335,190); c.lineTo(376,216); c.fill();
+  c.fillStyle="#e8c56a"; c.fillRect(312,228,12,12); c.fillRect(346,228,12,12);
+  c.fillStyle="rgba(205,210,214,0.62)"; c.fillRect(0,0,W,H);
+}
+function fitImage(img){ const W=inC.width,H=inC.height, s=Math.max(W/img.width,H/img.height), w=img.width*s, h=img.height*s; ictx.fillStyle="#000"; ictx.fillRect(0,0,W,H); ictx.drawImage(img,(W-w)/2,(H-h)/2,w,h); }
+function stats(gray){ let m=0; for(const v of gray) m+=v; m/=gray.length; let sd=0; for(const v of gray) sd+=(v-m)*(v-m); return [m, Math.sqrt(sd/gray.length)]; }
+function hist(gray){ const h=new Array(256).fill(0); for(const v of gray) h[v]++; return h; }
+const PY = {
+  gray:`img = cv2.imread("sample.jpg", cv2.IMREAD_GRAYSCALE)`,
+  thresh:`img = cv2.imread("sample.jpg", cv2.IMREAD_GRAYSCALE)\nimg[img < img.mean()] = 0\nimg[img >= img.mean()] = 1`,
+  invert:`plt.imshow(255 - img, cmap="gray")`,
+  equal:`img = cv2.imread("sample.jpg", cv2.IMREAD_GRAYSCALE)\nequalized = cv2.equalizeHist(img)`,
+  gamma:a=>`alpha = ${a.toFixed(2)}\nbeta = 255\nadjusted = beta * ((img / 255) ** alpha)`,
+};
+const OPNAME={gray:"grayscale",thresh:"threshold at mean",invert:"inverted",equal:"histogram equalised",gamma:"gamma corrected"};
+function runImage(){
+  const W=inC.width,H=inC.height, d=ictx.getImageData(0,0,W,H).data, n=W*H;
+  const gray=new Uint8ClampedArray(n); for(let i=0;i<n;i++) gray[i]=Math.round(.299*d[i*4]+.587*d[i*4+1]+.114*d[i*4+2]);
+  const out=new Uint8ClampedArray(n);
+  if(op==="gray") out.set(gray);
+  else if(op==="thresh"){ const m=stats(gray)[0]; for(let i=0;i<n;i++) out[i]=gray[i]>=m?255:0; }
+  else if(op==="invert"){ for(let i=0;i<n;i++) out[i]=255-gray[i]; }
+  else if(op==="equal"){ const h=hist(gray), cdf=[]; let c=0; for(let i=0;i<256;i++){c+=h[i];cdf[i]=c;} const cmin=cdf.find(v=>v>0); const lut=cdf.map(v=>Math.round((v-cmin)/Math.max(1,n-cmin)*255)); for(let i=0;i<n;i++) out[i]=lut[gray[i]]; }
+  else if(op==="gamma"){ const lut=Array.from({length:256},(_,v)=>Math.round(255*Math.pow(v/255,gammaA))); for(let i=0;i<n;i++) out[i]=lut[gray[i]]; }
+  const o=octx.createImageData(W,H); for(let i=0;i<n;i++){o.data[i*4]=o.data[i*4+1]=o.data[i*4+2]=out[i]; o.data[i*4+3]=255;} octx.putImageData(o,0,0);
+  const [mi,si]=stats(gray), [mo,so]=stats(out);
+  $("statIn").textContent=`mean ${mi.toFixed(0)} · contrast ${si.toFixed(0)}`; $("statOut").textContent=`mean ${mo.toFixed(0)} · contrast ${so.toFixed(0)}`; $("opName").textContent=OPNAME[op];
+  const hi=hist(gray), ho=hist(out), HW=960, HH=220, mx=Math.max(...hi.slice(1,255),...ho.slice(1,255),1);
+  hctx.clearRect(0,0,HW,HH); const bw=HW/256;
+  hctx.fillStyle="rgba(150,160,166,.45)"; hi.forEach((v,i)=>{const h=Math.min(HH-10,(v/mx)*(HH-10)); hctx.fillRect(i*bw,HH-h,bw,h);});
+  hctx.fillStyle="rgba(255,181,71,.85)"; ho.forEach((v,i)=>{const h=Math.min(HH-10,(v/mx)*(HH-10)); hctx.fillRect(i*bw,HH-h,Math.max(1,bw-0.5),h);});
+  $("pyCode").textContent = "# the same idea in Python + OpenCV\n" + (op==="gamma"?PY.gamma(gammaA):PY[op]);
+}
+document.querySelectorAll("#ops button").forEach(b=>b.onclick=()=>{ op=b.dataset.op; document.querySelectorAll("#ops button").forEach(x=>x.setAttribute("aria-pressed",x===b)); $("gammaWrap").style.display = op==="gamma"?"flex":"none"; runImage(); });
+$("gamma").oninput=e=>{gammaA=+e.target.value; $("gVal").textContent=gammaA.toFixed(2); runImage();};
+$("imgFile").onchange=e=>{ const f=e.target.files[0]; if(!f) return; const url=URL.createObjectURL(f), img=new Image();
+  img.onload=()=>{fitImage(img); URL.revokeObjectURL(url); runImage();}; img.onerror=()=>{ $("statIn").textContent="couldn't read that file. try a JPG or PNG."; }; img.src=url; };
+sampleScene(); runImage();
+
+/* =========================================================
+   Resistor colour code
+   ========================================================= */
+const COLORS=[["Black","#1a1a1a"],["Brown","#7b4a1e"],["Red","#d0312d"],["Orange","#f28c28"],["Yellow","#f4d03f"],["Green","#2e9b4f"],["Blue","#2f6fd6"],["Violet","#8e44ad"],["Grey","#8a8f94"],["White","#f4f4f4"]];
+const MULT=[...COLORS.map((c,i)=>[c[0],c[1],Math.pow(10,i)]),["Gold","#c9a227",0.1],["Silver","#c0c0c0",0.01]];
+const TOL=[["Brown","#7b4a1e",1],["Red","#d0312d",2],["Green","#2e9b4f",0.5],["Blue","#2f6fd6",0.25],["Violet","#8e44ad",0.1],["Gold","#c9a227",5],["Silver","#c0c0c0",10]];
+const short=n=> n>=1e6? n/1e6+"M" : n>=1e3? n/1e3+"k" : String(n);
+const opt=(arr,fmt)=>arr.map((c,i)=>`<option value="${i}">${c[0]}${fmt?fmt(c):""}</option>`).join("");
+$("s1").innerHTML=opt(COLORS.slice(1)); $("s2").innerHTML=opt(COLORS); $("s3").innerHTML=opt(MULT,c=>" ×"+short(c[2])); $("s4").innerHTML=opt(TOL,c=>" ±"+c[2]+"%");
+$("s1").value=3; $("s2").value=7; $("s3").value=2; $("s4").value=5;
+const ohm=v=>{const r=x=>+x.toPrecision(3); return v>=1e6? r(v/1e6)+" MΩ" : v>=1e3? r(v/1e3)+" kΩ" : r(v)+" Ω";};
+let resValue=4700;
+function calcRes(){
+  const d1=+$("s1").value+1, d2=+$("s2").value, m=MULT[+$("s3").value], t=TOL[+$("s4").value];
+  resValue=(d1*10+d2)*m[2];
+  $("b1").setAttribute("fill",COLORS[d1][1]); $("b2").setAttribute("fill",COLORS[d2][1]); $("b3").setAttribute("fill",m[1]); $("b4").setAttribute("fill",t[1]);
+  $("resOut").textContent=ohm(resValue); $("resTol").textContent=`±${t[2]}% · ${ohm(resValue*(1-t[2]/100))} – ${ohm(resValue*(1+t[2]/100))}`;
+}
+["s1","s2","s3","s4"].forEach(i=>$(i).onchange=calcRes); calcRes();
+$("sendToSpice").onclick=()=>{
+  if(circ.res.length>=MAX_COMP) return;
+  const v=+resValue.toPrecision(3); const txt = v>=1e6? (v/1e6)+"M" : v>=1e3? (v/1e3)+"k" : String(v);
+  const top=Math.max(1,...circ.res.flatMap(r=>[r[0],r[1]]));
+  circ.res.push([top,0,txt]); renderRows(); solveAndShow(); showTab("spice"); $("tab-spice").scrollIntoView({behavior:reduce?"auto":"smooth"});
+};
+
+/* =========================================================
+   The shell
+   ========================================================= */
+const out=$("termOut"), sin=$("shellIn"), body=$("termBody");
+const hist_=[]; let hIdx=0;
+const SECTIONS=["shell","about","projects","lab","journey","skills","now","contact"];
+const C=(cls,t)=>`<span class="c-${cls}">${t}</span>`;
+function print(html){ const d=document.createElement("div"); d.className="ln"; d.innerHTML=html; out.appendChild(d); body.scrollTop=body.scrollHeight; }
+function echoCmd(cmd){ print(`${C("g","mudit@lab")}:${C("a","~")}$ ${esc(cmd)}`); }
+function go(id){ const el=$(id); if(el) el.scrollIntoView({behavior:reduce?"auto":"smooth"}); }
+const FILESYS={
+  "about.txt":()=>`Mudit Jindal. I build tools where electronics meets software:\na circuit solver in C, an AI red-teaming app, a road-health frontend.\nthe current chapter: ${C("g","cat now.md")}`,
+  "now.md":()=>`studying:  B.Tech, Electronics &amp; Communication Engineering · JIIT Noida (2026–2030)\nbuilding:  MiniSPICE v2 (modified nodal analysis)\nopen to:   new ideas, collaborations, interesting problems`,
+  "skills.json":()=>"{\n"+SKILLS.map(g=>`  ${C("c",'"'+g.group+'"')}: {\n`+g.items.map(([n,d,l])=>`    ${C("a",'"'+n.replace(/<[^>]+>/g,"")+'"')}: ${C("g",'"'+"■".repeat(l)+"□".repeat(3-l)+'"')}`).join(",\n")+"\n  }").join(",\n")+"\n}",
+  "contact.txt":()=>`email:    ${EMAIL?EMAIL:C("a","[not added yet]")}\ngithub:   <a href="https://github.com/itzmudit" target="_blank" rel="noopener">github.com/itzmudit</a>\nlinkedin: ${LINKEDIN?`<a href="${LINKEDIN}" target="_blank" rel="noopener">${LINKEDIN}</a>`:C("a","[not added yet]")}\nor run:   ${C("g","cd contact")}`,
+  "resume.pdf":()=>C("a","no résumé yet. everything I've built is on this page: try 'ls projects'."),
+};
+const neofetch=()=>{
+  const art=[" __  __     _ ","|  \\/  |   | |","| \\  / |   | |","| |\\/| |_  | |","| |  | | |_| |","|_|  |_|\\___/ "].join("\n");
+  const kv=(k,v)=>`${C("a",k)}: ${v}`;
+  const info=[`${C("g","mudit")}@${C("g","lab")}`,"-----------",kv("OS","mudit-os · circuits + code"),kv("Host","the lab bench"),kv("Kernel","C + Python"),kv("Focus","AI security · signals · C"),kv("Shell","mudit-sh 1.0"),kv("Projects","CaughtBot, MiniSPICE, RoadSentinel"),kv("Repos","github.com/itzmudit"),kv("Building","MiniSPICE v2"),kv("Status",C("g","building")),"",["#ef7a64","#ffb547","#62c784","#5fd4e3","#c3a6ff","#e8e4dc"].map(c=>`<span class="swatch" style="background:${c}"></span>`).join("")].join("\n");
+  return `<div class="neo"><pre class="art">${esc(art)}</pre><pre>${info}</pre></div>`;
+};
+/* =========================================================
+   Hidden: click eggs. Things that look like decoration answer clicks.
+   Progress is kept in this browser only.
+   ========================================================= */
+const EGGS=(function(){
+  const LIST=[
+    {id:"logo",  name:"overclock"},
+    {id:"trig",  name:"trigger"},
+    {id:"sur",   name:"power on"},
+    {id:"exit",  name:"exit 0"},
+    {id:"hud",   name:"diagnostics"},
+    {id:"morse", name:"signal"},
+    {id:"zero",  name:"zero deps"},
+    {id:"bot",   name:"attack #41"}];
+  let found=new Set(); try{ found=new Set(JSON.parse(localStorage.getItem("mj-eggs")||"[]")); }catch(e){}
+  const save=()=>{ try{ localStorage.setItem("mj-eggs",JSON.stringify([...found])); }catch(e){} };
+  const t0=performance.now();
+  let box=null, hideT=0;
+
+  function pop(id,title,body,x,y){
+    const fresh=!found.has(id); found.add(id); save();
+    if(!box){ box=document.createElement("div"); box.id="egg"; box.setAttribute("role","status"); document.body.appendChild(box);
+      box.addEventListener("click",()=>box.classList.remove("on")); }
+    const n=found.size, all=n===LIST.length;
+    box.innerHTML=`<div class="eh"><span>◆ egg ${n}/${LIST.length}${fresh?" · new":""}</span><span>✕</span></div><h4>${title}</h4><p>${body}</p>`;
+    const W=innerWidth, H=innerHeight, bw=Math.min(310,W-24);
+    box.style.width=bw+"px"; box.style.left=Math.max(12,Math.min(W-bw-12,(x??W/2)-bw/2))+"px"; box.style.top=Math.max(70,Math.min(H-190,(y??H/2)+18))+"px";
+    box.classList.remove("on"); void box.offsetWidth; box.classList.add("on");
+    ring(x,y);
+    if(window.FIELD) FIELD.wave(x,y,1.2);
+    clearTimeout(hideT); hideT=setTimeout(()=>box.classList.remove("on"),6500);
+    if(all && fresh) setTimeout(()=>complete(x,y),1400);
+  }
+  function ring(x,y){ if(x==null) return; const r=document.createElement("span"); r.className="egg-ring"; r.style.left=x+"px"; r.style.top=y+"px"; document.body.appendChild(r); setTimeout(()=>r.remove(),700); }
+  function complete(x,y){
+    document.documentElement.classList.add("gold");
+    if(window.FIELD) FIELD.burst();
+    pop("logo","all eggs found",`You clicked on everything that wasn't meant to be clicked. That's how most bugs get found too. Gold mode is now on. Run <b>eggs</b> in the shell to see the list.`,x,y);
+  }
+  const on=(sel,fn)=>{ const el=document.querySelector(sel); if(el) el.addEventListener("click",fn); return el; };
+
+  // 1. logo: five quick clicks
+  let lc=[]; on(".logo b",e=>{ const now=performance.now(); lc=lc.filter(t=>now-t<2500); lc.push(now);
+    if(lc.length>=5){ lc=[]; const b=e.currentTarget; b.classList.remove("spin"); void b.offsetWidth; b.classList.add("spin");
+      pop("logo","overclocked",`Five clicks in under 2.5 s, roughly ${(5/2.5).toFixed(1)} Hz. The logo is rated for 1. It survived.`,e.clientX,e.clientY); } });
+  // 2. the scope's TRIG'D lamp
+  on(".scope-top .trig",e=>pop("trig","triggered",`Captured on a rising edge at t = ${((performance.now()-t0)/1000).toFixed(2)} s. The edge was your click.`,e.clientX,e.clientY));
+  // 3. the outlined surname
+  on(".surname",e=>{ e.currentTarget.classList.toggle("lit");
+    pop("sur","power on","Outlined letters are just letters with no current through them. Fixed.",e.clientX,e.clientY); });
+  // 4. footer exit code
+  on("footer .g",e=>pop("exit","exit code 0","The page ran top to bottom with no errors. Enjoy it, that's rare.",e.clientX,e.clientY));
+  // 5. the HUD readout in the corner
+  on("#hud",e=>{ const up=Math.round((performance.now()-t0)/1000);
+    pop("hud","diagnostics",`uptime ${Math.floor(up/60)}m ${up%60}s · viewport ${innerWidth}×${innerHeight} · eggs ${found.size+(found.has("hud")?0:1)}/${LIST.length} · status nominal`,e.clientX,e.clientY-160); });
+  // 6. copyright line blinks MJ in Morse
+  const fs=document.querySelectorAll("footer .wrap > span");
+  if(fs[0]) fs[0].addEventListener("click",e=>{ const el=fs[0]; if(el.dataset.busy) return; el.dataset.busy=1;
+    const code="-- .---", led=document.createElement("i"); led.className="led"; el.prepend(led);
+    let t=0; for(const ch of code){ const d=ch==="-"?420:ch==="."?140:0; if(ch===" "){t+=420;continue;}
+      setTimeout(()=>led.classList.add("on"),t); setTimeout(()=>led.classList.remove("on"),t+d); t+=d+160; }
+    setTimeout(()=>{ led.remove(); delete el.dataset.busy; },t+300);
+    pop("morse","signal","<b>-- .---</b> is MJ in Morse code. Watch the LED next to the copyright.",e.clientX,e.clientY-160); });
+  // 7. "0 frameworks" line
+  if(fs[1]) fs[1].addEventListener("click",e=>{ const html=document.documentElement.outerHTML;
+    pop("zero","zero dependencies",`This page: ${html.split("\n").length.toLocaleString()} lines, ${(new Blob([html]).size/1024).toFixed(0)} KB, 0 frameworks, 0 npm installs, 1 file.`,e.clientX,e.clientY-160); });
+  // 8. "CaughtBot" in the intro
+  on(".lede em",e=>pop("bot","attack #41","Asking the chatbot nicely to ignore its rules. Blocked. It said please was a nice touch, though.",e.clientX,e.clientY));
+
+  if(found.size===LIST.length) document.documentElement.classList.add("gold");
+  return { list:()=>LIST.map(g=>({name:g.name,found:found.has(g.id)})), count:()=>found.size, total:LIST.length,
+           reset:()=>{ found.clear(); save(); document.documentElement.classList.remove("gold"); } };
+})();
+
+const CMDS={
+  help:()=>[
+    ["whoami","who is this"],["neofetch","system info, mudit edition"],["ls [dir]","list files (try: ls projects)"],["cat &lt;file&gt;","read a file (about.txt, now.md, skills.json, contact.txt)"],
+    ["projects","list my projects"],["open &lt;project&gt;","open a case study (caughtbot, minispice, roadsentinel)"],
+    ["./caughtbot --score","CaughtBot's before / after results"],["solve [circuit]","run MiniSPICE (divider, bridge, parallel, ladder, broken)"],
+    ["scope &lt;wave&gt;","set the oscilloscope (sine, square, tri, ecg)"],["cd &lt;section&gt;","jump to a section (about, projects, lab, journey, skills, contact)"],
+    ["github","my GitHub"],["history","commands you've run"],["clear","clear the screen"],["cat now.md","the current chapter"]
+  ].map(([c,d])=>{ const raw=c.replace(/&lt;/g,"<").replace(/&gt;/g,">"); return `  ${C("g",esc(raw.padEnd(22," ")).replace(/ /g,"&nbsp;"))}${C("d",d)}`; }).join("\n"),
+  whoami:()=>`mudit jindal · electronics + software\n${C("d","builds things that run: ai security tools, circuit solvers, frontends")}`,
+  neofetch,
+  ls:a=>{ a=(a||"").replace(/\/$/,"");
+    if(!a||a==="~"||a===".") return `${C("c","projects/")}  ${C("c","lab/")}  about.txt  now.md  skills.json  contact.txt`;
+    if(a==="projects") return PROJECTS.map(p=>C("c",p.id+"/")).join("  ");
+    if(a==="lab") return `${C("g","minispice*")}  ${C("g","image-lab*")}  ${C("g","resistor*")}`;
+    return C("r",`ls: cannot access '${esc(a)}': No such file or directory`); },
+  cat:a=>{ if(!a) return C("r","cat: missing file operand. try: cat about.txt"); const f=FILESYS[a.replace(/^~\//,"")]; return f?f():C("r",`cat: ${esc(a)}: No such file or directory`); },
+  projects:()=>PROJECTS.map(p=>`${C("a",p.id.padEnd(14," ").replace(/ /g,"&nbsp;"))}${p.sub}`).join("\n")+`\n${C("d","run 'open <name>' for the full case study")}`,
+  open:a=>{ if(!a) return C("r","open: which one? try: open caughtbot"); const k=a.toLowerCase().replace(/[^a-z]/g,""); const id=PROJECTS.find(p=>p.id===k||p.id.startsWith(k))?.id; if(!id) return C("r",`open: no project named '${esc(a)}'. run 'projects' to list them.`); setTimeout(()=>openProject(id),120); return C("g",`opening ${id}...`); },
+  "./caughtbot":a=>{ if(!/--score/.test(a||"")) return `usage: ./caughtbot --score`;
+    const b=(n,col)=>C(col,"█".repeat(n*2)+"░".repeat(16-n*2));
+    return `${C("b","CaughtBot · demo bot · attacks that got through (out of 8)")}\n\n`+CB_RESULTS.map(([n,x,y])=>`${n.padEnd(22," ").replace(/ /g,"&nbsp;")}before ${b(x,"r")} ${x}\n${"".padEnd(22," ").replace(/ /g,"&nbsp;")}after&nbsp;&nbsp;${b(y,"g")} ${y}`).join("\n")+`\n\nsecurity score: ${C("r","22")} → ${C("g","62")} / 100   ${C("g","✓ hardened")}`; },
+  solve:a=>{ const key=PRESET_KEYS[(a||"divider").toLowerCase()]; if(!key) return C("r",`solve: unknown circuit '${esc(a)}'. options: ${Object.keys(PRESET_KEYS).join(", ")}`);
+    const r=solve(PRESETS[key]); setTimeout(()=>loadPreset(key),50);
+    if(r.errs) return `${C("a","$ ./minispice < "+(a||"divider")+".cir")}\n${C("r","✕ "+esc(r.errs[0]))}`;
+    return `${C("a","$ ./minispice < "+(a||"divider")+".cir")}\n${C("b","NODE VOLTAGES")}\n`+r.V.map((v,i)=>`  N${i}  ${v.toFixed(4).padStart(9," ").replace(/ /g,"&nbsp;")} V${i===0?C("d","  (ground)"):""}`).join("\n")+`\n${C("b","SOURCE")}  ${fmtU(Math.abs(r.Is),"A")} · ${fmtU(r.Psup,"W")} supplied · ${fmtU(r.Pused,"W")} used ${C("g","✓")}\n${C("d","loaded into the Lab too → cd lab")}`; },
+  scope:a=>{ const w={sine:"sine",square:"square",sqr:"square",tri:"tri",triangle:"tri",ecg:"ecg"}[(a||"").toLowerCase()]; if(!w) return "usage: scope sine|square|tri|ecg"; setWave(w); return C("g",`CH1 → ${w}. look up ↑`); },
+  cd:a=>{ a=(a||"~").replace(/^~\/?|\/$/g,"").toLowerCase(); if(!a){go("top"); return C("d","~");} if(a==="log") a="journey"; if(SECTIONS.includes(a)){ go(a); return C("d",`~/${a}`);} return C("r",`cd: no such directory: ${esc(a)}`); },
+  github:()=>`<a href="https://github.com/itzmudit" target="_blank" rel="noopener">https://github.com/itzmudit</a> ${C("d","· CaughtBot, MiniSPICE")}`,
+  history:()=>hist_.map((h,i)=>`${String(i+1).padStart(4," ").replace(/ /g,"&nbsp;")}  ${esc(h)}`).join("\n")||C("d","(empty)"),
+  date:()=>new Date().toString(),
+  pwd:()=>"/home/mudit",
+  echo:a=>esc(a||""),
+  clear:()=>{ out.innerHTML=""; return null; },
+  sudo:a=>{ if(/make\s+me\s+a\s+sandwich/i.test(a||"")) return "okay."; return C("r","mudit is not in the sudoers file. this incident will be reported to /dev/null."); },
+  exit:()=>`there is no exit. try ${C("g","cd contact")} instead.`,
+  rm:()=>C("r","rm: permission denied. nice try."),
+  vim:()=>`you are now stuck in vim. just kidding. ${C("d","(:q!)")}`,
+  eggs:()=>{ const L=EGGS.list(), n=EGGS.count();
+    return `${C("a","eggs found: "+n+"/"+EGGS.total)}\n`+L.map((g,i)=>`  ${String(i+1).padStart(2)}. ${g.found?C("g",g.name):C("d","???")}`).join("\n")+`\n${C("d",n===EGGS.total?"all found. gold mode unlocked.":"hint: click things that look like decoration.")}`; },
+  decrypt:()=>{ const msg="you read the source. that's the right instinct.", glyph="01<>/{}#$%&*+=", id="dc"+Date.now();
+    setTimeout(()=>{ const el=$(id); if(!el) return; let f=0; const t=setInterval(()=>{ f++; el.textContent=msg.split("").map((ch,i)=>ch===" "?" ":(f>i*.6+6?ch:glyph[Math.floor(Math.random()*glyph.length)])).join(""); if(f>msg.length*.6+8){ clearInterval(t); el.textContent=msg; FIELD.wave(); FIELD.burst(); } },35); },60);
+    return `${C("a","[decrypting payload…]")}\n<span id="${id}" class="c-g"></span>\n${C("d","more hides here: the code answers stillness, old consoles remember a certain code, and some decorations answer clicks. try: eggs")}`; },
+  ping:()=>`PING mudit (127.0.0.1): 56 data bytes\n64 bytes from mudit: icmp_seq=0 ttl=64 time=0.42 ms\n${C("g","mudit is up and replying.")}`,
+};
+const ALIASES={"?":"help",ll:"ls","ls -la":"ls",man:"help",about:"cat about.txt",contact:"cat contact.txt",skills:"cat skills.json",resume:"cat resume.pdf",now:"cat now.md"};
+function run(raw){
+  let cmd=raw.trim(); if(!cmd) { echoCmd(""); return; }
+  hist_.push(cmd); hIdx=hist_.length; echoCmd(cmd);
+  if(ALIASES[cmd]) cmd=ALIASES[cmd];
+  const [name,...rest]=cmd.split(/\s+/); const arg=rest.join(" ");
+  const fn=CMDS[name]||CMDS[name.toLowerCase()];
+  if(!fn){ print(C("r",`mudit-sh: command not found: ${esc(name)}`)+`  ${C("d","type 'help'")}`); return; }
+  const res=fn(arg); if(res!==null&&res!==undefined) print(res);
+}
+const COMPLETE=[...Object.keys(CMDS).filter(k=>k!=="decrypt"&&k!=="eggs"),"ls projects","cat about.txt","cat skills.json","cat contact.txt","cat now.md","./caughtbot --score",...PROJECTS.map(p=>"open "+p.id),...Object.keys(PRESET_KEYS).map(k=>"solve "+k),...SECTIONS.map(s=>"cd "+s),"scope ecg","scope square","sudo make me a sandwich"];
+sin.addEventListener("keydown",e=>{
+  if(e.key==="Enter"){ run(sin.value); sin.value=""; e.preventDefault(); }
+  else if(e.key==="ArrowUp"){ if(hIdx>0){hIdx--; sin.value=hist_[hIdx];} e.preventDefault(); }
+  else if(e.key==="ArrowDown"){ if(hIdx<hist_.length-1){hIdx++; sin.value=hist_[hIdx];} else {hIdx=hist_.length; sin.value="";} e.preventDefault(); }
+  else if(e.key==="Tab"){ e.preventDefault(); const v=sin.value; if(!v) return; const m=COMPLETE.filter(c=>c.startsWith(v)); if(m.length===1) sin.value=m[0]+(m[0].includes(" ")?"":" "); else if(m.length>1){ echoCmd(v); print(m.map(x=>C("c",esc(x))).join("   ")); } }
+  else if(e.key==="l"&&e.ctrlKey){ e.preventDefault(); out.innerHTML=""; }
+});
+body.addEventListener("click",e=>{ if(!e.target.closest("a") && !getSelection().toString()) sin.focus({preventScroll:true}); });
+$("hints").innerHTML=["help","neofetch","./caughtbot --score","solve bridge","open minispice","scope ecg","cat now.md"].map(c=>`<button type="button" data-cmd="${c}">${c}</button>`).join("");
+$("hints").addEventListener("click",e=>{ const b=e.target.closest("[data-cmd]"); if(b){ run(b.dataset.cmd); sin.focus({preventScroll:true}); } });
+function focusShell(){ go("shell"); setTimeout(()=>sin.focus({preventScroll:true}), reduce?0:450); }
+$("termBtn").onclick=focusShell;
+addEventListener("keydown",e=>{
+  const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+  if(!typing && (e.key==="/"||e.key==="`") && !dlg.open){ e.preventDefault(); focusShell(); }
+  if(e.key==="Escape" && document.activeElement===sin) sin.blur();
+});
+print(`${C("d","mudit-sh 1.0 · type")} ${C("g","help")} ${C("d","for commands · Tab completes · ↑ ↓ history")}`);
+echoCmd("neofetch"); print(neofetch());
+
+/* =========================================================
+   Contact
+   ========================================================= */
+if(EMAIL){ $("mailText").textContent=EMAIL; }
+$("copyMail").onclick=async e=>{
+  const b=e.currentTarget, orig=b.innerHTML;
+  if(!EMAIL){ b.textContent="email not added yet"; setTimeout(()=>b.innerHTML=orig,2000); return; }
+  try{ await navigator.clipboard.writeText(EMAIL); b.textContent="copied ✓"; }catch(err){ b.textContent="select the address above to copy"; }
+  setTimeout(()=>b.innerHTML=orig,2000);
+};
+$("msgForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const n=$("fn").value.trim(), em=$("fe").value.trim(), m=$("fm").value.trim();
+  if(!n||!em||!m){ $("formOut").textContent="Please fill in your name, email and message first."; return; }
+  const bodyTxt=`Subject: ${$("fs").value}, from ${n}\n\n${m}\n\n${n}\n${em}`;
+  location.href=`mailto:${EMAIL}?subject=${encodeURIComponent($("fs").value+" (from "+n+")")}&body=${encodeURIComponent(m+"\n\n"+n+"\n"+em)}`;
+  $("formOut").innerHTML=`Your email app should open now. If it didn't, copy this and send it to ${esc(EMAIL)}:<pre>${esc(bodyTxt)}</pre>`;
+  countFills();
+});
+
+/* =========================================================
+   Blank-slot helper
+   ========================================================= */
+let fillIdx=0;
+function visibleFills(){ return [...document.querySelectorAll("main .fill")].filter(f=>f.offsetParent!==null); }
+function countFills(){ const n=visibleFills().length; $("fillCount").textContent=n; $("helper").hidden=n===0; }
+function flashTo(el){ el.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"}); el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+$("nextFill").onclick=()=>{ const fs=visibleFills(); if(!fs.length) return; fillIdx%=fs.length; flashTo(fs[fillIdx]); fillIdx++; };
+$("toggleFills").onclick=e=>{ const on=document.body.classList.toggle("hide-fills"); e.currentTarget.setAttribute("aria-pressed",on); e.currentTarget.textContent=on?"show highlights":"hide highlights"; };
+
+renderProjects("all");
+console.log("%c mudit-sh ","background:#ffb547;color:#111;font-weight:700","devtools open? good. there's a command the shell never lists. the page source knows it.");
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- psst. you opened the source. the shell has one command it never lists: decrypt -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mudit Jindal</title>
+<meta name="description" content="Mudit Jindal builds tools where electronics meets software. CaughtBot, MiniSPICE and a working shell, all running on the page.">
+<meta name="theme-color" content="#07090a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a night shift at the lab bench. A circuit board glows behind everything, signals run along its traces,
+   and every section is a window on that bench: a shell, an editor, a git log, a scope. */
+:root{
+  --bg:#07090a; --panel:rgba(13,17,19,.86); --panel2:#0d1113; --line:#1d2529; --line2:#2a353a;
+  --ink:#e8e4dc; --muted:#8a949a; --dim:#5a656b;
+  --accent:#ffb547; --accent-soft:rgba(255,181,71,.10); --cyan:#5fd4e3; --ok:#62c784; --bad:#ef7a64; --violet:#c3a6ff;
+  --display:"Big Shoulders Display","Arial Narrow",sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:12px; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px;background:var(--bg)}
+body{margin:0;background:transparent;color:var(--ink);font:16px/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--accent);color:#111}
+a{color:inherit}
+img{max-width:100%}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px;position:relative}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1;letter-spacing:.01em}
+h2{font-size:clamp(44px,6.5vw,76px);font-weight:900;text-transform:uppercase}
+h3{font-size:26px;font-weight:900;text-transform:uppercase}
+p{margin:0}
+.mono{font-family:var(--mono)}
+.muted{color:var(--muted)}
+.k{font:700 11.5px var(--mono);color:var(--accent);letter-spacing:.1em;text-transform:uppercase}
+
+/* ---------- background ---------- */
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:-3;display:block}
+.glow{display:none}
+.scan{display:none;position:fixed;inset:0;z-index:-1;pointer-events:none}
+html.crt .scan{display:block}
+
+/* ---------- blanks ---------- */
+.fill{display:inline-block;font:500 .8em/1.4 var(--mono);color:var(--accent);background:var(--accent-soft);border:1.5px dashed var(--accent);border-radius:6px;padding:1px 8px;letter-spacing:0;text-transform:none}
+.fill.block{display:flex;align-items:center;justify-content:center;text-align:center;padding:14px}
+body.hide-fills .fill{border-color:transparent;background:transparent}
+
+/* ---------- window chrome ---------- */
+.win{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:0 30px 70px -40px #000}
+.win-bar{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02);font:500 12px var(--mono);color:var(--muted)}
+.dots{display:flex;gap:6px}
+.dots i{width:11px;height:11px;border-radius:50%;background:#3a4246}
+.dots i:nth-child(1){background:#ef7a64}.dots i:nth-child(2){background:#ffb547}.dots i:nth-child(3){background:#62c784}
+.win-bar .title{flex:1;text-align:center;letter-spacing:.04em}
+.win-bar .right{color:var(--dim)}
+
+/* ---------- nav ---------- */
+header{position:sticky;top:0;z-index:20;background:rgba(7,9,10,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;gap:16px;height:60px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font:500 13px var(--mono);color:var(--muted)}
+.logo b{display:grid;place-items:center;width:34px;height:34px;border:1.5px solid var(--accent);color:var(--accent);border-radius:8px;font:900 18px var(--display);box-shadow:0 0 18px -4px rgba(255,181,71,.6)}
+.logo span em{font-style:normal;color:var(--ok)}
+.links{display:flex;gap:2px;margin-left:auto}
+.links a{text-decoration:none;font:500 13px var(--mono);color:var(--muted);padding:8px 10px;border-radius:6px}
+.links a::before{content:"./";color:var(--dim)}
+.links a:hover,.links a.on{color:var(--ink);background:var(--accent-soft)}
+.links a.on::before{color:var(--accent)}
+.icon-btn{height:36px;min-width:36px;padding:0 10px;flex:none;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:600 12px var(--mono)}
+.icon-btn kbd{font:600 11px var(--mono);color:var(--muted);border:1px solid var(--line2);border-radius:4px;padding:0 5px}
+.menu-btn{display:none}
+@media (max-width:920px){
+  .links{display:none;position:absolute;top:60px;left:0;right:0;flex-direction:column;background:#07090a;border-bottom:1px solid var(--line);padding:10px 20px}
+  .links.open{display:flex}
+  .menu-btn{display:inline-flex;margin-left:auto}
+  .icon-btn kbd{display:none}
+}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:44px;align-items:center;padding:46px 0 34px}
+@media (max-width:960px){.hero{grid-template-columns:1fr;padding-top:28px}}
+.boot{font:500 12.5px/1.75 var(--mono);color:var(--muted);margin-bottom:10px;min-height:5.2em}
+.boot .okk{color:var(--ok)}
+.boot .pr{color:var(--accent)}
+.boot .line{opacity:0;animation:in .25s ease forwards}
+@keyframes in{to{opacity:1}}
+.name{font-size:clamp(84px,13vw,168px);font-weight:900;text-transform:uppercase;line-height:.82;margin:6px 0 2px;text-shadow:0 0 40px rgba(255,181,71,.15)}
+.name .a{color:var(--accent);text-shadow:0 0 34px rgba(255,181,71,.45)}
+.surname{font:900 clamp(32px,4.8vw,58px) var(--display);text-transform:uppercase;letter-spacing:.22em;color:transparent;-webkit-text-stroke:1.2px var(--muted);margin-bottom:18px}
+.role{font:500 16px var(--mono);color:var(--ink);margin-bottom:14px}
+.role .g{color:var(--ok)}
+.caret{display:inline-block;width:.6em;height:1.1em;background:var(--accent);vertical-align:-.18em;margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.lede{font-size:18px;max-width:42ch;color:#cfd2cc}
+.lede em{font-style:normal;color:var(--accent);font-weight:600}
+.ctas{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;font:700 13px var(--mono);letter-spacing:.02em;text-decoration:none;padding:12px 16px;border-radius:8px;border:1.5px solid var(--line2);background:rgba(13,17,19,.7);color:var(--ink);cursor:pointer;transition:border-color .2s, box-shadow .2s, transform .2s}
+.btn:hover{border-color:var(--accent);box-shadow:0 0 24px -8px var(--accent);transform:translateY(-1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#141414;box-shadow:0 0 30px -8px rgba(255,181,71,.8)}
+.btn.sm{padding:8px 12px;font-size:12px}
+.btn .p{color:var(--dim)}
+.btn.primary .p{color:#5a3a00}
+
+.scope{background:#14181b;border-radius:16px;padding:14px;border:1px solid #2b3135;color:#cfd5d9;box-shadow:0 40px 80px -40px #000,0 0 0 1px rgba(255,181,71,.05),0 0 60px -30px rgba(255,181,71,.35)}
+.scope-top{display:flex;justify-content:space-between;font:500 11px var(--mono);letter-spacing:.06em;color:#8a949a;padding:0 4px 10px}
+.scope-top b{color:var(--accent);font-weight:700}
+.scope-top .trig{color:var(--ok)}
+.screen{position:relative;background:#050607;border-radius:8px;overflow:hidden;aspect-ratio:10/7;border:1px solid #000}
+.screen canvas{width:100%;height:100%;display:block}
+.hud{position:absolute;inset:8px 10px auto;display:flex;justify-content:space-between;font:500 11px var(--mono);color:var(--accent);pointer-events:none}
+.hud .c2{color:var(--cyan)}
+.scope-ctl{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;padding:12px 4px 2px}
+@media (max-width:460px){.scope-ctl{grid-template-columns:1fr}}
+.wave-btns{display:flex;gap:6px}
+.wave-btns button{font:700 11px var(--mono);background:#20262a;color:#b8c0c5;border:1px solid #343b40;border-radius:6px;padding:7px 10px;cursor:pointer}
+.wave-btns button[aria-pressed="true"]{background:var(--accent);color:#141414;border-color:var(--accent)}
+.knob{display:flex;align-items:center;gap:10px;font:500 11px var(--mono);color:#8a949a}
+.knob input{flex:1;accent-color:var(--accent)}
+
+.statusbar{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:var(--r);background:var(--panel);margin:0;padding:0;overflow:hidden}
+.statusbar div{padding:16px 18px;border-left:1px solid var(--line)}
+.statusbar div:first-child{border-left:0}
+.statusbar dt{font:500 11px var(--mono);color:var(--dim)}
+.statusbar dt::before{content:"$ ";color:var(--accent)}
+.statusbar dd{margin:6px 0 0;font-weight:600}
+@media (max-width:800px){.statusbar{grid-template-columns:1fr 1fr}.statusbar div:nth-child(3){border-left:0}.statusbar div:nth-child(n+3){border-top:1px solid var(--line)}}
+
+/* ---------- sections ---------- */
+section{padding:96px 0 0}
+.sec-head{display:flex;align-items:end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:30px;padding-bottom:16px;border-bottom:1px solid var(--line2);position:relative}
+.sec-head::after{content:"";position:absolute;left:0;bottom:-1px;width:120px;height:2px;background:var(--accent);box-shadow:0 0 14px var(--accent)}
+.path{display:block;font:500 13px var(--mono);color:var(--muted);margin-bottom:8px}
+.path b{color:var(--ok);font-weight:500}
+.path i{font-style:normal;color:var(--accent)}
+.sec-head h2 .cur{display:inline-block;width:.38em;height:.72em;background:var(--accent);margin-left:.12em;vertical-align:-.04em;animation:blink 1.1s steps(1) infinite;box-shadow:0 0 18px rgba(255,181,71,.6)}
+.sec-head .tag{font:500 12px var(--mono);color:var(--dim)}
+.sec-head p{max-width:52ch;color:var(--muted)}
+
+/* ---------- shell ---------- */
+#shellWin .term-body{height:430px;overflow-y:auto;padding:16px 18px;font:13.5px/1.6 var(--mono);color:#d6dbde;cursor:text}
+.term-body pre{margin:0;font:inherit;white-space:pre-wrap;word-break:break-word}
+.term-body .ln{white-space:pre-wrap}
+.c-a{color:var(--accent)}.c-c{color:var(--cyan)}.c-g{color:var(--ok)}.c-r{color:var(--bad)}.c-d{color:var(--dim)}.c-v{color:var(--violet)}.c-b{font-weight:700}
+.term-body a{color:var(--cyan)}
+.prompt-line{display:flex;gap:8px;align-items:center}
+.prompt-line .ps{color:var(--ok);white-space:nowrap}
+.prompt-line .ps b{color:var(--accent);font-weight:500}
+#shellIn,#shellIn:focus{flex:1;background:transparent;border:0;outline:0;box-shadow:none;color:var(--ink);font:inherit;caret-color:var(--accent);padding:0;min-width:0}
+.shell-hints{display:flex;gap:8px;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--line);background:rgba(255,255,255,.015)}
+.shell-hints button{font:500 12px var(--mono);color:var(--muted);background:transparent;border:1px solid var(--line2);border-radius:6px;padding:5px 9px;cursor:pointer}
+.shell-hints button:hover{color:var(--accent);border-color:var(--accent)}
+.neo{display:flex;gap:26px;flex-wrap:wrap}
+.neo pre.art{color:var(--accent);text-shadow:0 0 12px rgba(255,181,71,.4);line-height:1.15}
+.swatch{display:inline-block;width:22px;height:12px;margin-right:2px}
+
+/* ---------- about ---------- */
+.about{display:block;max-width:860px}
+@media (max-width:860px){.about{grid-template-columns:1fr}}
+.photo{aspect-ratio:4/5;border-radius:var(--r);min-height:240px}
+.bio{display:grid;gap:18px;font-size:17px;max-width:68ch}
+.bio p.big{font-size:22px;line-height:1.45}
+.ide .tabs{display:flex;gap:0;border-bottom:1px solid var(--line);background:rgba(255,255,255,.015);overflow-x:auto}
+.ide .tabs button{font:500 12.5px var(--mono);color:var(--muted);background:transparent;border:0;border-right:1px solid var(--line);padding:9px 16px;cursor:pointer;white-space:nowrap;border-top:2px solid transparent}
+.ide .tabs button[aria-selected="true"]{color:var(--ink);background:var(--panel2);border-top-color:var(--accent)}
+.code-view{display:grid;grid-template-columns:auto 1fr;font:13.5px/1.7 var(--mono);overflow-x:auto;padding:14px 0}
+.code-view .gut{color:var(--dim);text-align:right;padding:0 14px;user-select:none;border-right:1px solid var(--line)}
+.code-view pre{margin:0;padding:0 18px;font:inherit;color:#d6dbde}
+.t-k{color:var(--violet)}.t-s{color:#b5e48c}.t-n{color:var(--accent)}.t-c{color:var(--dim);font-style:italic}.t-f{color:var(--cyan)}.t-p{color:#9aa4aa}.t-t{color:#ffd28a}
+.ide-foot{display:flex;justify-content:space-between;gap:10px;padding:6px 14px;border-top:1px solid var(--line);font:500 11px var(--mono);color:var(--dim);background:rgba(255,181,71,.04)}
+.ide-foot b{color:var(--ok);font-weight:500}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:740px){.pillars{grid-template-columns:1fr}}
+.pillar{border:1px solid var(--line);background:var(--panel);border-radius:var(--r);padding:18px}
+.pillar h3{font-size:22px;margin:8px 0 6px}
+.pillar p{font-size:14.5px;color:var(--muted)}
+
+/* ---------- projects ---------- */
+.feature{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);margin-bottom:18px}
+@media (max-width:900px){.feature{grid-template-columns:minmax(0,1fr)}}
+.feature .meta{flex-wrap:wrap;gap:6px 12px}
+.feature .copy{padding:26px;display:grid;gap:16px;align-content:start}
+.feature h3{font-size:clamp(40px,10vw,58px);overflow-wrap:anywhere;text-shadow:0 0 30px rgba(255,181,71,.15)}
+.feature .chartbox{background:#050708;border-left:1px solid var(--line);padding:24px;display:grid;gap:14px;align-content:start}
+@media (max-width:900px){.feature .chartbox{border-left:0;border-top:1px solid var(--line)}}
+.score{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;font-family:var(--mono)}
+.score b{font:900 68px var(--display);line-height:1}
+.score .from{color:var(--bad)}.score .to{color:var(--ok);text-shadow:0 0 24px rgba(98,199,132,.45)}
+.score span{font-size:11.5px;color:#8a949a}
+.chart-legend{display:flex;gap:16px;font:500 11.5px var(--mono);color:#a8b0b5;flex-wrap:wrap}
+.chart-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+#cbChart{width:100%;height:auto;display:block}
+.finding{border-left:2px solid var(--accent);padding:4px 0 4px 12px;font-size:14px;color:#cfd5d9}
+.bullets{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.bullets li{padding-left:22px;position:relative;font-size:15px}
+.bullets li::before{content:">";position:absolute;left:2px;top:0;color:var(--accent);font:700 14px var(--mono)}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font:500 12px var(--mono);padding:8px 12px;border-radius:999px;border:1px solid var(--line2);background:var(--panel2);color:var(--muted);cursor:pointer}
+.chip::before{content:"--";color:var(--dim)}
+.chip[aria-pressed="true"]{border-color:var(--accent);color:var(--ink);background:var(--accent-soft)}
+.chip[aria-pressed="true"]::before{color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+@media (max-width:800px){.grid{grid-template-columns:1fr}}
+.card{display:flex;flex-direction:column;gap:12px;text-align:left;font:inherit;color:inherit;border:1px solid var(--line);background:var(--panel);border-radius:var(--r);padding:22px;cursor:pointer;transition:border-color .2s, transform .2s, box-shadow .2s;position:relative}
+.card:hover{border-color:rgba(255,181,71,.6);transform:translateY(-3px);box-shadow:0 20px 50px -30px rgba(255,181,71,.5)}
+.meta{display:flex;justify-content:space-between;gap:10px;font:500 11px var(--mono);color:var(--muted)}
+.state{display:inline-flex;gap:6px;align-items:center;white-space:nowrap}
+.state i{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.state.live i{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.state.wip i{background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.card h3{font-size:34px}
+.card .sub{color:var(--muted);font-size:15px}
+.stack{display:flex;gap:6px;flex-wrap:wrap}
+.card .stack{margin-top:auto}
+.stack span{font:500 11.5px var(--mono);border:1px solid var(--line2);border-radius:5px;padding:3px 8px;color:#cfd2cc}
+.card .open{font:500 12.5px var(--mono);color:var(--muted)}
+.card .open b{color:var(--ok);font-weight:500}
+.card:hover .open{color:var(--accent)}
+.card.empty{border-style:dashed;cursor:default;justify-content:center;min-height:200px}
+.card.empty:hover{transform:none;border-color:var(--line);box-shadow:none}
+
+dialog{border:1px solid var(--line2);border-radius:14px;background:#0b0f11;color:var(--ink);padding:0;max-width:780px;width:calc(100% - 32px);max-height:calc(100% - 48px);box-shadow:0 40px 100px -30px #000}
+dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(4px)}
+.dlg{padding:26px;display:grid;gap:20px}
+.dlg-head{display:flex;justify-content:space-between;gap:16px;align-items:start}
+.dlg h3{font-size:46px}
+.dlg dl{display:grid;grid-template-columns:150px 1fr;gap:14px 20px;margin:0}
+.dlg dt{font:500 12px var(--mono);color:var(--accent);padding-top:3px}
+.dlg dt::before{content:"# ";color:var(--dim)}
+.dlg dd{margin:0;color:#d8dad4}
+.dlg a.ext{color:var(--cyan);font-weight:600}
+.shots{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.shots figure{margin:0;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.shots figcaption{font:500 11px var(--mono);color:var(--muted);padding:6px 8px}
+@media (max-width:560px){.dlg dl{grid-template-columns:1fr;gap:4px}.dlg dd{margin-bottom:12px}}
+
+/* ---------- lab ---------- */
+.tool-wrap[hidden]{display:none}
+.tool{padding:24px;display:grid;gap:18px}
+.tool-head{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:start}
+.tool-head h3{font-size:42px;margin-top:6px}
+.tool-head p{max-width:58ch;color:var(--muted);font-size:15px;margin-top:8px}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:22px}
+@media (max-width:920px){.split{grid-template-columns:1fr}}
+label.f{display:grid;gap:5px;font:500 11px var(--mono);color:var(--muted)}
+select,input[type="number"],input[type="text"],input[type="email"],textarea{font:500 14px var(--mono);color:var(--ink);background:#080a0b;border:1px solid var(--line2);border-radius:7px;padding:8px 10px;width:100%}
+select:focus,input:focus,textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px rgba(255,181,71,.15)}
+input.bad{border-color:var(--bad);box-shadow:0 0 0 2px rgba(239,122,100,.25)}
+textarea{font-family:var(--body);min-height:110px;resize:vertical}
+.rtable{width:100%;border-collapse:collapse;font:500 13px var(--mono)}
+.rtable th{text-align:left;font-size:11px;color:var(--dim);padding:0 6px 6px;font-weight:500}
+.rtable td{padding:4px 6px;vertical-align:middle}
+.rtable td:first-child{color:var(--accent);font-weight:700;width:38px}
+.rtable select,.rtable input{padding:6px 8px;font-size:13px}
+.rm{width:30px;height:30px;border-radius:6px;border:1px solid var(--line2);background:transparent;color:var(--muted);cursor:pointer;font:inherit}
+.rm:hover{color:var(--bad);border-color:var(--bad)}
+.ctl-row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.ctl-row label.f{flex:1;min-width:120px}
+.term{background:#050708;border:1px solid var(--line);color:#d6dbde;border-radius:10px;padding:16px;font:13px/1.55 var(--mono);overflow-x:auto}
+.term .h{color:var(--accent);font-weight:700}
+.term .err{color:var(--bad)}
+.term .ok{color:var(--ok)}
+.term table{border-collapse:collapse;width:100%;min-width:430px}
+.term td,.term th{padding:2px 10px 2px 0;text-align:left;white-space:nowrap;font-variant-numeric:tabular-nums}
+.term th{color:#8a949a;font-weight:500;border-bottom:1px solid #2a3135}
+.term hr{border:0;border-top:1px dashed #2a3135;margin:10px 0}
+.term details summary{cursor:pointer;color:#8a949a}
+#graph{width:100%;height:auto;display:block;background:#050708;border:1px solid var(--line);border-radius:10px}
+.lab-note{font-size:13.5px;color:var(--muted)}
+.imgs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:620px){.imgs{grid-template-columns:1fr}}
+.imgs figure{margin:0;display:grid;gap:6px}
+.imgs canvas{width:100%;height:auto;border-radius:8px;background:#050708;display:block;border:1px solid var(--line)}
+.imgs figcaption{font:500 11px var(--mono);color:var(--muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+#hist{width:100%;height:110px;display:block;background:#050708;border:1px solid var(--line);border-radius:8px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{font:700 12px var(--mono);padding:8px 11px;border-radius:7px;border:1px solid var(--line2);background:#080a0b;color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#141414}
+.readout{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;background:#050708;border:1px solid var(--line);color:var(--accent);border-radius:8px;padding:14px 16px;font-family:var(--mono)}
+.readout b{font:900 38px var(--display);letter-spacing:.02em;text-shadow:0 0 20px rgba(255,181,71,.35)}
+.readout span{color:#8a949a;font-size:13px}
+.res-svg{width:100%;max-width:520px;height:auto;display:block}
+.row4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:540px){.row4{grid-template-columns:1fr 1fr}}
+.code{font:12.5px/1.6 var(--mono);background:#050708;border:1px solid var(--line);border-radius:8px;padding:12px;overflow-x:auto;white-space:pre;color:#d6dbde;margin:0}
+
+/* ---------- git log ---------- */
+.gitlog{padding:18px 20px;font:13.5px/1.6 var(--mono)}
+.commit{display:grid;grid-template-columns:22px 1fr;gap:12px;position:relative;padding-bottom:22px}
+.commit::before{content:"";position:absolute;left:10px;top:14px;bottom:-4px;width:2px;background:linear-gradient(var(--accent),rgba(255,181,71,.15))}
+.commit:last-child::before{display:none}
+.commit .node{width:12px;height:12px;border-radius:50%;margin:5px 0 0 5px;background:#07090a;border:2px solid var(--accent);box-shadow:0 0 10px rgba(255,181,71,.5);position:relative;z-index:1}
+.commit.next .node{border-style:dashed;border-color:var(--muted);box-shadow:none}
+.commit .head{display:flex;gap:10px;flex-wrap:wrap;align-items:baseline}
+.commit .hash{color:var(--accent)}
+.commit .ref{color:var(--cyan)}
+.commit .date{color:var(--dim)}
+.commit .msg{color:var(--ink);font-weight:700}
+.commit p{font-family:var(--body);font-size:15px;color:var(--muted);margin-top:4px;max-width:68ch}
+
+/* ---------- skills ---------- */
+.skills{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+@media (max-width:800px){.skills{grid-template-columns:1fr}}
+.sk-group{padding:6px 20px 14px}
+.sk{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:10px 0;border-top:1px dashed var(--line2)}
+.sk:first-child{border-top:0}
+.sk .nm{font:600 14px var(--mono)}
+.sk small{display:block;color:var(--muted);font:13px var(--body)}
+.lvl{font:700 13px var(--mono);color:var(--dim);letter-spacing:1px}
+.lvl b{color:var(--accent);font-weight:700;text-shadow:0 0 10px rgba(255,181,71,.5)}
+.legend{display:flex;gap:18px;font:500 12px var(--mono);color:var(--muted);flex-wrap:wrap}
+
+/* ---------- now ---------- */
+.yaml{padding:18px 22px;font:14px/1.9 var(--mono)}
+.yaml .ky{color:var(--cyan)}
+.yaml .vl{color:#d6dbde}
+.yaml .cm{color:var(--dim)}
+
+/* ---------- contact ---------- */
+.contact{display:grid;grid-template-columns:1fr 1.1fr;gap:24px}
+@media (max-width:900px){.contact{grid-template-columns:1fr}}
+.contact .pane{padding:22px}
 .big-mail{font:900 clamp(30px,4vw,46px) var(--display);word-break:break-all;margin-top:4px}
 @media (max-width:560px){.big-mail{font-size:clamp(20px,6.6vw,30px);word-break:normal;overflow-wrap:anywhere}}
 .helper[hidden]{display:none}
