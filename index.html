@@ -178,10 +178,11 @@ section{padding:96px 0 0}
 .pillar p{font-size:14.5px;color:var(--muted)}
 
 /* ---------- projects ---------- */
-.feature{display:grid;grid-template-columns:1fr 1fr;margin-bottom:18px}
-@media (max-width:900px){.feature{grid-template-columns:1fr}}
+.feature{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);margin-bottom:18px}
+@media (max-width:900px){.feature{grid-template-columns:minmax(0,1fr)}}
+.feature .meta{flex-wrap:wrap;gap:6px 12px}
 .feature .copy{padding:26px;display:grid;gap:16px;align-content:start}
-.feature h3{font-size:58px;text-shadow:0 0 30px rgba(255,181,71,.15)}
+.feature h3{font-size:clamp(40px,10vw,58px);overflow-wrap:anywhere;text-shadow:0 0 30px rgba(255,181,71,.15)}
 .feature .chartbox{background:#050708;border-left:1px solid var(--line);padding:24px;display:grid;gap:14px;align-content:start}
 @media (max-width:900px){.feature .chartbox{border-left:0;border-top:1px solid var(--line)}}
 .score{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;font-family:var(--mono)}
@@ -322,6 +323,8 @@ textarea{font-family:var(--body);min-height:110px;resize:vertical}
 @media (max-width:900px){.contact{grid-template-columns:1fr}}
 .contact .pane{padding:22px}
 .big-mail{font:900 clamp(30px,4vw,46px) var(--display);word-break:break-all;margin-top:4px}
+@media (max-width:560px){.big-mail{font-size:clamp(20px,6.6vw,30px);word-break:normal;overflow-wrap:anywhere}}
+.helper[hidden]{display:none}
 .socials{display:grid;gap:10px;margin-top:20px}
 .social{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 16px;border:1px solid var(--line2);background:#080a0b;border-radius:8px;text-decoration:none;transition:border-color .2s, box-shadow .2s}
 .social:hover{border-color:var(--accent);box-shadow:0 0 22px -10px var(--accent)}
@@ -517,7 +520,7 @@ html.crt main{animation:flicker 4s infinite}
 
     <article class="win feature" id="featureCB">
       <div class="copy">
-        <div class="meta"><span>featured · ai security · hackin' summer 2026</span><span class="state live"><i></i>shipped</span></div>
+        <div class="meta"><span>featured · ai security · hackin' summer 2026</span><span class="state live"><i></i>live</span></div>
         <h3>CaughtBot</h3>
         <p style="font-size:18px">Catches a chatbot's weaknesses before attackers do. It attacks the bot, has a second AI judge every reply, writes a report, then rewrites the bot's instructions until its security score goes up.</p>
         <ul class="bullets">
@@ -534,7 +537,7 @@ html.crt main{animation:flicker 4s infinite}
       </div>
       <div class="chartbox">
         <div class="score"><b class="from">22</b><span>→</span><b class="to">62</b><span>security score / 100<br>before → after auto-harden</span></div>
-        <div class="chart-legend"><span><i style="background:#ef7a64"></i>got through, before</span><span><i style="background:#62c784"></i>got through, after</span><span>out of 8 · lower is better</span></div>
+        <div class="chart-legend"><span><i style="background:#ef7a64"></i>got through, before</span><span><i style="background:#62c784"></i>got through, after</span><span>sample run · 4 of the 6 categories, 8 attacks each · lower is better</span></div>
         <svg id="cbChart" viewBox="0 0 460 250" role="img" aria-label="Attacks that got through per category, before and after auto-harden"></svg>
         <p class="finding">Finding: hardening stopped nearly every rule override and unauthorised action, but not secret leakage, because the secret still lived inside the prompt. Never put secrets in a system prompt.</p>
       </div>
@@ -682,12 +685,12 @@ html.crt main{animation:flicker 4s infinite}
         </div>
       </div>
       <form class="win" id="msgForm" novalidate>
-        <label class="f" for="fn">--name<input id="fn" type="text" autocomplete="name"></label>
-        <label class="f" for="fe">--email<input id="fe" type="email" autocomplete="email"></label>
-        <label class="f" for="fs">--subject<select id="fs"><option>Project or collaboration</option><option>An idea</option><option>A question about my work</option><option>Just saying hello</option></select></label>
-        <label class="f" for="fm">--message<textarea id="fm"></textarea></label>
-        <button class="btn primary" type="submit"><span class="p">$</span> ./compose.sh</button>
-        <div class="form-out" id="formOut" aria-live="polite">This drafts an email you can copy and send to me. <span class="fill">[LATER: connect Formspree or similar to send directly]</span></div>
+        <label class="f" for="fn">Your name<input id="fn" type="text" autocomplete="name"></label>
+        <label class="f" for="fe">Your email<input id="fe" type="email" autocomplete="email"></label>
+        <label class="f" for="fs">Topic<select id="fs"><option>Project or collaboration</option><option>An idea</option><option>A question about my work</option><option>Just saying hello</option></select></label>
+        <label class="f" for="fm">Message<textarea id="fm"></textarea></label>
+        <button class="btn primary" type="submit"><span class="p">$</span> send via email</button>
+        <div class="form-out" id="formOut" aria-live="polite">Opens your email app with the message ready to send. Nothing is stored on this site.</div>
       </form>
     </div>
   </section>
@@ -738,9 +741,9 @@ const PROJECTS = [
     name:"RoadSentinel", sub:"A road-health prediction system (also called StructMirai) that flags roads likely to fail before they become hazards.",
     stack:["HTML / CSS / JS","Leaflet maps","Flask API","SQLite","ESP32 + MPU6050"],
     problem:"Road damage is usually found after it turns into a pothole or an accident. Predicting it earlier means cheaper, faster repairs.",
-    built:"A citizen web app where anyone can upload a photo of a road and get a Road Health Score, see a public pothole severity map, and plan a route that avoids bad roads. A Flask backend scores each report from road age, material, traffic, climate and an image-roughness check, then blends it with vibration data from car-mounted ESP32 + MPU6050 sensor units, grid cell by grid cell. An admin console shows every report and sensor on a live map.",
+    built:"The team built a citizen web app where anyone can upload a photo of a road and get a Road Health Score, see a public pothole severity map, and plan a route that avoids bad roads. A Flask backend scores each report from road age, material, traffic, climate and an image-roughness check, then blends it with vibration data from car-mounted ESP32 + MPU6050 sensor units, grid cell by grid cell. An admin console shows every report and sensor on a live map.",
     result:"Built and presented as a team at Smart India Hackathon 2026.",
-    role:"Built the frontend: the citizen app (report upload, pothole map, route planner, my-car-sensor tab) that talks to the team's Flask API.",
+    role:"My part was the frontend only: the citizen app (report upload, pothole map, route planner, my-car-sensor tab) that talks to the team's Flask API.",
     learned:"How a frontend talks to a real API, how to draw live data on a map with Leaflet, and that a demo should say plainly which numbers are placeholders.",
     links:[] },
 ];
@@ -1548,9 +1551,10 @@ $("copyMail").onclick=async e=>{
 $("msgForm").addEventListener("submit",e=>{
   e.preventDefault();
   const n=$("fn").value.trim(), em=$("fe").value.trim(), m=$("fm").value.trim();
-  if(!n||!em||!m){ $("formOut").textContent="error: fill in --name, --email and --message, then run it again."; return; }
+  if(!n||!em||!m){ $("formOut").textContent="Please fill in your name, email and message first."; return; }
   const bodyTxt=`Subject: ${$("fs").value}, from ${n}\n\n${m}\n\n${n}\n${em}`;
-  $("formOut").innerHTML=`Here's your email. Copy it and send it to ${EMAIL?esc(EMAIL):"<span class='fill'>[your email]</span>"}:<pre>${esc(bodyTxt)}</pre>`;
+  location.href=`mailto:${EMAIL}?subject=${encodeURIComponent($("fs").value+" (from "+n+")")}&body=${encodeURIComponent(m+"\n\n"+n+"\n"+em)}`;
+  $("formOut").innerHTML=`Your email app should open now. If it didn't, copy this and send it to ${esc(EMAIL)}:<pre>${esc(bodyTxt)}</pre>`;
   countFills();
 });
 
@@ -1559,7 +1563,7 @@ $("msgForm").addEventListener("submit",e=>{
    ========================================================= */
 let fillIdx=0;
 function visibleFills(){ return [...document.querySelectorAll("main .fill")].filter(f=>f.offsetParent!==null); }
-function countFills(){ $("fillCount").textContent=visibleFills().length; }
+function countFills(){ const n=visibleFills().length; $("fillCount").textContent=n; $("helper").hidden=n===0; }
 function flashTo(el){ el.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"}); el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
 $("nextFill").onclick=()=>{ const fs=visibleFills(); if(!fs.length) return; fillIdx%=fs.length; flashTo(fs[fillIdx]); fillIdx++; };
 $("toggleFills").onclick=e=>{ const on=document.body.classList.toggle("hide-fills"); e.currentTarget.setAttribute("aria-pressed",on); e.currentTarget.textContent=on?"show highlights":"hide highlights"; };
