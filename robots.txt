@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://muditjindal.vercel.app/sitemap.xml

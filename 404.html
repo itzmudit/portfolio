@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>404 · Mudit Jindal</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#07090a">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#07090a;--ink:#ece6d8;--muted:#8a949a;--accent:#ffb547;--g:#62c784;--r:#ef7a64;--line:#1f2a2c}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:var(--bg);color:var(--ink);font:400 15px/1.6 "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+    display:grid;place-items:center;padding:24px;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:48px 48px;background-position:-1px -1px}
+  body::before{content:"";position:fixed;inset:0;background:radial-gradient(60% 50% at 50% 45%,rgba(7,9,10,.55),var(--bg) 80%);pointer-events:none}
+  main{position:relative;width:min(640px,100%);border:1px solid #2a3437;border-radius:12px;background:#0b0e0f;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+  .bar{display:flex;gap:8px;align-items:center;padding:11px 14px;border-bottom:1px solid #1d2527;color:var(--muted);font-size:12px}
+  .bar i{width:10px;height:10px;border-radius:50%;background:#2a3437;display:inline-block}
+  .bar span{margin-left:8px}
+  .body{padding:22px 22px 26px}
+  h1{font:900 clamp(64px,18vw,120px)/.9 "Big Shoulders Display","Arial Narrow",sans-serif;margin:4px 0 14px;letter-spacing:-1px}
+  h1 b{color:var(--accent)}
+  p{margin:6px 0}
+  .p{color:var(--g)} .r{color:var(--r)} .d{color:var(--muted)}
+  #path{color:var(--accent);word-break:break-all}
+  a.btn{display:inline-block;margin-top:18px;padding:11px 16px;border-radius:8px;background:var(--accent);color:#111;font-weight:700;text-decoration:none}
+  a.btn:hover{filter:brightness(1.08)}
+  a.btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .caret{display:inline-block;width:9px;height:1.1em;background:var(--accent);vertical-align:-3px;animation:b 1s steps(1) infinite}
+  @keyframes b{50%{opacity:0}}
+  @media (prefers-reduced-motion:reduce){.caret{animation:none}}
+</style>
+</head>
+<body>
+<main>
+  <div class="bar"><i></i><i></i><i></i><span>mudit-sh — 404</span></div>
+  <div class="body">
+    <h1>4<b>0</b>4</h1>
+    <p><span class="p">mudit@lab:~$</span> cd <span id="path">/this-page</span></p>
+    <p class="r">cd: no such file or directory</p>
+    <p class="d">The page you tried to open doesn't exist. Everything lives on one page.</p>
+    <p><span class="p">mudit@lab:~$</span> <span class="caret"></span></p>
+    <a class="btn" href="/">$ cd ~</a>
+  </div>
+</main>
+<script>document.getElementById("path").textContent=location.pathname||"/";</script>
+</body>
+</html>
