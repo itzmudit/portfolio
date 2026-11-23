@@ -388,6 +388,36 @@ footer .g{color:var(--ok)}
 main,header,footer,.helper,#hud{transition:opacity .35s ease}
 html.dream main,html.dream header,html.dream footer,html.dream .helper{opacity:.06;transition:opacity 1.6s ease}
 /* ---------- field extras: progress, cursor, toast, hud, CRT ---------- */
+.skip{position:fixed;left:12px;top:-60px;z-index:200;padding:10px 14px;border-radius:8px;background:var(--accent);color:#111;font:700 13px var(--mono);text-decoration:none;transition:top .15s}
+.skip:focus{top:12px}
+.print-only{display:none}
+@media print{
+  @page{margin:14mm}
+  *,*::before,*::after{color:#111!important;background:transparent!important;box-shadow:none!important;text-shadow:none!important;animation:none!important;transition:none!important;-webkit-text-fill-color:#111!important}
+  html,body{background:#fff!important;font-size:11pt}
+  #bg,#pcb,#cur,#hud,#toast,#progress,#egg,header,.skip,.boot,.scope,.ctas,.caret,.cur,#shell,#lab,.ide,.filters,.helper,#msgForm,#copyMail,.chartbox svg,.chart-legend,.clinks,.open,.cicon,.legend,footer .g,#printLink,dialog,.sec-head .path,.sec-head .tag{display:none!important}
+  .print-only{display:block!important;font:10pt var(--mono);margin:6px 0 0}
+  .role,#projGrid .card[data-open="caughtbot"],.pillars{display:none!important}
+  .sec-head,h2{break-after:avoid}
+  .skills{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important}
+  .gitlog{padding:8px 10px!important;font-size:9.5pt!important}
+  .bio p{font-size:11pt!important}
+  .bio p.big{font-size:13pt!important}
+  main{opacity:1!important;filter:none!important}
+  .wrap{max-width:none!important;padding:0!important}
+  .hero{display:block!important;padding:0 0 8px!important;min-height:0!important}
+  .name{font-size:44pt!important;line-height:1!important}
+  .surname{font-size:16pt!important;-webkit-text-stroke:0!important}
+  section{padding:10px 0!important;margin:0!important;break-inside:auto}
+  .card,.win,.pillar,.feature,.commit{break-inside:avoid;border:1px solid #bbb!important}
+  .grid{grid-template-columns:1fr 1fr!important}
+  .feature{display:block!important}
+  h2{font-size:18pt!important;margin:6px 0!important}
+  .big-mail{font-size:14pt!important}
+  a{text-decoration:none!important}
+  .socials a .v::after{content:""}
+  .social{border:0!important;padding:2px 0!important}
+}
 #progress{position:fixed;top:0;left:0;right:0;height:2px;background:var(--accent);transform-origin:0 50%;transform:scaleX(0);z-index:40;box-shadow:0 0 10px var(--accent)}
 #cur{position:fixed;left:0;top:0;width:0;height:0;z-index:60;pointer-events:none;opacity:0;transition:opacity .15s;--g:6px;--c:var(--cyan)}
 #cur.on{opacity:1}
@@ -442,6 +472,7 @@ html.crt main{animation:flicker 4s infinite}
 </style>
 </head>
 <body>
+<a class="skip" href="#about">skip to content</a>
 <canvas id="bg" aria-hidden="true"></canvas>
 <div class="glow" aria-hidden="true"></div>
 <div class="scan" aria-hidden="true"></div>
@@ -479,6 +510,7 @@ html.crt main{animation:flicker 4s infinite}
       <div class="surname">Jindal</div>
       <p class="role"><span class="g">&gt;</span> <span id="roleText">red-teaming AI chatbots</span><span class="caret"></span></p>
       <p class="lede">I build tools where electronics meets software. With my teams I made <em>CaughtBot</em>, which attacks AI chatbots to find their weak spots, and <em>MiniSPICE</em>, a circuit solver in C you can run on this page.</p>
+      <p class="print-only">muditjindal.vercel.app · muditjindal100@gmail.com · github.com/itzmudit · linkedin.com/in/itzmudit</p>
       <div class="ctas">
         <a class="btn primary" href="#projects"><span class="p">$</span> ls projects</a>
         <a class="btn" href="#shell"><span class="p">$</span> open shell</a>
@@ -747,7 +779,7 @@ html.crt main{animation:flicker 4s infinite}
   <div class="wrap">
     <span>© 2026 Mudit Jindal</span>
     <span>vanilla HTML · CSS · JS — 0 frameworks, 0 templates</span>
-    <span><span class="g">[process exited with code 0]</span> · <a href="#top">cd ~ ↑</a></span>
+    <span><span class="g">[process exited with code 0]</span> · <a href="#top">cd ~ ↑</a> · <a href="#" id="printLink">save as PDF</a></span>
   </div>
 </footer>
 
@@ -1537,13 +1569,54 @@ const EGGS=(function(){
            reset:()=>{ found.clear(); save(); document.documentElement.classList.remove("gold"); } };
 })();
 
+const FORTUNES=[
+  "ground is just a node everyone agreed to call zero.",
+  "if power supplied doesn't equal power used, the bug is yours, not Kirchhoff's.",
+  "a floating node is a circuit's way of saying you forgot something.",
+  "never put a secret in a system prompt. CaughtBot checked.",
+  "partial pivoting: because dividing by almost-zero is how numbers go feral.",
+  "it works on my machine. my machine is a breadboard.",
+  "measure twice, solder once.",
+  "the fastest code is the code you deleted.",
+  "an oscilloscope is a window into the last few milliseconds.",
+  "every resistor is a note about where the current didn't want to go.",
+  "the first test of a defence is trying to break it yourself."
+];
+function siVal(t){ const m=/^(\d*\.?\d+)(p|n|u|µ|m|k|K|M|G)?(v|a|w|ω|ohms?|r)?$/i.exec(t);
+  if(!m) return null; let p=m[2]||"", u=(m[3]||"").toLowerCase();
+  const mul={"":1,p:1e-12,n:1e-9,u:1e-6,"µ":1e-6,m:1e-3,k:1e3,K:1e3,M:1e6,G:1e9}[p] ?? ({g:1e9}[p]||1);
+  const k=u==="v"?"V":u==="a"?"I":u==="w"?"P":"R";
+  return {k,v:parseFloat(m[1])*mul}; }
+function ohmLaw(a){
+  const usage=`usage: ohm &lt;two values&gt;  ${C("d","e.g. ohm 9V 4.7k · ohm 5V 20mA · ohm 12V 2W · ohm v=5 r=220")}`;
+  const got={};
+  for(const t of a.split(/[\s,]+/).filter(Boolean)){
+    const f=/^([virp])=(.+)$/i.exec(t); const v=siVal(f?f[2]:t); if(!v||!(v.v>0)) return usage;
+    got[f?f[1].toUpperCase():v.k]=v.v; }
+  const ks=Object.keys(got); if(ks.length!==2) return usage;
+  let {V,I,R,P}=got;
+  if(V&&I){R=V/I;P=V*I}else if(V&&R){I=V/R;P=V*V/R}else if(I&&R){V=I*R;P=I*I*R}
+  else if(V&&P){I=P/V;R=V*V/P}else if(I&&P){V=P/I;R=P/(I*I)}else if(R&&P){I=Math.sqrt(P/R);V=Math.sqrt(P*R)}
+  const row=(k,v,u)=>`  ${C("a",k)}  ${fmtU(v,u).replace(/\.?0+ /," ")}${ks.includes(k)?C("d","  (given)"):""}`;
+  return `${C("b","OHM'S LAW · V = I × R · P = V × I")}\n${row("V",V,"V")}\n${row("I",I,"A")}\n${row("R",R,"Ω")}\n${row("P",P,"W")}${P>0.25?"\n"+C("a","note: more than ¼ W. a standard small resistor would run hot."):""}`;
+}
+function resistorBands(a){
+  const v=parseVal(a); if(!(v>0)) return `usage: resistor &lt;value&gt;  ${C("d","e.g. resistor 4.7k · resistor 220 · resistor 1M")}`;
+  if(v<1||v>=1e11) return C("r","resistor: pick a value from 1 Ω to 99 GΩ");
+  let e=Math.floor(Math.log10(v))-1, d=Math.round(v/Math.pow(10,e));
+  if(d>=100){ d=Math.round(d/10); e++; }
+  const d1=Math.floor(d/10), d2=d%10, real=d*Math.pow(10,e);
+  const MUL={"-2":["Silver","#c0c0c0"],"-1":["Gold","#d4af37"]}; const mul=e>=0?COLORS[e]:MUL[e];
+  const band=([n,c])=>`<span style="display:inline-block;width:12px;height:14px;vertical-align:-2px;border-radius:2px;background:${c};margin-right:4px"></span>${n}`;
+  return `${C("b","4-BAND · "+fmtU(real,"Ω").replace(/\.?0+ /," "))}${Math.abs(real-v)/v>0.001?C("a","  (rounded from "+esc(a)+")"):""}\n  ${band(COLORS[d1])}   ${band(COLORS[d2])}   ${band(mul)}   ${band(["Gold","#d4af37"])} ${C("d","±5%")}`;
+}
 const CMDS={
   help:()=>[
     ["whoami","who is this"],["neofetch","system info, mudit edition"],["ls [dir]","list files (try: ls projects)"],["cat &lt;file&gt;","read a file (about.txt, now.md, skills.json, contact.txt)"],
     ["projects","list my projects"],["open &lt;project&gt;","open a case study (caughtbot, minispice, roadsentinel)"],
     ["./caughtbot --score","CaughtBot's before / after results"],["solve [circuit]","run MiniSPICE (divider, bridge, parallel, ladder, broken)"],
     ["scope &lt;wave&gt;","set the oscilloscope (sine, square, tri, ecg)"],["cd &lt;section&gt;","jump to a section (about, projects, lab, journey, skills, contact)"],
-    ["github","my GitHub"],["history","commands you've run"],["clear","clear the screen"],["cat now.md","the current chapter"]
+    ["ohm &lt;two values&gt;","Ohm's law from any two of V, I, R, P (try: ohm 9V 4.7k)"],["resistor &lt;value&gt;","colour bands for a resistor (try: resistor 4.7k)"],["fortune","a line from the lab bench"],["print","save this page as a clean PDF"],["github","my GitHub"],["history","commands you've run"],["clear","clear the screen"]
   ].map(([c,d])=>{ const raw=c.replace(/&lt;/g,"<").replace(/&gt;/g,">"); return `  ${C("g",esc(raw.padEnd(22," ")).replace(/ /g,"&nbsp;"))}${C("d",d)}`; }).join("\n"),
   whoami:()=>`mudit jindal · electronics + software\n${C("d","builds things that run: ai security tools, circuit solvers, frontends")}`,
   neofetch,
@@ -1579,6 +1652,13 @@ const CMDS={
   decrypt:()=>{ const msg="you read the source. that's the right instinct.", glyph="01<>/{}#$%&*+=", id="dc"+Date.now();
     setTimeout(()=>{ const el=$(id); if(!el) return; let f=0; const t=setInterval(()=>{ f++; el.textContent=msg.split("").map((ch,i)=>ch===" "?" ":(f>i*.6+6?ch:glyph[Math.floor(Math.random()*glyph.length)])).join(""); if(f>msg.length*.6+8){ clearInterval(t); el.textContent=msg; FIELD.wave(); FIELD.burst(); } },35); },60);
     return `${C("a","[decrypting payload…]")}\n<span id="${id}" class="c-g"></span>\n${C("d","more hides here: the code answers stillness, old consoles remember a certain code, and some decorations answer clicks. try: eggs")}`; },
+  ohm:a=>ohmLaw(a||""),
+  resistor:a=>resistorBands(a||""),
+  fortune:()=>C("a",FORTUNES[Math.floor(Math.random()*FORTUNES.length)]),
+  tree:()=>[C("c","~"),"├── "+C("c","projects/"),"│   ├── caughtbot/   "+C("d","ai red-teaming · live"),"│   ├── minispice/   "+C("d","circuit solver in C"),"│   └── roadsentinel/ "+C("d","road health · team build"),"├── "+C("c","lab/"),"│   ├── minispice*","│   ├── image-lab*","│   └── resistor*","├── about.txt","├── now.md","├── skills.json","└── contact.txt"].join("\n"),
+  uptime:()=>{ const s=Math.round(performance.now()/1000), m=Math.floor(s/60); return `up ${m?m+" min, ":""}${s%60} sec on this page · 1 user · load average: curious, curious, curious`; },
+  email:()=>{ try{ navigator.clipboard.writeText(EMAIL); }catch(e){} return `${EMAIL} ${C("g","· copied to clipboard")}`; },
+  print:()=>{ setTimeout(()=>window.print(),250); return C("d","opening the print dialog · choose 'Save as PDF' for a clean copy"); },
   ping:()=>`PING mudit (127.0.0.1): 56 data bytes\n64 bytes from mudit: icmp_seq=0 ttl=64 time=0.42 ms\n${C("g","mudit is up and replying.")}`,
 };
 const ALIASES={"?":"help",ll:"ls","ls -la":"ls",man:"help",about:"cat about.txt",contact:"cat contact.txt",skills:"cat skills.json",resume:"cat resume.pdf",now:"cat now.md","cat README.md":"cat about.txt","cat readme.md":"cat about.txt"};
@@ -1616,6 +1696,7 @@ echoCmd("neofetch"); print(neofetch());
    Contact
    ========================================================= */
 if(EMAIL){ $("mailText").textContent=EMAIL; }
+$("printLink").onclick=e=>{ e.preventDefault(); window.print(); };
 $("copyMail").onclick=async e=>{
   const b=e.currentTarget, orig=b.innerHTML;
   if(!EMAIL){ b.textContent="email not added yet"; setTimeout(()=>b.innerHTML=orig,2000); return; }
