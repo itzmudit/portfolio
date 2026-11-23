@@ -391,6 +391,8 @@ html.dream main,html.dream header,html.dream footer,html.dream .helper{opacity:.
 .skip{position:fixed;left:12px;top:-60px;z-index:200;padding:10px 14px;border-radius:8px;background:var(--accent);color:#111;font:700 13px var(--mono);text-decoration:none;transition:top .15s}
 .skip:focus{top:12px}
 .print-only{display:none}
+.dlg dl.keys{grid-template-columns:auto 1fr;align-items:center}
+.dlg dl.keys kbd{display:inline-block;min-width:34px;text-align:center;padding:3px 8px;border:1px solid var(--line2);border-bottom-width:2px;border-radius:6px;font:600 13px var(--mono);color:var(--ink);background:#0b0e0f}
 @media print{
   @page{margin:14mm}
   *,*::before,*::after{color:#111!important;background:transparent!important;box-shadow:none!important;text-shadow:none!important;animation:none!important;transition:none!important;-webkit-text-fill-color:#111!important}
@@ -654,6 +656,7 @@ html.crt main{animation:flicker 4s infinite}
             </div>
             <div class="ctl-row">
               <button class="btn sm" type="button" id="addR">+ add resistor</button>
+              <button class="btn sm" type="button" id="shareC" title="Copy a link that opens this exact circuit"><span class="p">$</span> share circuit</button>
               <label class="f" for="srcNode">source + on node<select id="srcNode"></select></label>
               <label class="f" for="srcV">voltage (V)<input id="srcV" type="text" inputmode="decimal" value="10"></label>
             </div>
@@ -670,7 +673,7 @@ html.crt main{animation:flicker 4s infinite}
       <div class="tool">
         <div class="tool-head">
           <div><span class="k">tool 02 · image processing, from scratch</span><h3>Image lab</h3>
-          <p>Classic image-processing steps written from scratch in JavaScript: threshold at the mean, invert, histogram equalisation and gamma correction. The sample is a foggy, low-contrast scene, so each step is easy to see. Upload your own photo to try it. It never leaves your browser.</p></div>
+          <p>Classic image-processing steps written from scratch in JavaScript: threshold at the mean, invert, histogram equalisation, gamma correction, a Gaussian blur and Sobel edge detection, all by looping over pixels. The sample is a foggy, low-contrast scene, so each step is easy to see. Upload your own photo to try it. It never leaves your browser.</p></div>
           <label class="btn sm" for="imgFile" style="cursor:pointer"><span class="p">$</span> upload photo<input id="imgFile" type="file" accept="image/*" style="position:absolute;left:-9999px"></label>
         </div>
         <div class="seg" role="group" aria-label="Operation" id="ops">
@@ -679,6 +682,8 @@ html.crt main{animation:flicker 4s infinite}
           <button type="button" data-op="invert" aria-pressed="false">invert</button>
           <button type="button" data-op="equal" aria-pressed="true">equalizeHist</button>
           <button type="button" data-op="gamma" aria-pressed="false">gamma</button>
+          <button type="button" data-op="blur" aria-pressed="false">gaussianBlur</button>
+          <button type="button" data-op="sobel" aria-pressed="false">sobel edges</button>
         </div>
         <label class="knob f" for="gamma" id="gammaWrap" style="display:none">gamma α = <span id="gVal">1.90</span><input id="gamma" type="range" min="0.3" max="3" step="0.05" value="1.9"></label>
         <div class="imgs">
@@ -802,10 +807,10 @@ const PROJECTS = [
     name:"CaughtBot", sub:"Automated prompt-injection and jailbreak testing for AI chatbots, with a judge, a report and auto-hardening.",
     stack:["Python","Streamlit","Groq","Pydantic","SQLite","reportlab"],
     problem:"Most chatbots ship without anyone trying to break them. Testing by hand means typing hundreds of tricky prompts and judging every answer yourself.",
-    built:"We built a Streamlit app that fires 40 attacks in 6 categories at a target bot, in parallel. A second, larger model judges each reply against a fixed security policy and returns a verdict validated with Pydantic, so there is no fragile string matching. An AI attack generator writes new attacks tailored to the target's own instructions. Reports show a score, a per-category breakdown and the exact quote behind every failure. It runs live on Streamlit Cloud with sign-up and login (passwords stored hashed), and an admin dashboard that only my account can open. Auto-harden rewrites the bot's prompt and keeps a fix only if the re-measured score goes up. It can also test a live bot over HTTP, tracks score over time, and has a rate limiter that keeps it on Groq's free tier.",
+    built:"We built a Streamlit app that fires 40 attacks in 6 categories at a target bot, in parallel. A second, larger model judges every reply against a fixed security policy and returns a Pydantic-validated verdict, so there is no fragile string matching. An attack generator writes new attacks tailored to the bot's own instructions, and auto-harden rewrites its prompt, keeping a fix only if the re-measured score goes up. Reports show the score, a per-category breakdown and the exact quote behind every failure. It runs live on Streamlit Cloud with hashed-password logins, score history, testing of live bots over HTTP, a rate limiter for Groq's free tier, and an admin dashboard only my account can open.",
     result:"On the demo bot the security score went from 22 to 62 out of 100. Rule overrides dropped from 6/8 to 1/8 and off-limits actions from 8/8 to 0/8. Secret leakage did not improve (7/8 to 8/8), which showed that secrets should never sit in a system prompt.",
-    role:"A team of three; we sat together and wrote the code as a group. The repo started on my GitHub on day one of the hackathon (24 Sep 2026) and is the original. I host and maintain the live app.",
-    learned:"How LLMs fail under adversarial input, why you need a fixed yardstick to compare before and after, and how to ship a full app as a team in four days.",
+    role:"A team of three; we sat together and wrote the code as a group. The repo started on my GitHub on 24 Sep 2026 and is the original. I host and maintain the live app.",
+    learned:"How LLMs fail under adversarial input, why you need a fixed yardstick to compare before and after, and how to ship a full app as a team in a few days.",
     links:[["Live app","https://caughtbot.streamlit.app"],["GitHub repo","https://github.com/itzmudit/CaughtBot"]] },
   { id:"minispice", tags:["circuits"], kind:"sdf lab-1 · c · team of 4", state:"live", stateText:"shipped",
     name:"MiniSPICE", sub:"A DC circuit solver in C. Enter resistors and a voltage source; it finds every node voltage, current and power.",
@@ -852,7 +857,7 @@ const SKILLS = [
 const LOG = [ // newest first
   { date:"Nov 2026", ref:"HEAD -> main", msg:"ship: MiniSPICE for SDF Lab-1", body:"A DC circuit solver in C with a team of four, under Dr. Taj Alam. Floating-node detection, power-balance check, strict input validation." },
   { date:"2026", msg:"learn: image processing workshop", body:"Thresholding, colour channels, histogram equalisation and gamma correction in OpenCV. The Image lab on this page rebuilds those ideas from scratch." },
-  { date:"Sep 24–27 2026", ref:"tag: hackin-summer", msg:"ship: CaughtBot at Hackin' Summer 2026", body:"With a team of three: first commit to a working red-teaming tool with accounts, PDF reports and auto-hardening in four days." },
+  { date:"Sep 2026", ref:"tag: hackin-summer", msg:"ship: CaughtBot at Hackin' Summer 2026", body:"With a team of three: from first commit to a working red-teaming tool with accounts, PDF reports and auto-hardening, shipped at Hackin' Summer (26–28 Sep)." },
   { date:"Aug 2026", ref:"tag: sih-2026", msg:"feat: RoadSentinel frontend at Smart India Hackathon", body:"Joined a 7-person team building a road-health prediction system. I built the frontend app." },
   { date:"Jul 2026", msg:"init: started engineering", body:"Electronics and communication: circuits, signals and the code that drives them." },
 ];
@@ -1217,6 +1222,13 @@ function openProject(id){
   return true;
 }
 dlg.addEventListener("click",e=>{if(e.target===dlg) dlg.close()});
+function showKeys(){
+  const k=(a,b)=>`<dt><kbd>${a}</kbd></dt><dd>${b}</dd>`;
+  dlgBody.innerHTML=`<div class="dlg-head"><div><div class="meta">keyboard</div><h3>Shortcuts</h3></div><button class="icon-btn" type="button" id="dlgClose" aria-label="Close">esc ✕</button></div>
+  <dl class="keys">${k("/","jump to the shell")}${k("?","this panel")}${k("Tab","autocomplete a command")}${k("↑ ↓","command history")}${k("Ctrl L","clear the shell")}${k("Esc","close a panel or leave the shell")}</dl>
+  <p class="muted" style="font-size:14px;margin-top:14px">Try <b class="mono">ohm 9V 4.7k</b>, <b class="mono">resistor 4.7k</b> or <b class="mono">fortune</b> in the shell.</p>`;
+  dlg.showModal(); $("dlgClose").onclick=()=>dlg.close();
+}
 bindOpen($("featureCB"));
 
 /* =========================================================
@@ -1257,6 +1269,15 @@ let circ = JSON.parse(JSON.stringify(PRESETS["README example (divider)"]));
 $("preset").innerHTML = Object.keys(PRESETS).map(k=>`<option>${k}</option>`).join("");
 $("preset").onchange=e=>loadPreset(e.target.value);
 function loadPreset(k){ circ=JSON.parse(JSON.stringify(PRESETS[k])); $("preset").value=k; renderRows(); solveAndShow(); }
+// share a circuit as a link: #c=<base64 of the netlist>
+function encCirc(c){ return btoa(unescape(encodeURIComponent(JSON.stringify([c.node,c.v,c.res])))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,""); }
+function decCirc(t){ try{
+  const a=JSON.parse(decodeURIComponent(escape(atob(t.replace(/-/g,"+").replace(/_/g,"/")))));
+  const ok=n=>Number.isInteger(n)&&n>=0&&n<MAX_NODES, str=v=>typeof v==="string"&&v.length<=12;
+  if(!Array.isArray(a)||!ok(a[0])||a[0]<1||!str(a[1])||!Array.isArray(a[2])||a[2].length<1||a[2].length>MAX_COMP) return null;
+  if(!a[2].every(r=>Array.isArray(r)&&ok(r[0])&&ok(r[1])&&str(r[2]))) return null;
+  return {node:a[0],v:a[1],res:a[2].map(r=>[r[0],r[1],r[2]])};
+}catch(e){ return null; } }
 const nodeOpts=(sel,min)=>Array.from({length:MAX_NODES-min},(_,i)=>i+min).map(n=>`<option value="${n}" ${n===sel?"selected":""}>N${n}${n===0?" (gnd)":""}</option>`).join("");
 function parseVal(s){
   s=String(s).trim().replace(/\s+/g,"").replace(/(ohm|Ω)$/i,"");
@@ -1279,6 +1300,8 @@ $("rRows").addEventListener("change",e=>{const t=e.target; if(t.tagName!=="SELEC
 $("rRows").addEventListener("click",e=>{const b=e.target.closest("[data-rm]"); if(!b) return; circ.res.splice(+b.dataset.rm,1); renderRows(); solveAndShow();});
 $("addR").onclick=()=>{ if(circ.res.length>=MAX_COMP) return; const top=Math.max(1,...circ.res.flatMap(r=>[r[0],r[1]])); circ.res.push([top,Math.min(top+1,MAX_NODES-1),"1k"]); renderRows(); solveAndShow(); };
 $("srcNode").onchange=e=>{circ.node=+e.target.value; solveAndShow();};
+$("shareC").onclick=async()=>{ const url=location.origin+location.pathname+"#c="+encCirc(circ);
+  try{ await navigator.clipboard.writeText(url); toast("link copied · it opens this exact circuit"); }catch(e){ prompt("Copy this link:",url); } };
 $("srcV").oninput=e=>{circ.v=e.target.value; solveAndShow();};
 
 function fmtU(v,unit){
@@ -1408,8 +1431,10 @@ const PY = {
   invert:`plt.imshow(255 - img, cmap="gray")`,
   equal:`img = cv2.imread("sample.jpg", cv2.IMREAD_GRAYSCALE)\nequalized = cv2.equalizeHist(img)`,
   gamma:a=>`alpha = ${a.toFixed(2)}\nbeta = 255\nadjusted = beta * ((img / 255) ** alpha)`,
+  blur:`blurred = cv2.GaussianBlur(img, (3, 3), 0)   # kernel [1 2 1; 2 4 2; 1 2 1] / 16`,
+  sobel:`gx = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=3)\ngy = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=3)\nedges = np.clip(np.hypot(gx, gy), 0, 255)`,
 };
-const OPNAME={gray:"grayscale",thresh:"threshold at mean",invert:"inverted",equal:"histogram equalised",gamma:"gamma corrected"};
+const OPNAME={gray:"grayscale",thresh:"threshold at mean",invert:"inverted",equal:"histogram equalised",gamma:"gamma corrected",blur:"gaussian blur (3×3)",sobel:"sobel edge magnitude"};
 function runImage(){
   const W=inC.width,H=inC.height, d=ictx.getImageData(0,0,W,H).data, n=W*H;
   const gray=new Uint8ClampedArray(n); for(let i=0;i<n;i++) gray[i]=Math.round(.299*d[i*4]+.587*d[i*4+1]+.114*d[i*4+2]);
@@ -1419,6 +1444,13 @@ function runImage(){
   else if(op==="invert"){ for(let i=0;i<n;i++) out[i]=255-gray[i]; }
   else if(op==="equal"){ const h=hist(gray), cdf=[]; let c=0; for(let i=0;i<256;i++){c+=h[i];cdf[i]=c;} const cmin=cdf.find(v=>v>0); const lut=cdf.map(v=>Math.round((v-cmin)/Math.max(1,n-cmin)*255)); for(let i=0;i<n;i++) out[i]=lut[gray[i]]; }
   else if(op==="gamma"){ const lut=Array.from({length:256},(_,v)=>Math.round(255*Math.pow(v/255,gammaA))); for(let i=0;i<n;i++) out[i]=lut[gray[i]]; }
+  else if(op==="blur"||op==="sobel"){ // 3×3 convolution, edges clamped
+    const px=(x,y)=>gray[Math.min(H-1,Math.max(0,y))*W+Math.min(W-1,Math.max(0,x))];
+    for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+      if(op==="blur"){ out[y*W+x]=(px(x-1,y-1)+2*px(x,y-1)+px(x+1,y-1)+2*px(x-1,y)+4*px(x,y)+2*px(x+1,y)+px(x-1,y+1)+2*px(x,y+1)+px(x+1,y+1))/16; }
+      else { const gx=-px(x-1,y-1)+px(x+1,y-1)-2*px(x-1,y)+2*px(x+1,y)-px(x-1,y+1)+px(x+1,y+1);
+             const gy=-px(x-1,y-1)-2*px(x,y-1)-px(x+1,y-1)+px(x-1,y+1)+2*px(x,y+1)+px(x+1,y+1);
+             out[y*W+x]=Math.min(255,Math.hypot(gx,gy)); } } }
   const o=octx.createImageData(W,H); for(let i=0;i<n;i++){o.data[i*4]=o.data[i*4+1]=o.data[i*4+2]=out[i]; o.data[i*4+3]=255;} octx.putImageData(o,0,0);
   const [mi,si]=stats(gray), [mo,so]=stats(out);
   $("statIn").textContent=`mean ${mi.toFixed(0)} · contrast ${si.toFixed(0)}`; $("statOut").textContent=`mean ${mo.toFixed(0)} · contrast ${so.toFixed(0)}`; $("opName").textContent=OPNAME[op];
@@ -1616,7 +1648,7 @@ const CMDS={
     ["projects","list my projects"],["open &lt;project&gt;","open a case study (caughtbot, minispice, roadsentinel)"],
     ["./caughtbot --score","CaughtBot's before / after results"],["solve [circuit]","run MiniSPICE (divider, bridge, parallel, ladder, broken)"],
     ["scope &lt;wave&gt;","set the oscilloscope (sine, square, tri, ecg)"],["cd &lt;section&gt;","jump to a section (about, projects, lab, journey, skills, contact)"],
-    ["ohm &lt;two values&gt;","Ohm's law from any two of V, I, R, P (try: ohm 9V 4.7k)"],["resistor &lt;value&gt;","colour bands for a resistor (try: resistor 4.7k)"],["fortune","a line from the lab bench"],["print","save this page as a clean PDF"],["github","my GitHub"],["history","commands you've run"],["clear","clear the screen"]
+    ["ohm &lt;two values&gt;","Ohm's law from any two of V, I, R, P (try: ohm 9V 4.7k)"],["resistor &lt;value&gt;","colour bands for a resistor (try: resistor 4.7k)"],["fortune","a line from the lab bench"],["print","save this page as a clean PDF"],["?","keyboard shortcuts (outside the shell)"],["github","my GitHub"],["history","commands you've run"],["clear","clear the screen"]
   ].map(([c,d])=>{ const raw=c.replace(/&lt;/g,"<").replace(/&gt;/g,">"); return `  ${C("g",esc(raw.padEnd(22," ")).replace(/ /g,"&nbsp;"))}${C("d",d)}`; }).join("\n"),
   whoami:()=>`mudit jindal · electronics + software\n${C("d","builds things that run: ai security tools, circuit solvers, frontends")}`,
   neofetch,
@@ -1687,8 +1719,12 @@ $("termBtn").onclick=focusShell;
 addEventListener("keydown",e=>{
   const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
   if(!typing && (e.key==="/"||e.key==="`") && !dlg.open){ e.preventDefault(); focusShell(); }
+  if(!typing && e.key==="?" && !dlg.open){ e.preventDefault(); showKeys(); }
   if(e.key==="Escape" && document.activeElement===sin) sin.blur();
 });
+(function(){ const m=/^#c=([A-Za-z0-9_-]+)$/.exec(location.hash); if(!m) return; const c=decCirc(m[1]); if(!c) return;
+  circ=c; $("preset").value=""; renderRows(); solveAndShow(); showTab("spice");
+  setTimeout(()=>{ go("lab"); toast("loaded a shared circuit"); },400); })();
 print(`${C("d","mudit-sh 1.0 · type")} ${C("g","help")} ${C("d","for commands · Tab completes · ↑ ↓ history")}`);
 echoCmd("neofetch"); print(neofetch());
 
