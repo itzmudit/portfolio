@@ -7,6 +7,12 @@
 <title>Mudit Jindal</title>
 <meta name="description" content="Mudit Jindal builds tools where electronics meets software. CaughtBot, MiniSPICE and a working shell, all running on the page.">
 <meta name="theme-color" content="#07090a">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="Mudit">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -390,6 +396,15 @@ html.probe input,html.probe textarea{cursor:text!important}
 #egg h4{margin:5px 0 3px;font:900 21px/1.1 var(--display);letter-spacing:.02em;text-transform:uppercase}
 #egg p{margin:0;color:#b8c0c5}
 #egg b{color:var(--accent)}
+/* phone: one thing at a time */
+html{touch-action:manipulation}
+.name{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+@media (max-width:760px){
+  .boot,.hero .scope,#projects .filters,.about .ide{display:none}
+  #projGrid .card[data-open="caughtbot"]{display:none}
+  .hero{padding:22px 0 30px;gap:26px}
+  #egg{top:auto!important;bottom:calc(16px + env(safe-area-inset-bottom));left:12px!important;right:12px;width:auto!important}
+}
 .egg-ring{position:fixed;z-index:74;width:10px;height:10px;margin:-5px 0 0 -5px;border:1.5px solid var(--accent);border-radius:50%;pointer-events:none;animation:eggring .65s ease-out forwards}
 @keyframes eggring{to{transform:scale(9);opacity:0}}
 .logo b.spin{animation:lspin .7s cubic-bezier(.2,.8,.2,1)}
@@ -825,20 +840,20 @@ const FIELD=(function(){
   c.after(p); const px=p.getContext("2d");
   const base=document.createElement("canvas"), bx=base.getContext("2d");
   const mk=document.createElement("canvas"), mx=mk.getContext("2d",{willReadFrequently:true});
-  const CH="01<>/{}[]=+*#$&;:01ABCDEF0110", FS=14, CW=18;
+  const CH="01<>/{}[]=+*#$&;:01ABCDEF0110"; let FS=14, CW=18; const COARSE=matchMedia("(pointer: coarse)").matches;
   let W=0,H=0,dpr=1,cols=[],rows=0,traces=[],sparks=[],lit=-1,mask=null,mw=0,mh=0,cells=[];
-  let idle=0,gather=false,crt=false,pulseT=0,scram=[];
+  let idle=0,force=0,gather=false,crt=false,pulseT=0,scram=[];
   const m={x:-9999,y:-9999,inside:false,lastNear:0};
   const rnd=(a,b)=>a+Math.random()*(b-a), ch=()=>CH[(Math.random()*CH.length)|0];
   const K=()=>crt?{a:"120,255,140",c:"57,255,20",d:"60,150,80",bg:"4,10,6"}:{a:"255,181,71",c:"95,212,227",d:"120,138,148",bg:"7,9,10"};
 
   function resize(){
-    dpr=Math.min(devicePixelRatio||1,1.5); W=innerWidth; H=innerHeight;
+    dpr=Math.min(devicePixelRatio||1,1.5); W=innerWidth; H=innerHeight; CW=W<640?12:18; FS=W<640?10:14;
     for(const cv of [c,p,base]){ cv.width=W*dpr; cv.height=H*dpr; }
     x.setTransform(dpr,0,0,dpr,0,0); px.setTransform(dpr,0,0,dpr,0,0); bx.setTransform(dpr,0,0,dpr,0,0);
     x.fillStyle=`rgb(${K().bg})`; x.fillRect(0,0,W,H);
     rows=Math.ceil(H/CW)+1; const n=Math.ceil(W/CW);
-    cols=[]; for(let i=0;i<n;i++) cols.push({y:Math.floor(rnd(-rows,rows)), wait:0, every:Math.floor(rnd(4,9)), t:0, on:Math.random()<.55});
+    cols=[]; for(let i=0;i<n;i++) cols.push({y:Math.floor(rnd(-rows,rows)), wait:0, every:Math.floor(rnd(4,9)), t:0, on:Math.random()<(W<640?.32:.55)});
     buildTraces(); buildMask();
   }
   // circuit: right-angle random walks on a 30px grid, ending in vias
@@ -862,8 +877,11 @@ const FIELD=(function(){
   }
   function buildMask(){
     mw=Math.ceil(W/CW); mh=rows; mk.width=mw; mk.height=mh;
-    const fs=Math.min(mh*.7,mw*.36); mx.clearRect(0,0,mw,mh); mx.fillStyle="#fff"; mx.textAlign="center"; mx.textBaseline="middle";
-    mx.font=`900 ${Math.round(fs)}px "Big Shoulders Display","Arial Narrow",sans-serif`; mx.fillText("MJ",mw/2,mh/2);
+    mx.clearRect(0,0,mw,mh); mx.fillStyle="#fff"; mx.textAlign="center"; mx.textBaseline="alphabetic";
+    const F=v=>`900 ${v}px "Big Shoulders Display","Arial Narrow",sans-serif`; mx.font=F(100);
+    const tm=mx.measureText("MJ"), tw=tm.width||90, th=(tm.actualBoundingBoxAscent||72)/100;
+    const fs=Math.max(8,Math.min(mh*.55/th,mw*.84*100/tw)); mx.font=F(Math.round(fs));
+    mx.fillText("MJ",mw/2,mh/2+fs*th/2);
     const d=mx.getImageData(0,0,mw,mh).data; mask=new Uint8Array(mw*mh); cells=[]; for(let i=0;i<mw*mh;i++){ mask[i]=d[i*4+3]>110?1:0; if(mask[i]) cells.push(i); }
   }
   const inMask=(i,j)=>mask && i>=0&&j>=0&&i<mw&&j<mh && mask[j*mw+i];
@@ -896,7 +914,7 @@ const FIELD=(function(){
     }
     if(gather){ // fill the letters with code
       x.fillStyle=`rgba(${k.a},.85)`;
-      const n=Math.min(cells.length,Math.max(60,cells.length>>2));
+      const n=Math.min(cells.length,Math.max(60,cells.length>>(W<640?1:2)));
       for(let q=0;q<n;q++){ const ci=cells[(Math.random()*cells.length)|0]; x.fillText(ch(),(ci%mw)*CW+2,((ci/mw)|0)*CW); } }
     for(let q=scram.length-1;q>=0;q--){ const s=scram[q]; s.n--; if(s.n<0){scram.splice(q,1);continue;}
       x.fillStyle=`rgba(${k.a},.9)`; for(let r=0;r<6;r++){ const a=rnd(0,6.283), d=rnd(0,s.r); x.fillText(ch(),Math.round((s.x+Math.cos(a)*d)/CW)*CW+2,Math.round((s.y+Math.sin(a)*d)/CW)*CW); } }
@@ -915,7 +933,7 @@ const FIELD=(function(){
   function loop(now){
     const dt=Math.min(.05,(now-last)/1000); last=now;
     if(!document.hidden){
-      idle+=dt; const g=idle>4.5&&m.inside;
+      idle+=dt; if(force>0) force-=dt; const g=force>0||(!COARSE&&idle>4.5&&m.inside);
       if(g!==gather){ gather=g; document.documentElement.classList.toggle("dream",g); if(g) toast("hold still… the code is compiling something"); }
       acc+=dt; if(acc>=1/40){ acc=0; rain(); }            // code steps at ~40 fps
       pulseT+=dt; if(pulseT>1.1){ pulseT=0; spark((Math.random()*traces.length)|0,"c"); }
@@ -930,15 +948,15 @@ const FIELD=(function(){
     const now=performance.now(); if(now-mvT>60){ mvT=now; const n=nearest(m.x,m.y,70); if(n!==lit){ lit=n; if(n>=0) spark(n,"c",380); } } },{passive:true});
   const out=()=>{ m.inside=false; lit=-1; };
   addEventListener("pointerleave",out); document.addEventListener("mouseleave",out);
-  addEventListener("pointerdown",e=>wave(e.clientX,e.clientY,1));
+  addEventListener("pointerdown",e=>{ if(force>0&&!(e.target.closest&&e.target.closest("#heroName"))) force=0; wave(e.clientX,e.clientY,1); });
   addEventListener("keydown",()=>{idle=0;}); addEventListener("scroll",()=>{idle=0;},{passive:true});
   function wave(X,Y,s){ idle=0; X=X??W/2; Y=Y??H/2; scram.push({x:X,y:Y,r:90*(s||1),n:14});
     const n=nearest(X,Y,160); spark(n,"a",480);
     traces.map((t,i)=>[Math.hypot(t.pts[0][0]-X,t.pts[0][1]-Y),i]).sort((a,b)=>a[0]-b[0]).slice(0,3).forEach(([,i])=>spark(i,"a")); }
-  let rt; addEventListener("resize",()=>{clearTimeout(rt); rt=setTimeout(resize,150);});
+  let rt,lw=innerWidth,lh=innerHeight; addEventListener("resize",()=>{ if(COARSE&&innerWidth===lw&&Math.abs(innerHeight-lh)<160) return; lw=innerWidth; lh=innerHeight; clearTimeout(rt); rt=setTimeout(resize,150);});
   resize(); document.fonts && document.fonts.ready.then(buildMask);
   if(reduce){ for(let i=0;i<60;i++) rain(); board(0); } else requestAnimationFrame(loop);
-  return { wave, burst:()=>{ for(let i=0;i<12;i++) spark((Math.random()*traces.length)|0,"a"); }, setCrt:v=>{ crt=v; x.fillStyle=`rgb(${K().bg})`; x.fillRect(0,0,W,H); } };
+  return { wave, dream:v=>{ force=v||7; }, burst:()=>{ for(let i=0;i<12;i++) spark((Math.random()*traces.length)|0,"a"); }, setCrt:v=>{ crt=v; x.fillStyle=`rgb(${K().bg})`; x.fillRect(0,0,W,H); } };
 })();
 
 /* =========================================================
@@ -962,7 +980,7 @@ function toast(msg){ const t=$("toast"); if(!t) return; t.textContent=msg; t.cla
 })();
 addEventListener("scroll",()=>{ const h=document.documentElement; $("progress").style.transform=`scaleX(${h.scrollTop/Math.max(1,h.scrollHeight-h.clientHeight)})`; dimBg(); },{passive:true});
 var bgDim=-1;
-function dimBg(){ const k=Math.min(1,document.documentElement.scrollTop/(innerHeight*.9)); const o=(1-.55*k).toFixed(2); if(o===bgDim) return; bgDim=o; for(const id of ["bg","pcb"]){ const c=document.getElementById(id); if(c) c.style.opacity=o; } }
+function dimBg(){ const k=Math.min(1,document.documentElement.scrollTop/(innerHeight*.9)), b=innerWidth<=760?.6:1; const o=(b*(1-.55*k)).toFixed(2); if(o===bgDim) return; bgDim=o; for(const id of ["bg","pcb"]){ const c=document.getElementById(id); if(c) c.style.opacity=o; } }
 setTimeout(dimBg,300);
 
 /* =========================================================
@@ -1440,8 +1458,8 @@ const EGGS=(function(){
     const fresh=!found.has(id); found.add(id); save();
     if(!box){ box=document.createElement("div"); box.id="egg"; box.setAttribute("role","status"); document.body.appendChild(box);
       box.addEventListener("click",()=>box.classList.remove("on")); }
-    const n=found.size, all=n===LIST.length;
-    box.innerHTML=`<div class="eh"><span>◆ egg ${n}/${LIST.length}${fresh?" · new":""}</span><span>✕</span></div><h4>${title}</h4><p>${body}</p>`;
+    const av=avail(), n=av.filter(g=>found.has(g.id)).length, all=n===av.length;
+    box.innerHTML=`<div class="eh"><span>◆ egg ${n}/${av.length}${fresh?" · new":""}</span><span>✕</span></div><h4>${title}</h4><p>${body}</p>`;
     const W=innerWidth, H=innerHeight, bw=Math.min(310,W-24);
     box.style.width=bw+"px"; box.style.left=Math.max(12,Math.min(W-bw-12,(x??W/2)-bw/2))+"px"; box.style.top=Math.max(70,Math.min(H-190,(y??H/2)+18))+"px";
     box.classList.remove("on"); void box.offsetWidth; box.classList.add("on");
@@ -1457,6 +1475,18 @@ const EGGS=(function(){
     pop("logo","all eggs found",`You clicked on everything that wasn't meant to be clicked. That's how most bugs get found too. Gold mode is now on. Run <b>eggs</b> in the shell to see the list.`,x,y);
   }
   const on=(sel,fn)=>{ const el=document.querySelector(sel); if(el) el.addEventListener("click",fn); return el; };
+  // only count eggs this screen can actually show (phones hide the scope and the corner readout)
+  const SEL={logo:".logo b",trig:".scope-top .trig",sur:".surname",exit:"footer .g",hud:"#hud",bot:".lede em"};
+  function avail(){ const fsp=document.querySelectorAll("footer .wrap > span");
+    return LIST.filter(g=>{ const el=g.id==="morse"?fsp[0]:g.id==="zero"?fsp[1]:document.querySelector(SEL[g.id]); return el && el.getClientRects().length>0; }); }
+  // phones: hold the big name to make the code compile MJ
+  const hn=$("heroName"); let lp=0;
+  if(hn && matchMedia("(pointer: coarse)").matches){
+    const stop=()=>clearTimeout(lp);
+    hn.addEventListener("touchstart",()=>{ stop(); lp=setTimeout(()=>{ if(window.FIELD||typeof FIELD!=="undefined"){ FIELD.dream(7); if(navigator.vibrate) navigator.vibrate(15); } },600); },{passive:true});
+    hn.addEventListener("touchend",stop); hn.addEventListener("touchmove",stop,{passive:true}); hn.addEventListener("touchcancel",stop);
+    hn.addEventListener("contextmenu",e=>e.preventDefault());
+  }
 
   // 1. logo: five quick clicks
   let lc=[]; on(".logo b",e=>{ const now=performance.now(); lc=lc.filter(t=>now-t<2500); lc.push(now);
@@ -1486,7 +1516,7 @@ const EGGS=(function(){
   // 8. "CaughtBot" in the intro
   on(".lede em",e=>pop("bot","attack #41","Asking the chatbot nicely to ignore its rules. Blocked. It said please was a nice touch, though.",e.clientX,e.clientY));
 
-  if(found.size===LIST.length) document.documentElement.classList.add("gold");
+  { const av=avail(); if(av.length && av.every(g=>found.has(g.id))) document.documentElement.classList.add("gold"); }
   return { list:()=>LIST.map(g=>({name:g.name,found:found.has(g.id)})), count:()=>found.size, total:LIST.length,
            reset:()=>{ found.clear(); save(); document.documentElement.classList.remove("gold"); } };
 })();
@@ -1598,6 +1628,7 @@ $("toggleFills").onclick=e=>{ const on=document.body.classList.toggle("hide-fill
 
 renderProjects("all");
 console.log("%c mudit-sh ","background:#ffb547;color:#111;font-weight:700","devtools open? good. there's a command the shell never lists. the page source knows it.");
+if("serviceWorker" in navigator && location.protocol==="https:") addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));
 </script>
 </body>
 </html>
