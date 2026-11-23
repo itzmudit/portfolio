@@ -1,0 +1,17 @@
+{
+  "name": "Mudit Jindal",
+  "short_name": "Mudit",
+  "description": "Mudit Jindal builds tools where electronics meets software. CaughtBot, MiniSPICE and a working shell.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#07090a",
+  "theme_color": "#07090a",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
