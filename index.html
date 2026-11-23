@@ -4,8 +4,25 @@
 <!-- psst. you opened the source. the shell has one command it never lists: decrypt -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mudit Jindal</title>
+<title>Mudit Jindal · electronics meets software</title>
 <meta name="description" content="Mudit Jindal builds tools where electronics meets software. CaughtBot, MiniSPICE and a working shell, all running on the page.">
+<meta name="author" content="Mudit Jindal">
+<link rel="canonical" href="https://muditjindal.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mudit Jindal">
+<meta property="og:url" content="https://muditjindal.vercel.app/">
+<meta property="og:title" content="Mudit Jindal · electronics meets software">
+<meta property="og:description" content="CaughtBot red-teams AI chatbots, MiniSPICE solves circuits in C, and the whole site is a working terminal. Try it.">
+<meta property="og:image" content="https://muditjindal.vercel.app/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Mudit Jindal: builds tools where electronics meets software">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mudit Jindal · electronics meets software">
+<meta name="twitter:description" content="CaughtBot red-teams AI chatbots, MiniSPICE solves circuits in C, and the whole site is a working terminal.">
+<meta name="twitter:image" content="https://muditjindal.vercel.app/og.jpg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Mudit Jindal","url":"https://muditjindal.vercel.app/","sameAs":["https://github.com/itzmudit","https://www.linkedin.com/in/itzmudit","https://x.com/mudit1419j"],"knowsAbout":["Electronics","C programming","Circuit analysis","AI security","Python"]}</script>
 <meta name="theme-color" content="#07090a">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
@@ -516,7 +533,6 @@ html.crt main{animation:flicker 4s infinite}
       <div class="bio">
         <p class="big">I'm Mudit. I work where electronics meets software, and I like taking an idea from a textbook, or a problem I run into, and turning it into a tool that actually runs.</p>
         <p>With my SDF Lab team I turned nodal analysis into MiniSPICE, a DC circuit solver written in C. At Hackin' Summer 2026 my team of three built CaughtBot, which fires 40 prompt-injection and jailbreak attacks at an AI chatbot, scores how many get through, and then hardens it. I also built the frontend for RoadSentinel, a road-health prediction system, at Smart India Hackathon 2026. Next up is MiniSPICE v2, which moves from plain nodal analysis to modified nodal analysis so it can handle voltage sources properly.</p>
-        <p>Outside of building things, I spend about three hours a day commuting to college, so a lot of my project ideas start as notes on my phone during the ride.</p>
         <div class="win ide">
           <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="title">~/mudit — editor</span><span class="right">UTF-8</span></div>
           <div class="tabs" role="tablist" aria-label="Files">
@@ -1537,7 +1553,7 @@ const CMDS={
     if(a==="lab") return `${C("g","minispice*")}  ${C("g","image-lab*")}  ${C("g","resistor*")}`;
     return C("r",`ls: cannot access '${esc(a)}': No such file or directory`); },
   cat:a=>{ if(!a) return C("r","cat: missing file operand. try: cat about.txt"); const f=FILESYS[a.replace(/^~\//,"")]; return f?f():C("r",`cat: ${esc(a)}: No such file or directory`); },
-  projects:()=>PROJECTS.map(p=>`${C("a",p.id.padEnd(14," ").replace(/ /g,"&nbsp;"))}${p.sub}`).join("\n")+`\n${C("d","run 'open <name>' for the full case study")}`,
+  projects:()=>PROJECTS.map(p=>`${C("a",p.id.padEnd(14," ").replace(/ /g,"&nbsp;"))}${p.sub}`).join("\n")+`\n${C("d","run 'open &lt;name&gt;' for the full case study")}`,
   open:a=>{ if(!a) return C("r","open: which one? try: open caughtbot"); const k=a.toLowerCase().replace(/[^a-z]/g,""); const id=PROJECTS.find(p=>p.id===k||p.id.startsWith(k))?.id; if(!id) return C("r",`open: no project named '${esc(a)}'. run 'projects' to list them.`); setTimeout(()=>openProject(id),120); return C("g",`opening ${id}...`); },
   "./caughtbot":a=>{ if(!/--score/.test(a||"")) return `usage: ./caughtbot --score`;
     const b=(n,col)=>C(col,"█".repeat(n*2)+"░".repeat(16-n*2));
@@ -1565,11 +1581,11 @@ const CMDS={
     return `${C("a","[decrypting payload…]")}\n<span id="${id}" class="c-g"></span>\n${C("d","more hides here: the code answers stillness, old consoles remember a certain code, and some decorations answer clicks. try: eggs")}`; },
   ping:()=>`PING mudit (127.0.0.1): 56 data bytes\n64 bytes from mudit: icmp_seq=0 ttl=64 time=0.42 ms\n${C("g","mudit is up and replying.")}`,
 };
-const ALIASES={"?":"help",ll:"ls","ls -la":"ls",man:"help",about:"cat about.txt",contact:"cat contact.txt",skills:"cat skills.json",resume:"cat resume.pdf",now:"cat now.md"};
+const ALIASES={"?":"help",ll:"ls","ls -la":"ls",man:"help",about:"cat about.txt",contact:"cat contact.txt",skills:"cat skills.json",resume:"cat resume.pdf",now:"cat now.md","cat README.md":"cat about.txt","cat readme.md":"cat about.txt"};
 function run(raw){
   let cmd=raw.trim(); if(!cmd) { echoCmd(""); return; }
   hist_.push(cmd); hIdx=hist_.length; echoCmd(cmd);
-  if(ALIASES[cmd]) cmd=ALIASES[cmd];
+  if(ALIASES[cmd]) cmd=ALIASES[cmd]; else if(/^man(\s|$)/i.test(cmd)) cmd="help";
   const [name,...rest]=cmd.split(/\s+/); const arg=rest.join(" ");
   const fn=CMDS[name]||CMDS[name.toLowerCase()];
   if(!fn){ print(C("r",`mudit-sh: command not found: ${esc(name)}`)+`  ${C("d","type 'help'")}`); return; }
@@ -1630,5 +1646,7 @@ renderProjects("all");
 console.log("%c mudit-sh ","background:#ffb547;color:#111;font-weight:700","devtools open? good. there's a command the shell never lists. the page source knows it.");
 if("serviceWorker" in navigator && location.protocol==="https:") addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));
 </script>
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
